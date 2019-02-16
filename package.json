@@ -1,6 +1,6 @@
 {
   "name": "axios-hooks",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "axios-hooks",
   "main": "lib/index.js",
   "module": "es/index.js",
