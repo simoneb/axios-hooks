@@ -1,55 +1,68 @@
 {
   "name": "axios-hooks",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "axios-hooks",
-  "main": "lib/index.js",
-  "module": "es/index.js",
-  "files": [
-    "es",
-    "lib",
-    "umd"
-  ],
-  "scripts": {
-    "build": "nwb build-react-component",
-    "clean": "nwb clean-module && nwb clean-demo",
-    "prepublishOnly": "npm run build",
-    "start": "nwb serve-react-demo",
-    "test": "nwb test-react",
-    "test:coverage": "nwb test-react --coverage",
-    "test:watch": "nwb test-react --server",
-    "pretty": "prettier **/*.{js,json,md,yml} --write"
-  },
-  "dependencies": {
-    "lru-cache": "^5.1.1"
-  },
-  "peerDependencies": {
-    "react": "^16.8.x",
-    "axios": "^0.18.0"
-  },
-  "devDependencies": {
-    "husky": "^1.3.1",
-    "lint-staged": "^8.1.4",
-    "nwb": "0.23.x",
-    "prettier": "^1.16.4",
-    "react": "^16.8.2",
-    "react-dom": "^16.8.2"
-  },
-  "author": "Simone Busoli <simone.busoli@gmail.com>",
-  "homepage": "https://github.com/simoneb/axios-hooks",
-  "license": "MIT",
-  "repository": "",
   "keywords": [
     "axios",
     "react",
     "hooks"
   ],
+  "license": "MIT",
+  "author": "Simone Busoli <simone.busoli@gmail.com>",
+  "homepage": "https://github.com/simoneb/axios-hooks",
+  "repository": "simoneb/axios-hooks",
+  "bugs": "https://github.com/simoneb/axios-hooks/issues",
+  "main": "lib/index.js",
+  "module": "es/index.js",
+  "files": [
+    "lib",
+    "es",
+    "src"
+  ],
+  "scripts": {
+    "build:commonjs": "cross-env BABEL_ENV=commonjs babel src --out-dir lib",
+    "build:es": "babel src --out-dir es",
+    "build": "run-p build:*",
+    "clean": "rimraf lib es coverage",
+    "format": "prettier --write \"src/**/*.{js,md}\"",
+    "lint": "eslint src",
+    "prepare": "npm run clean && npm run build",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "lru-cache": "^5.1.1"
+  },
+  "peerDependencies": {
+    "react": "^16.8.0-0",
+    "axios": "^0.18.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.3.3",
+    "@babel/plugin-transform-runtime": "^7.2.0",
+    "@babel/preset-env": "^7.3.1",
+    "axios": "^0.18.0",
+    "babel-eslint": "^10.0.1",
+    "cross-env": "^5.2.0",
+    "eslint": "^5.14.0",
+    "eslint-config-prettier": "^4.0.0",
+    "eslint-plugin-import": "^2.16.0",
+    "eslint-plugin-prettier": "^3.0.1",
+    "husky": "^1.3.1",
+    "lint-staged": "^8.1.4",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^1.16.4",
+    "react": "^16.8.2",
+    "react-dom": "^16.8.2",
+    "rimraf": "^2.6.3"
+  },
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"
     }
   },
   "lint-staged": {
-    "**/*.{js,json,md,yml}": [
+    "src/**/*.{js,md}": [
       "prettier --write",
       "git add"
     ]

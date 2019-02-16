@@ -1,12 +1,7 @@
 language: node_js
 node_js: 11
-
-before_install:
-  - npm install coveralls
-
-after_success:
-  - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
-
+sudo: false
+script: npm run lint
 deploy:
   skip_cleanup: true
   provider: script
