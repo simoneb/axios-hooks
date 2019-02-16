@@ -8,6 +8,7 @@ after_success:
   - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
 
 deploy:
+  skip_cleanup: true
   provider: script
   script: bash scripts/publish.sh
   on:
