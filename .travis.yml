@@ -1,12 +1,10 @@
 language: node_js
 node_js: 11
-
 before_install:
   - npm install coveralls
-
+script: npm run test:coverage
 after_success:
   - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
-
 deploy:
   skip_cleanup: true
   provider: script
