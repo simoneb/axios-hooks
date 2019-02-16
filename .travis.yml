@@ -2,18 +2,13 @@ language: node_js
 node_js: 11
 
 before_install:
-  - npm install codecov.io coveralls
+  - npm install coveralls
 
 after_success:
-  - cat ./coverage/lcov.info | ./node_modules/codecov.io/bin/codecov.io.js
   - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
-
-branches:
-  only:
-    - master
 
 deploy:
   provider: script
-  script: bash deploy.sh
+  script: bash scripts/publish.sh
   on:
     tags: true
