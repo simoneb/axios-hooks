@@ -1,11 +1,10 @@
 {
   "name": "axios-hooks",
-  "version": "1.0.0",
-  "description": "axios-hooks React component",
+  "version": "0.1.0",
+  "description": "axios-hooks",
   "main": "lib/index.js",
   "module": "es/index.js",
   "files": [
-    "css",
     "es",
     "lib",
     "umd"
@@ -19,20 +18,39 @@
     "test:coverage": "nwb test-react --coverage",
     "test:watch": "nwb test-react --server"
   },
-  "dependencies": {},
+  "dependencies": {
+    "lru-cache": "^5.1.1"
+  },
   "peerDependencies": {
-    "react": "16.x"
+    "react": "^16.8.x",
+    "axios": "^0.18.0"
   },
   "devDependencies": {
+    "husky": "^1.3.1",
+    "lint-staged": "^8.1.4",
     "nwb": "0.23.x",
+    "prettier": "^1.16.4",
     "react": "^16.8.2",
     "react-dom": "^16.8.2"
   },
-  "author": "",
-  "homepage": "",
+  "author": "Simone Busoli <simone.busoli@gmail.com>",
+  "homepage": "https://github.com/simoneb/axios-hooks",
   "license": "MIT",
   "repository": "",
   "keywords": [
-    "react-component"
-  ]
+    "axios",
+    "react",
+    "hooks"
+  ],
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "**/*.{js,json,md,yml}": [
+      "prettier --write",
+      "git add"
+    ]
+  }
 }

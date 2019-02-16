@@ -1,8 +1,5 @@
-sudo: false
-
 language: node_js
-node_js:
-  - 8
+node_js: 11
 
 before_install:
   - npm install codecov.io coveralls
@@ -14,3 +11,9 @@ after_success:
 branches:
   only:
     - master
+
+deploy:
+  provider: script
+  script: bash deploy.sh
+  on:
+    tags: true

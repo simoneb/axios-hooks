@@ -1,15 +1,24 @@
-import React, {Component} from 'react'
-import {render} from 'react-dom'
+import React from 'react'
+import { render } from 'react-dom'
 
-import Example from '../../src'
+import useAxios from '../../src'
 
-class Demo extends Component {
-  render() {
-    return <div>
-      <h1>axios-hooks Demo</h1>
-      <Example/>
+function AxiosHooksDemo() {
+  const [{ data, loading, error }, reload] = useAxios(
+    'https://jsonplaceholder.typicode.com/todos/1'
+  )
+
+  return (
+    <div>
+      <h1>axios-hooks demo</h1>
+      <button onClick={reload}>Reload data</button>
+      <div>
+        {loading && 'Loading...'}
+        {error && 'Error!!!'}
+        <pre>{data && JSON.stringify(data, null, 2)}</pre>
+      </div>
     </div>
-  }
+  )
 }
 
-render(<Demo/>, document.querySelector('#demo'))
+render(<AxiosHooksDemo />, document.querySelector('#demo'))
