@@ -61,7 +61,7 @@ Returns:
 - `data` `{Object}` - The [success response](https://github.com/axios/axios#response-schema) data property (for convenient access)
 - `loading` `{Boolean}` - True if the request is in progress, otherwise False
 - `error` `{Object}` - The [error](https://github.com/axios/axios#handling-errors) value
-- `response` `{Object}` - The whole [success response](https://github.com/axios/axios#response-schema) object (for accessing additional response information like headers, ...)
+- `response` `{Object}` - The whole [success response](https://github.com/axios/axios#response-schema) object
 
 - `refetch` `{() => void}` - Function to reload the data
 
@@ -69,7 +69,7 @@ Returns:
 
 Allows to provide custom instances of cache and axios.
 
-- `cache` `{LRU}` - An instance of a [lru-cache](https://github.com/isaacs/node-lru-cache)
+- `cache` `{LRU}` - An instance of [lru-cache](https://github.com/isaacs/node-lru-cache)
 - `axios` `{Axios}` - An instance of [axios](https://github.com/axios/axios#creating-an-instance)
 
 ### serializeCache()
@@ -78,7 +78,7 @@ Returns a dump of the cache to use in server side sendering scenarios.
 
 Returns:
 
-`{Array}` - A serializable representation of the request-response cache ready to be used by `loadCache`
+`{Promise<Array>}` - A serializable representation of the request-response cache ready to be used by `loadCache`
 
 ### loadCache(cache)
 
