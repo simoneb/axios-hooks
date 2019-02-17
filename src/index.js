@@ -1,5 +1,5 @@
 import React from 'react'
-import axios from 'axios'
+import Axios from 'axios'
 import LRU from 'lru-cache'
 
 const actions = {
@@ -13,9 +13,24 @@ const initialState = {
 
 const ssrPromises = []
 
-export const cache = new LRU()
+let cache = new LRU()
+let axios = Axios
 
-export const serializeCache = async () => {
+export function configure(options) {
+  if (options.axios) {
+    axios = options.axios
+  }
+
+  if (options.cache) {
+    cache = options.cache
+  }
+}
+
+export function loadCache(data) {
+  cache.load(data)
+}
+
+export async function serializeCache() {
   await Promise.all(ssrPromises)
 
   ssrPromises.length = 0
