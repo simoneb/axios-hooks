@@ -1,7 +1,7 @@
 # axios-hooks
 
 [![Build Status](https://travis-ci.org/simoneb/axios-hooks.svg?branch=master)](https://travis-ci.org/simoneb/axios-hooks)
-![](https://img.shields.io/npm/v/axios-hooks.svg?style=flat)
+[![npm version](https://badge.fury.io/js/axios-hooks.svg)](https://badge.fury.io/js/axios-hooks)
 
 React hooks for [axios], with built-in support for server side rendering.
 
