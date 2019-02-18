@@ -47,10 +47,10 @@ function App() {
 
 ### API
 
-- [useAxios](#useAxios(url|config))
-- [configure](#configure({-cache,-axios-}))
-- [serializeCache](#serializeCache())
-- [loadCache](#loadCache())
+- [useAxios](#useaxiosurlconfig)
+- [configure](#configure-cache-axios-)
+- [serializeCache](#serializeCache
+- [loadCache](#loadcachecache)
 
 ### Guides
 
@@ -198,7 +198,7 @@ If your environment doesn't support ES6 Promises, you can [polyfill](https://git
 
 ## Credits
 
-axios-hooks is heavily inspired by [graphql-hooks](https://github.com/nearform/graphql-hooks), 
+`axios-hooks` is heavily inspired by [graphql-hooks](https://github.com/nearform/graphql-hooks), 
 developed by the awesome people at [NearForm](https://github.com/nearform).
 
 ## License
