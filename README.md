@@ -49,7 +49,7 @@ function App() {
 
 - [useAxios](#useaxiosurlconfig)
 - [configure](#configure-cache-axios-)
-- [serializeCache](#serializeCache
+- [serializeCache](#serializeCache)
 - [loadCache](#loadcachecache)
 
 ### Guides
