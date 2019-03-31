@@ -88,13 +88,14 @@ async function request(config, dispatch) {
   }
 }
 
-export default function useAxios(config) {
-  if (typeof config === 'string') {
-    config = {
-      url: config
-    }
-  }
+function normalizeConfig(config) {
+  return typeof config === 'string' ? {
+    url: config
+  } : { ...config }
+}
 
+export default function useAxios(config) {
+  const config = normalizeConfig(requestConfig)
   const [state, dispatch] = React.useReducer(reducer, initialState)
 
   if (typeof window === 'undefined') {
