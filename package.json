@@ -1,6 +1,6 @@
 {
   "name": "axios-hooks",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "axios-hooks",
   "keywords": [
     "axios",
@@ -27,7 +27,8 @@
     "format": "prettier --write \"src/**/*.{js,md}\"",
     "lint": "eslint src",
     "prepare": "npm run clean && npm run build",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "release": "standard-version"
   },
   "dependencies": {
     "@babel/runtime": "^7.3.1",
@@ -56,7 +57,8 @@
     "prettier": "^1.16.4",
     "react": "^16.8.2",
     "react-dom": "^16.8.2",
-    "rimraf": "^2.6.3"
+    "rimraf": "^2.6.3",
+    "standard-version": "^6.0.1"
   },
   "husky": {
     "hooks": {
