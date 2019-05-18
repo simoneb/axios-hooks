@@ -8,7 +8,7 @@ const actions = {
 }
 
 const initialState = {
-  loading: false
+  loading: true
 }
 
 const ssrPromises = []
