@@ -30,13 +30,14 @@ function App() {
   const [{ data, loading, error }, refetch] = useAxios(
     'https://jsonplaceholder.typicode.com/todos/1'
   )
-  
+
+  if (loading) return <p>Loading...</p>
+  if (error) return <p>Error!</p>
+
   return (
     <div>
       <button onClick={refetch}>refetch</button>
-      {loading && <p>Loading...</p>}
-      {error && <p>Error!</p>}
-      {data && <pre>{JSON.stringify(data, null, 2)}</pre>}
+      <pre>{JSON.stringify(data, null, 2)}</pre>
     </div>
   )
 }
@@ -144,7 +145,7 @@ configure({ axios, cache })
 
 1. the React component tree is rendered on the server
 2. `useAxios` HTTP requests are executed on the server
-3. the server code awaits `serializeCache()` in order to obtain a serializable representation of the  request-response cache
+3. the server code awaits `serializeCache()` in order to obtain a serializable representation of the request-response cache
 4. the server injects a JSON-serialized version of the cache in a `window` global variable
 5. the client hydrates the cache from the global variable before rendering the application using `loadCache`
 
@@ -194,12 +195,12 @@ ReactDOM.hydrate(<App />, document.getElementById('root'))
 
 ## Promises
 
-axios-hooks depends on a native ES6 Promise implementation to be [supported](http://caniuse.com/promises). 
+axios-hooks depends on a native ES6 Promise implementation to be [supported](http://caniuse.com/promises).
 If your environment doesn't support ES6 Promises, you can [polyfill](https://github.com/jakearchibald/es6-promise).
 
 ## Credits
 
-`axios-hooks` is heavily inspired by [graphql-hooks](https://github.com/nearform/graphql-hooks), 
+`axios-hooks` is heavily inspired by [graphql-hooks](https://github.com/nearform/graphql-hooks),
 developed by the awesome people at [NearForm](https://github.com/nearform).
 
 ## License
