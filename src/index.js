@@ -1,5 +1,5 @@
 import React from 'react'
-import Axios from 'axios'
+import DefaultAxios from 'axios'
 import LRU from 'lru-cache'
 
 const actions = {
@@ -7,18 +7,14 @@ const actions = {
   REQUEST_END: 'REQUEST_END'
 }
 
-const initialState = {
-  loading: true
-}
-
 const ssrPromises = []
 
 let cache = new LRU()
-let axios = Axios
+let axiosInstance = DefaultAxios
 
 export function configure(options) {
   if (options.axios) {
-    axios = options.axios
+    axiosInstance = options.axios
   }
 
   if (options.cache) {
@@ -48,7 +44,7 @@ async function cacheAdapter(config) {
 
   delete config.adapter
 
-  const response = await axios(config)
+  const response = await axiosInstance(config)
 
   const responseForCache = { ...response }
   delete responseForCache.config
@@ -57,6 +53,12 @@ async function cacheAdapter(config) {
   cache.set(cacheKey, responseForCache)
 
   return response
+}
+
+function createInitialState(options) {
+  return {
+    loading: !options.manual
+  }
 }
 
 function reducer(state, action) {
@@ -81,34 +83,50 @@ function reducer(state, action) {
 async function request(config, dispatch) {
   try {
     dispatch({ type: actions.REQUEST_START })
-    const response = await axios(config)
+    const response = await axiosInstance(config)
     dispatch({ type: actions.REQUEST_END, payload: response })
   } catch (err) {
     dispatch({ type: actions.REQUEST_END, payload: err, error: true })
   }
 }
 
-export default function useAxios(config) {
+function executeRequestWithCache(config, dispatch) {
+  request({ ...config, adapter: cacheAdapter }, dispatch)
+}
+
+function executeRequestWithoutCache(config, dispatch) {
+  return request(config, dispatch)
+}
+
+export default function useAxios(config, options = { manual: false }) {
   if (typeof config === 'string') {
     config = {
       url: config
     }
   }
 
-  const [state, dispatch] = React.useReducer(reducer, initialState)
+  const [state, dispatch] = React.useReducer(
+    reducer,
+    createInitialState(options)
+  )
 
   if (typeof window === 'undefined') {
-    ssrPromises.push(axios({ ...config, adapter: cacheAdapter }))
+    ssrPromises.push(axiosInstance({ ...config, adapter: cacheAdapter }))
   }
 
   React.useEffect(() => {
-    request({ ...config, adapter: cacheAdapter }, dispatch)
+    if (!options.manual) {
+      executeRequestWithCache(config, dispatch)
+    }
   }, [JSON.stringify(config)])
 
   return [
     state,
-    function refetch() {
-      return request(config, dispatch)
+    configOverride => {
+      return executeRequestWithoutCache(
+        { ...config, ...configOverride },
+        dispatch
+      )
     }
   ]
 }
