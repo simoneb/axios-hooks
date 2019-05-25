@@ -55,6 +55,7 @@ function App() {
 ### Guides
 
 - [Configuration](#configuration)
+- [Manual Requests](#manual-requests)
 - [Server Side Rendering](#server-side-rendering)
 
 ## API
