@@ -11,7 +11,8 @@
   },
   "env": {
     "browser": true,
-    "node": true
+    "node": true,
+    "jest": true
   },
   "globals": {
     "Promise": true
@@ -19,7 +20,5 @@
   "rules": {
     "valid-jsdoc": 2
   },
-  "plugins": [
-    "import"
-  ]
+  "plugins": ["import"]
 }
