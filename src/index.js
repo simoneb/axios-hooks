@@ -34,8 +34,12 @@ export async function serializeCache() {
   return cache.dump()
 }
 
+function createCacheKey(config) {
+  return JSON.stringify(config)
+}
+
 async function cacheAdapter(config) {
-  const cacheKey = JSON.stringify(config)
+  const cacheKey = createCacheKey(config)
   const hit = cache.get(cacheKey)
 
   if (hit) {
@@ -55,7 +59,16 @@ async function cacheAdapter(config) {
   return response
 }
 
-function createInitialState(options) {
+function createInitialState(config, options) {
+  const hit = cache.get(createCacheKey(config))
+
+  if (hit) {
+    return {
+      loading: false,
+      data: hit.data
+    }
+  }
+
   return {
     loading: !options.manual
   }
@@ -90,12 +103,8 @@ async function request(config, dispatch) {
   }
 }
 
-function executeRequestWithCache(config, dispatch) {
-  request({ ...config, adapter: cacheAdapter }, dispatch)
-}
-
-function executeRequestWithoutCache(config, dispatch) {
-  return request(config, dispatch)
+function requestWithCache(config, dispatch) {
+  return request({ ...config, adapter: cacheAdapter }, dispatch)
 }
 
 export default function useAxios(config, options = { manual: false }) {
@@ -107,26 +116,27 @@ export default function useAxios(config, options = { manual: false }) {
 
   const [state, dispatch] = React.useReducer(
     reducer,
-    createInitialState(options)
+    createInitialState(config, options)
   )
 
-  if (typeof window === 'undefined') {
-    ssrPromises.push(axiosInstance({ ...config, adapter: cacheAdapter }))
-  }
+  console.log('state', state)
 
-  React.useEffect(() => {
-    if (!options.manual) {
-      executeRequestWithCache(config, dispatch)
+  if (typeof window === 'undefined') {
+    if (!options.manual && !cache.get(createCacheKey(config))) {
+      ssrPromises.push(axiosInstance({ ...config, adapter: cacheAdapter }))
     }
-  }, [JSON.stringify(config)])
+  } else {
+    React.useEffect(() => {
+      if (!options.manual) {
+        requestWithCache(config, dispatch)
+      }
+    }, [JSON.stringify(config)])
+  }
 
   return [
     state,
     configOverride => {
-      return executeRequestWithoutCache(
-        { ...config, ...configOverride },
-        dispatch
-      )
+      return request({ ...config, ...configOverride }, dispatch)
     }
   ]
 }
