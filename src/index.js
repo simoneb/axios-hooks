@@ -4,7 +4,8 @@ import LRU from 'lru-cache'
 
 const actions = {
   REQUEST_START: 'REQUEST_START',
-  REQUEST_END: 'REQUEST_END'
+  REQUEST_END: 'REQUEST_END',
+  CACHE_HIT: 'CACHE_HIT'
 }
 
 const ssrPromises = []
@@ -88,6 +89,13 @@ function reducer(state, action) {
         ...(action.error ? {} : { data: action.payload.data }),
         [action.error ? 'error' : 'response']: action.payload
       }
+    case actions.CACHE_HIT: {
+      return {
+        ...state,
+        loading: false,
+        data: action.payload.data
+      }
+    }
     default:
       return state
   }
@@ -119,11 +127,15 @@ export default function useAxios(config, options = { manual: false }) {
     createInitialState(config, options)
   )
 
-  console.log('state', state)
-
   if (typeof window === 'undefined') {
-    if (!options.manual && !cache.get(createCacheKey(config))) {
-      ssrPromises.push(axiosInstance({ ...config, adapter: cacheAdapter }))
+    if (!options.manual) {
+      const hit = cache.get(createCacheKey(config))
+
+      if (hit) {
+        dispatch({ type: actions.CACHE_HIT, payload: hit })
+      } else {
+        ssrPromises.push(axiosInstance({ ...config, adapter: cacheAdapter }))
+      }
     }
   } else {
     React.useEffect(() => {
