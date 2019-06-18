@@ -1,6 +1,6 @@
 {
   "name": "axios-hooks",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "axios-hooks",
   "keywords": [
     "axios",
@@ -21,18 +21,19 @@
     "src"
   ],
   "scripts": {
-    "build:commonjs": "cross-env BABEL_ENV=commonjs babel src --out-dir lib",
-    "build:es": "babel src --out-dir es",
+    "build:commonjs": "cross-env BABEL_ENV=commonjs babel src/index.js --out-dir lib",
+    "build:es": "babel src/index.js --out-dir es",
     "build": "run-p build:*",
     "clean": "rimraf lib es coverage",
     "format": "prettier --write \"src/**/*.{js,md,ts}\"",
     "lint": "eslint src",
     "prepare": "npm run clean && npm run build",
     "prepublishOnly": "npm run build",
-    "release": "standard-version"
+    "release": "standard-version",
+    "test": "jest"
   },
   "dependencies": {
-    "@babel/runtime": "^7.3.1",
+    "@babel/runtime": "^7.4.5",
     "lru-cache": "^5.1.1"
   },
   "peerDependencies": {
@@ -40,24 +41,27 @@
     "react": "^16.8.0-0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.2.3",
-    "@babel/core": "^7.3.3",
-    "@babel/plugin-transform-runtime": "^7.2.0",
-    "@babel/preset-env": "^7.3.1",
+    "@babel/cli": "^7.4.4",
+    "@babel/core": "^7.4.5",
+    "@babel/plugin-transform-runtime": "^7.4.4",
+    "@babel/preset-env": "^7.4.5",
     "axios": "^0.18.0",
     "babel-eslint": "^10.0.1",
     "cross-env": "^5.2.0",
     "cz-conventional-changelog": "^2.1.0",
-    "eslint": "^5.14.0",
-    "eslint-config-prettier": "^4.0.0",
-    "eslint-plugin-import": "^2.16.0",
-    "eslint-plugin-prettier": "^3.0.1",
+    "eslint": "^5.16.0",
+    "eslint-config-prettier": "^4.3.0",
+    "eslint-plugin-import": "^2.17.3",
+    "eslint-plugin-prettier": "^3.1.0",
     "husky": "^1.3.1",
-    "lint-staged": "^8.1.4",
+    "jest": "^24.8.0",
+    "lint-staged": "^8.1.7",
     "npm-run-all": "^4.1.5",
-    "prettier": "^1.16.4",
-    "react": "^16.8.2",
-    "react-dom": "^16.8.2",
+    "prettier": "^1.17.1",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-hooks-testing-library": "^0.5.0",
+    "react-test-renderer": "^16.8.6",
     "rimraf": "^2.6.3",
     "standard-version": "^6.0.1",
     "typescript": "^3.4.5"

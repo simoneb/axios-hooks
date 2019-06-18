@@ -7,6 +7,6 @@ module.exports = {
   plugins: [
     ['@babel/proposal-object-rest-spread', { loose }],
     cjs && ['@babel/transform-modules-commonjs', { loose }],
-    ['@babel/transform-runtime', { useESModules: !cjs }],
+    ['@babel/transform-runtime', { useESModules: !cjs }]
   ].filter(Boolean)
 }
