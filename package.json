@@ -14,6 +14,7 @@
   "bugs": "https://github.com/simoneb/axios-hooks/issues",
   "main": "lib/index.js",
   "module": "es/index.js",
+  "typings": "./index.d.ts",
   "files": [
     "lib",
     "es",
@@ -24,7 +25,7 @@
     "build:es": "babel src --out-dir es",
     "build": "run-p build:*",
     "clean": "rimraf lib es coverage",
-    "format": "prettier --write \"src/**/*.{js,md}\"",
+    "format": "prettier --write \"src/**/*.{js,md,ts}\"",
     "lint": "eslint src",
     "prepare": "npm run clean && npm run build",
     "prepublishOnly": "npm run build",
@@ -35,8 +36,8 @@
     "lru-cache": "^5.1.1"
   },
   "peerDependencies": {
-    "react": "^16.8.0-0",
-    "axios": "^0.18.0"
+    "axios": "^0.18.0",
+    "react": ">=16.8.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.3",
@@ -58,7 +59,8 @@
     "react": "^16.8.2",
     "react-dom": "^16.8.2",
     "rimraf": "^2.6.3",
-    "standard-version": "^6.0.1"
+    "standard-version": "^6.0.1",
+    "typescript": "^3.4.5"
   },
   "husky": {
     "hooks": {
