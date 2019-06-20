@@ -37,8 +37,8 @@
     "lru-cache": "^5.1.1"
   },
   "peerDependencies": {
-    "axios": "^0.18.0",
-    "react": "^16.8.0-0"
+    "react": "^16.8.0-0",
+    "axios": "^0.18.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.4.4",
