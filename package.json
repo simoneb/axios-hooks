@@ -63,8 +63,7 @@
     "react-hooks-testing-library": "^0.5.0",
     "react-test-renderer": "^16.8.6",
     "rimraf": "^2.6.3",
-    "standard-version": "^6.0.1",
-    "typescript": "^3.4.5"
+    "standard-version": "^6.0.1"
   },
   "husky": {
     "hooks": {
