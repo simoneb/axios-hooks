@@ -14,6 +14,7 @@
   "bugs": "https://github.com/simoneb/axios-hooks/issues",
   "main": "lib/index.js",
   "module": "es/index.js",
+  "typings": "./index.d.ts",
   "files": [
     "lib",
     "es",
@@ -24,7 +25,7 @@
     "build:es": "babel src/index.js --out-dir es",
     "build": "run-p build:*",
     "clean": "rimraf lib es coverage",
-    "format": "prettier --write \"src/**/*.{js,md}\"",
+    "format": "prettier --write \"src/**/*.{js,md,ts}\"",
     "lint": "eslint src",
     "prepare": "npm run clean && npm run build",
     "prepublishOnly": "npm run build",
