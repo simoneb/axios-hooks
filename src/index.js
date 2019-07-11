@@ -66,7 +66,8 @@ function reducer(state, action) {
     case actions.REQUEST_START:
       return {
         ...state,
-        loading: true
+        loading: true,
+        error: null
       }
     case actions.REQUEST_END:
       return {

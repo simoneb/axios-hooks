@@ -9,7 +9,7 @@ test('should set loading to true', async () => {
   expect(result.current[0].loading).toBe(true)
 })
 
-test('should set loading to false when request completes and return data', async () => {
+test('should set loading to false when request completes and returns data', async () => {
   const { result, waitForNextUpdate } = renderHook(() => useAxios())
 
   act(() => {
@@ -22,7 +22,25 @@ test('should set loading to false when request completes and return data', async
   expect(result.current[0].data).toBe('whatever')
 })
 
-test('should set loading to false when request completes and return error', async () => {
+test('should reset error when request completes and returns data', async () => {
+  const { result, waitForNextUpdate } = renderHook(() => useAxios())
+  result.current[0].error = new Error()
+
+  act(() => {
+    axios.resolvePromise({ data: 'whatever' })
+  })
+
+  await waitForNextUpdate()
+
+  // Refetch
+  act(() => {
+    result.current[1]()
+  })
+
+  expect(result.current[0].error).toBe(null)
+})
+
+test('should set loading to false when request completes and returns error', async () => {
   const { result, waitForNextUpdate } = renderHook(() => useAxios())
   const error = new Error('boom')
 
