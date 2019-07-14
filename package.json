@@ -18,7 +18,8 @@
   "files": [
     "lib",
     "es",
-    "src"
+    "src",
+    "index.d.ts"
   ],
   "scripts": {
     "build:commonjs": "cross-env BABEL_ENV=commonjs babel src/index.js --out-dir lib",
