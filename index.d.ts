@@ -13,4 +13,4 @@ interface Options {
 export default function useAxios(
   config: AxiosRequestConfig | string,
   options?: Options
-): [ResponseValues, () => void]
+): [ResponseValues, (config?: AxiosRequestConfig) => void]
