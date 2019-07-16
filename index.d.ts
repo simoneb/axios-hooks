@@ -6,6 +6,11 @@ interface ResponseValues {
   error?: AxiosError;
 }
 
+interface Options {
+  manual: boolean
+}
+
 export default function useAxios(
-  config: AxiosRequestConfig | string
+  config: AxiosRequestConfig | string,
+  options?: Options
 ): [ResponseValues, () => void]
