@@ -123,7 +123,14 @@ export default function useAxios(config, options = { manual: false }) {
 
   return [
     state,
-    configOverride => {
+    (configOverride, options = { useCache: false }) => {
+      if (options.useCache) {
+        return executeRequestWithCache(
+          { ...config, ...configOverride },
+          dispatch
+        )
+      }
+
       return executeRequestWithoutCache(
         { ...config, ...configOverride },
         dispatch
