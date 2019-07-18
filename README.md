@@ -81,7 +81,7 @@ Returns:
 - `error` The [error](https://github.com/axios/axios#handling-errors) value
 - `response` The whole [success response](https://github.com/axios/axios#response-schema) object
 
-- `execute([config])` Function to execute the request manually, bypassing the cache. It optionally accepts the same `config` object as `axios`, which is _shallow-merged_ with the config object provided when invoking the hook. Useful to provide arguments to non-GET requests.
+- `execute([config[, options]])` Function to execute the request manually, bypassing the cache by default. It optionally accepts the same `config` object as `axios`, which is _shallow-merged_ with the config object provided when invoking the hook. Useful to provide arguments to non-GET requests. It also optionally accepts an options object which has a `useCache` property, which allows caching to be enabled/disabled for this "execute" function.
 
 ### configure({ cache, axios })
 
