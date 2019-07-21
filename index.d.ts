@@ -1,7 +1,7 @@
 import { AxiosRequestConfig, AxiosError, AxiosPromise } from 'axios'
 
-interface ResponseValues {
-  data: any
+interface ResponseValues<T> {
+  data: T
   loading: boolean
   error?: AxiosError
 }
@@ -14,10 +14,10 @@ interface RefetchOptions {
   useCache: boolean
 }
 
-export default function useAxios(
+export default function useAxios<T = any>(
   config: AxiosRequestConfig | string,
   options?: Options
 ): [
-  ResponseValues,
+  ResponseValues<T>,
   (config?: AxiosRequestConfig, options?: RefetchOptions) => void
 ]
