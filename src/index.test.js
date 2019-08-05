@@ -1,12 +1,12 @@
 import { renderHook, act } from '@testing-library/react-hooks'
 import axios from 'axios'
 
-import useAxios from './'
+import useAxios, { configure, resetConfigure } from './'
 
 jest.mock('axios')
 
 it('should set loading to true', async () => {
-  const { result } = renderHook(() => useAxios())
+  const { result } = renderHook(() => useAxios(''))
 
   expect(result.current[0].loading).toBe(true)
 })
@@ -14,7 +14,7 @@ it('should set loading to true', async () => {
 it('should set loading to false when request completes and returns data', async () => {
   axios.mockResolvedValueOnce({ data: 'whatever' })
 
-  const { result, waitForNextUpdate } = renderHook(() => useAxios())
+  const { result, waitForNextUpdate } = renderHook(() => useAxios(''))
 
   await waitForNextUpdate()
 
@@ -22,12 +22,25 @@ it('should set loading to false when request completes and returns data', async 
   expect(result.current[0].data).toBe('whatever')
 })
 
+it('should set the response', async () => {
+  const response = { data: 'whatever' }
+
+  axios.mockResolvedValueOnce(response)
+
+  const { result, waitForNextUpdate } = renderHook(() => useAxios(''))
+
+  await waitForNextUpdate()
+
+  expect(result.current[0].loading).toBe(false)
+  expect(result.current[0].response).toBe(response)
+})
+
 it('should reset error when request completes and returns data', async () => {
   axios.mockResolvedValueOnce({ data: 'whatever' })
 
-  const { result, waitForNextUpdate } = renderHook(() => useAxios())
+  const { result, waitForNextUpdate } = renderHook(() => useAxios(''))
 
-  result.current[0].error = new Error()
+  result.current[0].error = { config: {}, name: '', message: '' }
 
   await waitForNextUpdate()
 
@@ -44,7 +57,7 @@ it('should set loading to false when request completes and returns error', async
 
   axios.mockRejectedValue(error)
 
-  const { result, waitForNextUpdate } = renderHook(() => useAxios())
+  const { result, waitForNextUpdate } = renderHook(() => useAxios(''))
 
   await waitForNextUpdate()
 
@@ -55,7 +68,7 @@ it('should set loading to false when request completes and returns error', async
 it('should refetch', async () => {
   axios.mockResolvedValue({ data: 'whatever' })
 
-  const { result, waitForNextUpdate } = renderHook(() => useAxios())
+  const { result, waitForNextUpdate } = renderHook(() => useAxios(''))
 
   await waitForNextUpdate()
 
@@ -121,5 +134,19 @@ describe('manual option', () => {
     expect(axios).toHaveBeenCalledWith(
       expect.objectContaining({ adapter: expect.any(Function) })
     )
+  })
+})
+
+describe('configure', () => {
+  afterEach(() => resetConfigure())
+
+  it('should provide a custom implementation of axios', () => {
+    const mockAxios = jest.fn()
+
+    configure({ axios: mockAxios })
+
+    renderHook(() => useAxios(''))
+
+    expect(mockAxios).toHaveBeenCalled()
   })
 })

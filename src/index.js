@@ -9,8 +9,15 @@ const actions = {
 
 const ssrPromises = []
 
-let cache = new LRU()
-let axiosInstance = DefaultAxios
+let cache
+let axiosInstance
+
+export function resetConfigure() {
+  cache = new LRU()
+  axiosInstance = DefaultAxios
+}
+
+resetConfigure()
 
 export function configure(options) {
   if (options.axios) {
