@@ -2,3 +2,5 @@ es
 lib
 node_modules
 npm-debug.log*
+src/index.d.ts
+*.test.ts
