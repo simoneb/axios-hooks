@@ -47,7 +47,7 @@ function App() {
 
 ### API
 
-- [useAxios](#useaxiosurlconfig)
+- [useAxios](#useaxiosurlconfig-options)
 - [configure](#configure-cache-axios-)
 - [serializeCache](#serializeCache)
 - [loadCache](#loadcachecache)
