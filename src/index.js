@@ -72,13 +72,11 @@ function reducer(state, action) {
   switch (action.type) {
     case actions.REQUEST_START:
       return {
-        ...state,
         loading: true,
         error: null
       }
     case actions.REQUEST_END:
       return {
-        ...state,
         loading: false,
         ...(action.error ? {} : { data: action.payload.data }),
         [action.error ? 'error' : 'response']: action.payload
