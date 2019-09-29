@@ -17,6 +17,7 @@ interface ResponseValues<T> {
 
 interface Options {
   manual?: boolean;
+  useCache?: boolean;
 }
 
 interface RefetchOptions {
