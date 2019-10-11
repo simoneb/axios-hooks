@@ -80,8 +80,8 @@ function reducer(state, action) {
       return {
         ...state,
         loading: false,
-        ...(action.error ? {} : { data: action.payload.data }),
-        [action.error ? 'error' : 'response']: action.payload
+        data: action.payload && action.payload.data,
+        [action.error ? 'error' : 'response']: action.payload || !action.payload
       }
     default:
       return state
@@ -92,9 +92,17 @@ async function request(config, dispatch) {
   try {
     dispatch({ type: actions.REQUEST_START })
     const response = await axiosInstance(config)
-    dispatch({ type: actions.REQUEST_END, payload: response })
+    dispatch({
+      type: actions.REQUEST_END,
+      payload: response,
+      error: !response || !response.data
+    })
   } catch (err) {
-    dispatch({ type: actions.REQUEST_END, payload: err, error: true })
+    dispatch({
+      type: actions.REQUEST_END,
+      payload: err,
+      error: true
+    })
   }
 }
 
