@@ -108,12 +108,22 @@ function executeRequestWithoutCache(config, dispatch) {
   return request(config, dispatch)
 }
 
-export default function useAxios(config, options = { manual: false }) {
+function executeRequest(config, options, dispatch) {
+  if (options.useCache) {
+    return executeRequestWithCache(config, dispatch)
+  }
+
+  return executeRequestWithoutCache(config, dispatch)
+}
+
+export default function useAxios(config, options) {
   if (typeof config === 'string') {
     config = {
       url: config
     }
   }
+
+  options = { manual: false, useCache: true, ...options }
 
   const [state, dispatch] = React.useReducer(
     reducer,
@@ -126,24 +136,16 @@ export default function useAxios(config, options = { manual: false }) {
 
   React.useEffect(() => {
     if (!options.manual) {
-      executeRequestWithCache(config, dispatch)
+      executeRequest(config, options, dispatch)
     }
   }, [JSON.stringify(config)])
 
   return [
     state,
-    (configOverride, options = { useCache: false }) => {
-      if (options.useCache) {
-        return executeRequestWithCache(
-          { ...config, ...configOverride },
-          dispatch
-        )
-      }
+    (configOverride, options) => {
+      options = { useCache: false, ...options }
 
-      return executeRequestWithoutCache(
-        { ...config, ...configOverride },
-        dispatch
-      )
+      return executeRequest({ ...config, ...configOverride }, options, dispatch)
     }
   ]
 }

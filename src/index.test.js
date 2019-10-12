@@ -142,6 +142,36 @@ describe('manual option', () => {
   })
 })
 
+describe('useCache option', () => {
+  it('should use cache by default', async () => {
+    const { waitForNextUpdate } = renderHook(() => useAxios(''))
+
+    axios.mockResolvedValueOnce({ data: 'whatever' })
+
+    await waitForNextUpdate()
+
+    expect(axios).toHaveBeenCalledTimes(1)
+    expect(axios).toHaveBeenCalledWith(
+      expect.objectContaining({ adapter: expect.any(Function) })
+    )
+  })
+
+  it('should allow disabling cache', async () => {
+    const { waitForNextUpdate } = renderHook(() =>
+      useAxios('', { useCache: false })
+    )
+
+    axios.mockResolvedValueOnce({ data: 'whatever' })
+
+    await waitForNextUpdate()
+
+    expect(axios).toHaveBeenCalledTimes(1)
+    expect(axios).toHaveBeenCalledWith(
+      expect.not.objectContaining({ adapter: expect.any(Function) })
+    )
+  })
+})
+
 describe('configure', () => {
   afterEach(() => resetConfigure())
 
