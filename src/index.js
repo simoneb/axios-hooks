@@ -34,9 +34,11 @@ export function loadCache(data) {
 }
 
 export async function serializeCache() {
-  await Promise.all(ssrPromises)
+  const ssrPromisesCopy = [...ssrPromises]
 
   ssrPromises.length = 0
+
+  await Promise.all(ssrPromisesCopy)
 
   return cache.dump()
 }

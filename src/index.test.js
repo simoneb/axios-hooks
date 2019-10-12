@@ -40,7 +40,12 @@ it('should reset error when request completes and returns data', async () => {
 
   const { result, waitForNextUpdate } = renderHook(() => useAxios(''))
 
-  result.current[0].error = { config: {}, name: '', message: '' }
+  result.current[0].error = {
+    isAxiosError: true,
+    config: {},
+    name: '',
+    message: ''
+  }
 
   await waitForNextUpdate()
 
