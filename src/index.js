@@ -108,7 +108,10 @@ function executeRequestWithoutCache(config, dispatch) {
   return request(config, dispatch)
 }
 
-export default function useAxios(config, options = { manual: false }) {
+export default function useAxios(
+  config,
+  options = { manual: false, useCache: true }
+) {
   if (typeof config === 'string') {
     config = {
       url: config
@@ -126,7 +129,9 @@ export default function useAxios(config, options = { manual: false }) {
 
   React.useEffect(() => {
     if (!options.manual) {
-      executeRequestWithCache(config, dispatch)
+      options.useCache
+        ? executeRequestWithCache(config, dispatch)
+        : executeRequestWithoutCache(config, dispatch)
     }
   }, [JSON.stringify(config)])
 
