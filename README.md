@@ -68,20 +68,24 @@ The package exports one default export and named exports:
 
 The main React hook to execute HTTP requests.
 
-- `url|config` The request URL or [config](https://github.com/axios/axios#request-config) object, the same argument accepted by `axios`
-- `options` a configuration object containing these keys:
-  - `manual` False by default. If true, the request is not executed immediately. Useful for non-GET requests that should not be executed when the component renders. Use the `execute` function returned when invoking the hooks to execute the request manually, optionally providing additional arguments to `axios`.
+- `url|config` - The request URL or [config](https://github.com/axios/axios#request-config) object, the same argument accepted by `axios`.
+- `options` - An options object.
+  - `manual` ( `false` ) - If true, the request is not executed immediately. Useful for non-GET requests that should not be executed when the component renders. Use the `execute` function returned when invoking the hook to execute the request manually.
+  - `useCache` ( `true` ) - Allows caching to be enabled/disabled for the hook. It doesn't affect the `execute` function returned by the hook.
 
 Returns:
 
 `[{ data, loading, error, response }, execute]`
 
-- `data` The [success response](https://github.com/axios/axios#response-schema) data property (for convenient access)
-- `loading` True if the request is in progress, otherwise False
-- `error` The [error](https://github.com/axios/axios#handling-errors) value
-- `response` The whole [success response](https://github.com/axios/axios#response-schema) object
+- `data` - The [success response](https://github.com/axios/axios#response-schema) data property (for convenient access).
+- `loading` - True if the request is in progress, otherwise False.
+- `error` - The [error](https://github.com/axios/.axios#handling-errors) value
+- `response` - The whole [success response](https://github.com/axios/axios#response-schema) object.
 
-- `execute([config[, options]])` Function to execute the request manually, bypassing the cache by default. It optionally accepts the same `config` object as `axios`, which is _shallow-merged_ with the config object provided when invoking the hook. Useful to provide arguments to non-GET requests. It also optionally accepts an options object which has a `useCache` property, which allows caching to be enabled/disabled for this "execute" function.
+- `execute([config[, options]])` - A function to execute the request manually, bypassing the cache by default.
+  - `config` - Same `config` object as `axios`, which is _shallow-merged_ with the config object provided when invoking the hook. Useful to provide arguments to non-GET requests.
+  - `options` - An options object.
+    - `useCache` ( `false` ) - Allows caching to be enabled/disabled for this "execute" function.
 
 ### configure({ cache, axios })
 
