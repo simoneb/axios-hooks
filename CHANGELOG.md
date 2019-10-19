@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.1](https://github.com/simoneb/axios-hooks/compare/v1.3.0...v1.4.1) (2019-10-19)
+
+
+### Bug Fixes
+
+* do not execute manual requests on server ([88829b0](https://github.com/simoneb/axios-hooks/commit/88829b0206673f411367eae67b018dae0c48b059))
+
 ## [1.4.0](https://github.com/simoneb/axios-hooks/compare/v1.3.0...v1.4.0) (2019-10-12)
 
 Features
