@@ -7,7 +7,7 @@ const actions = {
   REQUEST_END: 'REQUEST_END'
 }
 
-const ssrPromises = []
+export const __ssrPromises = []
 
 let cache
 let axiosInstance
@@ -34,9 +34,9 @@ export function loadCache(data) {
 }
 
 export async function serializeCache() {
-  const ssrPromisesCopy = [...ssrPromises]
+  const ssrPromisesCopy = [...__ssrPromises]
 
-  ssrPromises.length = 0
+  __ssrPromises.length = 0
 
   await Promise.all(ssrPromisesCopy)
 
@@ -130,8 +130,8 @@ export default function useAxios(config, options) {
     createInitialState(options)
   )
 
-  if (typeof window === 'undefined') {
-    ssrPromises.push(axiosInstance({ ...config, adapter: cacheAdapter }))
+  if (typeof window === 'undefined' && !options.manual) {
+    __ssrPromises.push(axiosInstance({ ...config, adapter: cacheAdapter }))
   }
 
   React.useEffect(() => {

@@ -31,7 +31,7 @@
     "prepare": "npm run clean && npm run build",
     "prepublishOnly": "npm run build",
     "release": "standard-version",
-    "pretest": "cp ./src/index.test.js ./src/index.test.ts && cp ./index.d.ts ./src",
+    "pretest": "cp ./src/index.test.js ./src/index.test.ts && cp ./src/index.test.ssr.js ./src/index.test.ssr.ts && cp ./index.d.ts ./src",
     "test": "jest --no-cache"
   },
   "dependencies": {
