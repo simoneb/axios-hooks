@@ -38,7 +38,7 @@ export default function useAxios<T = any>(
 ]
 
 export function loadCache(data: any[]): void
-export function serializeCache(): any[]
+export function serializeCache(): Promise<any[]>
 
 export function configure(options: ConfigureOptions): void
 export function resetConfigure(): void
