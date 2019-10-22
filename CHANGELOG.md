@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.5.0-0](https://github.com/simoneb/axios-hooks/compare/v1.4.1...v1.5.0-0) (2019-10-22)
+
+
+### Features
+
+* maintain referential integrity of refetch function ([1c4c5ac](https://github.com/simoneb/axios-hooks/commit/1c4c5acdd56f5597269a0d9ae321daf2e587f5c8))
+
+
+### Bug Fixes
+
+* typing of serializeCache function ([3040b80](https://github.com/simoneb/axios-hooks/commit/3040b80696e7ab9df07f64ac6c5beacc276178cd))
+
 ### [1.4.1](https://github.com/simoneb/axios-hooks/compare/v1.3.0...v1.4.1) (2019-10-19)
 
 
