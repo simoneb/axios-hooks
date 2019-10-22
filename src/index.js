@@ -123,6 +123,8 @@ export default function useAxios(config, options) {
     }
   }
 
+  const stringifiedConfig = JSON.stringify(config)
+
   options = { manual: false, useCache: true, ...options }
 
   const [state, dispatch] = React.useReducer(
@@ -138,14 +140,20 @@ export default function useAxios(config, options) {
     if (!options.manual) {
       executeRequest(config, options, dispatch)
     }
-  }, [JSON.stringify(config)])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [stringifiedConfig])
 
-  return [
-    state,
+  const refetch = React.useCallback(
     (configOverride, options) => {
-      options = { useCache: false, ...options }
+      return executeRequest(
+        { ...config, ...configOverride },
+        { useCache: false, ...options },
+        dispatch
+      )
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [stringifiedConfig]
+  )
 
-      return executeRequest({ ...config, ...configOverride }, options, dispatch)
-    }
-  ]
+  return [state, refetch]
 }

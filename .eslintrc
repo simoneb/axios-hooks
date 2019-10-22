@@ -5,6 +5,7 @@
     "plugin:import/recommended",
     "plugin:prettier/recommended"
   ],
+  "plugins": ["import", "react-hooks"],
   "parserOptions": {
     "ecmaVersion": 6,
     "sourceType": "module"
@@ -18,7 +19,8 @@
     "Promise": true
   },
   "rules": {
-    "valid-jsdoc": 2
-  },
-  "plugins": ["import"]
+    "valid-jsdoc": 2,
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn"
+  }
 }

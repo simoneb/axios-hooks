@@ -85,6 +85,18 @@ it('should refetch', async () => {
   expect(axios).toHaveBeenCalledTimes(2)
 })
 
+it('should return the same reference to the fetch function', async () => {
+  axios.mockResolvedValue({ data: 'whatever' })
+
+  const { result, rerender } = renderHook(() => useAxios(''))
+
+  const firstRefetch = result.current[1]
+
+  rerender()
+
+  expect(result.current[1]).toBe(firstRefetch)
+})
+
 describe('manual option', () => {
   it('should set loading to false', async () => {
     const { result } = renderHook(() => useAxios('', { manual: true }))
