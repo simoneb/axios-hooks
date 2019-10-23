@@ -95,13 +95,15 @@ async function request(config, dispatch) {
     dispatch({ type: actions.REQUEST_START })
     const response = await axiosInstance(config)
     dispatch({ type: actions.REQUEST_END, payload: response })
+    return response
   } catch (err) {
     dispatch({ type: actions.REQUEST_END, payload: err, error: true })
+    throw err
   }
 }
 
 function executeRequestWithCache(config, dispatch) {
-  request({ ...config, adapter: cacheAdapter }, dispatch)
+  return request({ ...config, adapter: cacheAdapter }, dispatch)
 }
 
 function executeRequestWithoutCache(config, dispatch) {
@@ -138,7 +140,7 @@ export default function useAxios(config, options) {
 
   React.useEffect(() => {
     if (!options.manual) {
-      executeRequest(config, options, dispatch)
+      executeRequest(config, options, dispatch).catch(() => {})
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stringifiedConfig])

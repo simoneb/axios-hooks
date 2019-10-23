@@ -36,23 +36,24 @@ it('should set the response', async () => {
 })
 
 it('should reset error when request completes and returns data', async () => {
-  axios.mockResolvedValueOnce({ data: 'whatever' })
+  const error = new Error('boom')
+
+  axios.mockRejectedValue(error)
 
   const { result, waitForNextUpdate } = renderHook(() => useAxios(''))
 
-  result.current[0].error = {
-    isAxiosError: true,
-    config: {},
-    name: '',
-    message: ''
-  }
-
   await waitForNextUpdate()
+
+  expect(result.current[0].error).toBe(error)
+
+  axios.mockResolvedValue({ data: 'whatever' })
 
   // Refetch
   act(() => {
     result.current[1]()
   })
+
+  await waitForNextUpdate()
 
   expect(result.current[0].error).toBe(null)
 })
@@ -83,6 +84,76 @@ it('should refetch', async () => {
 
   expect(result.current[0].loading).toBe(true)
   expect(axios).toHaveBeenCalledTimes(2)
+})
+
+describe('refetch', () => {
+  describe('when axios resolves', () => {
+    it('should resolve to the response by default', () => {
+      const response = { data: 'whatever' }
+
+      axios.mockResolvedValue(response)
+
+      const {
+        result: {
+          current: [, refetch]
+        }
+      } = renderHook(() => useAxios(''))
+
+      act(() => {
+        expect(refetch()).resolves.toEqual(response)
+      })
+    })
+
+    it('should resolve to the response when using cache', () => {
+      const response = { data: 'whatever' }
+
+      axios.mockResolvedValue(response)
+
+      const {
+        result: {
+          current: [, refetch]
+        }
+      } = renderHook(() => useAxios(''))
+
+      act(() => {
+        expect(refetch({}, { useCache: true })).resolves.toEqual(response)
+      })
+    })
+  })
+
+  describe('when axios rejects', () => {
+    it('should reject with the error by default', () => {
+      const error = new Error('boom')
+
+      axios.mockRejectedValue(error)
+
+      const {
+        result: {
+          current: [, refetch]
+        }
+      } = renderHook(() => useAxios(''))
+
+      act(() => {
+        expect(refetch()).rejects.toEqual(error)
+      })
+    })
+
+    it('should reject with the error by when using cache', () => {
+      const error = new Error('boom')
+
+      axios.mockRejectedValue(error)
+
+      const {
+        result: {
+          current: [, refetch]
+        }
+      } = renderHook(() => useAxios(''))
+
+      act(() => {
+        expect(refetch({}, { useCache: true })).rejects.toEqual(error)
+      })
+    })
+  })
 })
 
 it('should return the same reference to the fetch function', async () => {
