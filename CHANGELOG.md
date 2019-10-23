@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.6.0](https://github.com/simoneb/axios-hooks/compare/v1.5.0...v1.6.0) (2019-10-23)
+
+
+### Features
+
+* async refetch ([f018d0a](https://github.com/simoneb/axios-hooks/commit/f018d0a31685003244c2be677845c6195646f2bd)), closes [#51](https://github.com/simoneb/axios-hooks/issues/51)
+
 ## [1.5.0](https://github.com/simoneb/axios-hooks/compare/v1.5.0-0...v1.5.0) (2019-10-23)
 
 ## [1.5.0-0](https://github.com/simoneb/axios-hooks/compare/v1.4.1...v1.5.0-0) (2019-10-22)
