@@ -34,7 +34,7 @@ export default function useAxios<T = any>(
   options?: Options
 ): [
   ResponseValues<T>,
-  (config?: AxiosRequestConfig, options?: RefetchOptions) => void
+  (config?: AxiosRequestConfig, options?: RefetchOptions) => AxiosPromise
 ]
 
 export function loadCache(data: any[]): void
