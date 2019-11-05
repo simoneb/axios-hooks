@@ -273,3 +273,65 @@ describe('configure', () => {
     expect(mockAxios).toHaveBeenCalled()
   })
 })
+
+describe('component dismount', () => {
+  let originalConsoleError
+  let mockConsoleError
+
+  beforeEach(() => {
+    originalConsoleError = console.error
+    mockConsoleError = jest.fn((...args) =>
+      originalConsoleError.apply(console, args)
+    )
+
+    console.error = mockConsoleError
+    axios.mockReset()
+  })
+
+  afterEach(() => {
+    console.error = originalConsoleError
+  })
+
+  it('should not update state after the component is destroyed for automatic', async () => {
+    let resolve = null
+    axios.mockImplementationOnce(() => {
+      return new Promise(resolver => {
+        resolve = resolver
+      })
+    })
+    const { result, unmount } = renderHook(() => useAxios(''))
+
+    expect(resolve).not.toBeNull()
+    expect(result.current[0].loading).toBe(true)
+    unmount()
+
+    await act(async () => {
+      resolve({ data: 'whatever' })
+    })
+
+    expect(mockConsoleError).not.toHaveBeenCalled()
+  })
+
+  it('should not update state after the component is destroyed for manual', async () => {
+    let resolve = null
+    axios.mockImplementationOnce(() => {
+      return new Promise(resolver => {
+        resolve = resolver
+      })
+    })
+    const { result, unmount } = renderHook(() => useAxios('', { manual: true }))
+
+    act(() => {
+      result.current[1]()
+    })
+
+    expect(resolve).not.toBeNull()
+    unmount()
+
+    await act(async () => {
+      resolve({ data: 'whatever' })
+    })
+
+    expect(mockConsoleError).not.toHaveBeenCalled()
+  })
+})
