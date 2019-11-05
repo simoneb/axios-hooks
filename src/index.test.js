@@ -6,9 +6,11 @@ import useAxios, { configure, resetConfigure } from './'
 jest.mock('axios')
 
 it('should set loading to true', async () => {
-  const { result } = renderHook(() => useAxios(''))
+    axios.mockImplementation(() => new Promise(() => null))
 
-  expect(result.current[0].loading).toBe(true)
+    const { result } = renderHook(() => useAxios(''))
+
+    expect(result.current[0].loading).toBe(true)
 })
 
 it('should set loading to false when request completes and returns data', async () => {
@@ -83,16 +85,19 @@ it('should refetch', async () => {
 
   expect(result.current[0].loading).toBe(true)
   expect(axios).toHaveBeenCalledTimes(2)
+
+  await waitForNextUpdate()
 })
 
 it('should return the same reference to the fetch function', async () => {
   axios.mockResolvedValue({ data: 'whatever' })
 
-  const { result, rerender } = renderHook(() => useAxios(''))
+  const { result, rerender, waitForNextUpdate } = renderHook(() => useAxios(''))
 
   const firstRefetch = result.current[1]
 
   rerender()
+  await waitForNextUpdate()
 
   expect(result.current[1]).toBe(firstRefetch)
 })
@@ -187,8 +192,8 @@ describe('useCache option', () => {
 describe('configure', () => {
   afterEach(() => resetConfigure())
 
-  it('should provide a custom implementation of axios', () => {
-    const mockAxios = jest.fn()
+  it('should provide a custom implementation of axios', async () => {
+    const mockAxios = jest.fn(() => new Promise(() => null));
 
     configure({ axios: mockAxios })
 
