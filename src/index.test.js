@@ -6,11 +6,11 @@ import useAxios, { configure, resetConfigure } from './'
 jest.mock('axios')
 
 it('should set loading to true', async () => {
-    axios.mockImplementation(() => new Promise(() => null))
+  axios.mockImplementation(() => new Promise(() => null))
 
-    const { result } = renderHook(() => useAxios(''))
+  const { result } = renderHook(() => useAxios(''))
 
-    expect(result.current[0].loading).toBe(true)
+  expect(result.current[0].loading).toBe(true)
 })
 
 it('should set loading to false when request completes and returns data', async () => {
@@ -193,7 +193,7 @@ describe('configure', () => {
   afterEach(() => resetConfigure())
 
   it('should provide a custom implementation of axios', async () => {
-    const mockAxios = jest.fn(() => new Promise(() => null));
+    const mockAxios = jest.fn(() => new Promise(() => null))
 
     configure({ axios: mockAxios })
 
