@@ -6,6 +6,8 @@ import useAxios, { configure, resetConfigure } from './'
 jest.mock('axios')
 
 it('should set loading to true', async () => {
+  axios.mockImplementation(() => new Promise(() => null))
+
   const { result } = renderHook(() => useAxios(''))
 
   expect(result.current[0].loading).toBe(true)
@@ -84,11 +86,13 @@ it('should refetch', async () => {
 
   expect(result.current[0].loading).toBe(true)
   expect(axios).toHaveBeenCalledTimes(2)
+
+  await waitForNextUpdate()
 })
 
 describe('refetch', () => {
   describe('when axios resolves', () => {
-    it('should resolve to the response by default', () => {
+    it('should resolve to the response by default', async () => {
       const response = { data: 'whatever' }
 
       axios.mockResolvedValue(response)
@@ -99,12 +103,12 @@ describe('refetch', () => {
         }
       } = renderHook(() => useAxios(''))
 
-      act(() => {
+      await act(async () => {
         expect(refetch()).resolves.toEqual(response)
       })
     })
 
-    it('should resolve to the response when using cache', () => {
+    it('should resolve to the response when using cache', async () => {
       const response = { data: 'whatever' }
 
       axios.mockResolvedValue(response)
@@ -115,14 +119,14 @@ describe('refetch', () => {
         }
       } = renderHook(() => useAxios(''))
 
-      act(() => {
+      await act(async () => {
         expect(refetch({}, { useCache: true })).resolves.toEqual(response)
       })
     })
   })
 
   describe('when axios rejects', () => {
-    it('should reject with the error by default', () => {
+    it('should reject with the error by default', async () => {
       const error = new Error('boom')
 
       axios.mockRejectedValue(error)
@@ -133,12 +137,12 @@ describe('refetch', () => {
         }
       } = renderHook(() => useAxios(''))
 
-      act(() => {
+      await act(async () => {
         expect(refetch()).rejects.toEqual(error)
       })
     })
 
-    it('should reject with the error by when using cache', () => {
+    it('should reject with the error by when using cache', async () => {
       const error = new Error('boom')
 
       axios.mockRejectedValue(error)
@@ -149,7 +153,7 @@ describe('refetch', () => {
         }
       } = renderHook(() => useAxios(''))
 
-      act(() => {
+      await act(async () => {
         expect(refetch({}, { useCache: true })).rejects.toEqual(error)
       })
     })
@@ -159,17 +163,18 @@ describe('refetch', () => {
 it('should return the same reference to the fetch function', async () => {
   axios.mockResolvedValue({ data: 'whatever' })
 
-  const { result, rerender } = renderHook(() => useAxios(''))
+  const { result, rerender, waitForNextUpdate } = renderHook(() => useAxios(''))
 
   const firstRefetch = result.current[1]
 
   rerender()
+  await waitForNextUpdate()
 
   expect(result.current[1]).toBe(firstRefetch)
 })
 
 describe('manual option', () => {
-  it('should set loading to false', async () => {
+  it('should set loading to false', () => {
     const { result } = renderHook(() => useAxios('', { manual: true }))
 
     expect(result.current[0].loading).toBe(false)
@@ -258,8 +263,8 @@ describe('useCache option', () => {
 describe('configure', () => {
   afterEach(() => resetConfigure())
 
-  it('should provide a custom implementation of axios', () => {
-    const mockAxios = jest.fn()
+  it('should provide a custom implementation of axios', async () => {
+    const mockAxios = jest.fn(() => new Promise(() => null))
 
     configure({ axios: mockAxios })
 
