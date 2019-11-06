@@ -47,6 +47,8 @@
     "@babel/core": "7.7.0",
     "@babel/plugin-transform-runtime": "7.6.2",
     "@babel/preset-env": "7.7.1",
+    "@commitlint/cli": "8.2.0",
+    "@commitlint/config-conventional": "8.2.0",
     "@testing-library/react-hooks": "3.2.1",
     "@types/jest": "24.0.22",
     "@types/lru-cache": "5.1.0",
@@ -77,6 +79,7 @@
   },
   "husky": {
     "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
       "pre-commit": "lint-staged",
       "post-merge": "npm i"
     }
