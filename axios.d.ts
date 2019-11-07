@@ -1,9 +1,10 @@
-import { AxiosStatic } from "axios";
+import { AxiosStatic } from 'axios'
 
-declare module "axios" {
+declare module 'axios' {
   interface AxiosStatic {
-    mockResolvedValue: Function;
-    mockResolvedValueOnce: Function;
-    mockRejectedValue: Function;
+    mockResolvedValue: Function
+    mockResolvedValueOnce: Function
+    mockRejectedValue: Function
+    mockRejectedValueOnce: Function
   }
 }

@@ -129,6 +129,8 @@ export default function useAxios(config, options) {
 
   options = { manual: false, useCache: true, ...options }
 
+  const cancelSourceRef = React.useRef()
+
   const [state, dispatch] = React.useReducer(
     reducer,
     createInitialState(options)
@@ -139,16 +141,28 @@ export default function useAxios(config, options) {
   }
 
   React.useEffect(() => {
+    cancelSourceRef.current = axiosInstance.CancelToken.source()
+
     if (!options.manual) {
-      executeRequest(config, options, dispatch).catch(() => {})
+      executeRequest(
+        { cancelToken: cancelSourceRef.current.token, ...config },
+        options,
+        dispatch
+      ).catch(() => {})
     }
+
+    return () => cancelSourceRef.current.cancel()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stringifiedConfig])
 
   const refetch = React.useCallback(
     (configOverride, options) => {
       return executeRequest(
-        { ...config, ...configOverride },
+        {
+          cancelToken: cancelSourceRef.current.token,
+          ...config,
+          ...configOverride
+        },
         { useCache: false, ...options },
         dispatch
       )
