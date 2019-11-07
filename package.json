@@ -19,7 +19,7 @@
     "cjs/",
     "es/",
     "src/index.js",
-    "./index.d.ts"
+    "/index.d.ts"
   ],
   "scripts": {
     "build:commonjs": "cross-env BABEL_ENV=commonjs babel src/index.js --out-dir cjs",
