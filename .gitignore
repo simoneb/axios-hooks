@@ -1,5 +1,5 @@
 es
-lib
+cjs
 node_modules
 npm-debug.log*
 src/index.d.ts
