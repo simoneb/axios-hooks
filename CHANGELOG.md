@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.7.1](https://github.com/simoneb/axios-hooks/compare/v1.7.0...v1.7.1) (2019-11-07)
+
+
+### Bug Fixes
+
+* **build:** include typings in package ([0b43f5e](https://github.com/simoneb/axios-hooks/commit/0b43f5ea256a556f6a22261f7130b92db63ddbcc))
+
 ## [1.7.0](https://github.com/simoneb/axios-hooks/compare/v1.6.0...v1.7.0) (2019-11-07)
 
 
