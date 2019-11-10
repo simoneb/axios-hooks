@@ -1,24 +1,25 @@
+const commonOptions = {
+  clearMocks: true,
+  coverageDirectory: 'coverage'
+}
+
 const projects = [
   {
-    clearMocks: true,
-    coverageDirectory: 'coverage',
+    displayName: 'js',
     testMatch: ['**/?(*.)+(spec|test).js?(x)']
   },
   {
-    clearMocks: true,
-    coverageDirectory: 'coverage',
+    displayName: 'ts',
     testMatch: ['**/?(*.)+(spec|test).ts?(x)'],
     preset: 'ts-jest/presets/js-with-ts'
   },
   {
-    clearMocks: true,
-    coverageDirectory: 'coverage',
+    displayName: 'ssr-js',
     testMatch: ['**/?(*.)+(spec|test).ssr.js?(x)'],
     testEnvironment: 'node'
   },
   {
-    clearMocks: true,
-    coverageDirectory: 'coverage',
+    displayName: 'ssr-ts',
     testMatch: ['**/?(*.)+(spec|test).ssr.ts?(x)'],
     preset: 'ts-jest/presets/js-with-ts',
     testEnvironment: 'node'
@@ -26,5 +27,5 @@ const projects = [
 ]
 
 module.exports = {
-  projects
+  projects: projects.map(p => ({ ...p, ...commonOptions }))
 }

@@ -26,6 +26,7 @@
     "build:es": "babel src/index.js --out-dir es",
     "build": "run-p build:*",
     "clean": "rimraf cjs es coverage",
+    "commit": "npx git-cz",
     "format": "prettier --write \"src/**/*.{js,md,ts}\"",
     "lint": "eslint src",
     "prepare": "npm run clean && npm run build",
