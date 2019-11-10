@@ -36,7 +36,7 @@
     "test": "jest --no-cache"
   },
   "dependencies": {
-    "@babel/runtime": "7.6.3",
+    "@babel/runtime": "7.7.2",
     "lru-cache": "5.1.1"
   },
   "peerDependencies": {
