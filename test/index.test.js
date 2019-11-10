@@ -1,217 +1,286 @@
 import { renderHook, act } from '@testing-library/react-hooks'
 import axios from 'axios'
 
-import useAxios, { configure, resetConfigure } from '../'
+import useAxios, { configure, resetConfigure } from '../src'
 import { mockCancelToken } from './testUtils'
 
 jest.mock('axios')
 
 let cancel
 let token
+let errors
 
 beforeEach(() => {
   ;({ cancel, token } = mockCancelToken(axios))
 })
 
-it('should set loading to true', async () => {
-  axios.mockResolvedValueOnce({ data: 'whatever' })
+beforeAll(() => {
+  const error = console.error
 
-  const { result, waitForNextUpdate } = renderHook(() => useAxios(''))
-
-  expect(result.current[0].loading).toBe(true)
-
-  await waitForNextUpdate()
+  console.error = (...args) => {
+    error.apply(console, args) // keep default behaviour
+    errors.push(args)
+  }
 })
 
-it('should set loading to false when request completes and returns data', async () => {
-  axios.mockResolvedValueOnce({ data: 'whatever' })
-
-  const { result, waitForNextUpdate } = renderHook(() => useAxios(''))
-
-  await waitForNextUpdate()
-
-  expect(result.current[0].loading).toBe(false)
-  expect(result.current[0].data).toBe('whatever')
+beforeEach(() => {
+  errors = []
 })
 
-it('should set the response', async () => {
-  const response = { data: 'whatever' }
-
-  axios.mockResolvedValueOnce(response)
-
-  const { result, waitForNextUpdate } = renderHook(() => useAxios(''))
-
-  await waitForNextUpdate()
-
-  expect(result.current[0].loading).toBe(false)
-  expect(result.current[0].response).toBe(response)
+afterEach(() => {
+  // assert that no errors were logged during tests
+  expect(errors.length).toBe(0)
 })
 
-it('should reset error when request completes and returns data', async () => {
-  const error = new Error('boom')
-
-  axios.mockRejectedValueOnce(error)
-
-  const { result, waitForNextUpdate } = renderHook(() => useAxios(''))
-
-  await waitForNextUpdate()
-
-  expect(result.current[0].error).toBe(error)
-
-  axios.mockResolvedValueOnce({ data: 'whatever' })
-
-  // Refetch
-  act(() => {
-    result.current[1]()
-  })
-
-  await waitForNextUpdate()
-
-  expect(result.current[0].error).toBe(null)
-})
-
-it('should set loading to false when request completes and returns error', async () => {
-  const error = new Error('boom')
-
-  axios.mockRejectedValueOnce(error)
-
-  const { result, waitForNextUpdate } = renderHook(() => useAxios(''))
-
-  await waitForNextUpdate()
-
-  expect(result.current[0].loading).toBe(false)
-  expect(result.current[0].error).toBe(error)
-})
-
-it('should refetch', async () => {
-  axios.mockResolvedValue({ data: 'whatever' })
-
-  const { result, waitForNextUpdate } = renderHook(() => useAxios(''))
-
-  await waitForNextUpdate()
-
-  act(() => {
-    result.current[1]()
-  })
-
-  expect(result.current[0].loading).toBe(true)
-  expect(axios).toHaveBeenCalledTimes(2)
-
-  await waitForNextUpdate()
-})
-
-describe('cancellation', () => {
-  it('should cancel the outstanding request when the component unmounts', async () => {
+describe('basic functionality', () => {
+  it('should set loading to true', async () => {
     axios.mockResolvedValueOnce({ data: 'whatever' })
 
-    const { waitForNextUpdate, unmount } = renderHook(() => useAxios(''))
+    const { result, waitForNextUpdate } = renderHook(() => useAxios(''))
 
-    expect(axios).toHaveBeenCalledWith(
-      expect.objectContaining({
-        cancelToken: token
-      })
-    )
-
-    await waitForNextUpdate()
-
-    unmount()
-
-    expect(cancel).toHaveBeenCalled()
-  })
-
-  it('should cancel the outstanding request when the component refetches', async () => {
-    axios.mockResolvedValue({ data: 'whatever' })
-
-    const { waitForNextUpdate, rerender } = renderHook(
-      props => useAxios(props),
-      { initialProps: 'initial config' }
-    )
-
-    expect(axios).toHaveBeenCalledWith(
-      expect.objectContaining({
-        cancelToken: token
-      })
-    )
-
-    await waitForNextUpdate()
-
-    rerender('new config')
-
-    expect(cancel).toHaveBeenCalled()
+    expect(result.current[0].loading).toBe(true)
 
     await waitForNextUpdate()
   })
 
-  it('should not cancel the outstanding request when the component rerenders with same config', async () => {
-    axios.mockResolvedValue({ data: 'whatever' })
+  it('should set loading to false when request completes and returns data', async () => {
+    axios.mockResolvedValueOnce({ data: 'whatever' })
 
-    const { waitForNextUpdate, rerender } = renderHook(
-      props => useAxios(props),
-      { initialProps: 'initial config' }
-    )
-
-    expect(axios).toHaveBeenCalledWith(
-      expect.objectContaining({
-        cancelToken: token
-      })
-    )
+    const { result, waitForNextUpdate } = renderHook(() => useAxios(''))
 
     await waitForNextUpdate()
+
+    expect(result.current[0].loading).toBe(false)
+    expect(result.current[0].data).toBe('whatever')
+  })
+
+  it('should set the response', async () => {
+    const response = { data: 'whatever' }
+
+    axios.mockResolvedValueOnce(response)
+
+    const { result, waitForNextUpdate } = renderHook(() => useAxios(''))
+
+    await waitForNextUpdate()
+
+    expect(result.current[0].loading).toBe(false)
+    expect(result.current[0].response).toBe(response)
+  })
+
+  it('should reset error when request completes and returns data', async () => {
+    const error = new Error('boom')
+
+    axios.mockRejectedValueOnce(error)
+
+    const { result, waitForNextUpdate } = renderHook(() => useAxios(''))
+
+    await waitForNextUpdate()
+
+    expect(result.current[0].error).toBe(error)
+
+    axios.mockResolvedValueOnce({ data: 'whatever' })
+
+    // Refetch
+    act(() => {
+      result.current[1]()
+    })
+
+    await waitForNextUpdate()
+
+    expect(result.current[0].error).toBe(null)
+  })
+
+  it('should set loading to false when request completes and returns error', async () => {
+    const error = new Error('boom')
+
+    axios.mockRejectedValueOnce(error)
+
+    const { result, waitForNextUpdate } = renderHook(() => useAxios(''))
+
+    await waitForNextUpdate()
+
+    expect(result.current[0].loading).toBe(false)
+    expect(result.current[0].error).toBe(error)
+  })
+
+  it('should refetch', async () => {
+    axios.mockResolvedValue({ data: 'whatever' })
+
+    const { result, waitForNextUpdate } = renderHook(() => useAxios(''))
+
+    await waitForNextUpdate()
+
+    act(() => {
+      result.current[1]()
+    })
+
+    expect(result.current[0].loading).toBe(true)
+    expect(axios).toHaveBeenCalledTimes(2)
+
+    await waitForNextUpdate()
+  })
+
+  it('should return the same reference to the fetch function', async () => {
+    axios.mockResolvedValue({ data: 'whatever' })
+
+    const { result, rerender, waitForNextUpdate } = renderHook(() =>
+      useAxios('')
+    )
+
+    const firstRefetch = result.current[1]
 
     rerender()
 
-    expect(cancel).not.toHaveBeenCalled()
+    expect(result.current[1]).toBe(firstRefetch)
+
+    await waitForNextUpdate()
   })
+})
 
-  it('should cancel the outstanding manual refetch when the component unmounts', async () => {
-    const { result, waitForNextUpdate, unmount } = renderHook(() =>
-      useAxios('', { manual: true })
-    )
+describe('request cancellation', () => {
+  describe('effect-generated requests', () => {
+    it('should provide the cancel token to axios', async () => {
+      axios.mockResolvedValueOnce({ data: 'whatever' })
 
-    axios.mockResolvedValueOnce({ data: 'whatever' })
+      const { waitForNextUpdate } = renderHook(() => useAxios(''))
 
-    act(() => {
-      result.current[1]()
+      expect(axios).toHaveBeenCalledWith(
+        expect.objectContaining({
+          cancelToken: token
+        })
+      )
+
+      await waitForNextUpdate()
     })
 
-    expect(axios).toHaveBeenLastCalledWith(
-      expect.objectContaining({
-        cancelToken: token
-      })
-    )
+    it('should cancel the outstanding request when the component unmounts', async () => {
+      axios.mockResolvedValueOnce({ data: 'whatever' })
 
-    await waitForNextUpdate()
+      const { waitForNextUpdate, unmount } = renderHook(() => useAxios(''))
 
-    unmount()
+      await waitForNextUpdate()
 
-    expect(cancel).toHaveBeenCalled()
-  })
+      unmount()
 
-  it('should cancel the outstanding manual refetch when the component refetches', async () => {
-    axios.mockResolvedValue({ data: 'whatever' })
-
-    const { result, waitForNextUpdate, rerender } = renderHook(
-      config => useAxios(config),
-      { initialProps: '' }
-    )
-
-    act(() => {
-      result.current[1]()
+      expect(cancel).toHaveBeenCalled()
     })
 
-    expect(axios).toHaveBeenLastCalledWith(
-      expect.objectContaining({
-        cancelToken: token
+    it('should cancel the outstanding request when the component refetches due to a rerender', async () => {
+      axios.mockResolvedValue({ data: 'whatever' })
+
+      const { waitForNextUpdate, rerender } = renderHook(
+        props => useAxios(props),
+        { initialProps: 'initial config' }
+      )
+
+      await waitForNextUpdate()
+
+      rerender('new config')
+
+      expect(cancel).toHaveBeenCalled()
+
+      await waitForNextUpdate()
+    })
+
+    it('should not cancel the outstanding request when the component rerenders with same config', async () => {
+      axios.mockResolvedValue({ data: 'whatever' })
+
+      const { waitForNextUpdate, rerender } = renderHook(
+        props => useAxios(props),
+        { initialProps: 'initial config' }
+      )
+
+      await waitForNextUpdate()
+
+      rerender()
+
+      expect(cancel).not.toHaveBeenCalled()
+    })
+
+    it('should not dispatch an error when the request is canceled', async () => {
+      const cancellation = new Error('canceled')
+
+      axios.mockRejectedValueOnce(cancellation)
+      axios.isCancel = jest
+        .fn()
+        .mockImplementationOnce(err => err === cancellation)
+
+      const { result, wait } = renderHook(() => useAxios(''))
+
+      // if we cancel we won't dispatch the error, hence there's no state update
+      // to wait for. yet, if we don't try to wait, we won't know if we're handling
+      // the error properly because the return value will not have the error until a
+      // state update happens. it would be great to have a better way to test this
+      await wait(
+        () => {
+          expect(result.current[0].error).toBeNull()
+        },
+        { timeout: 1000, suppressErrors: false }
+      )
+    })
+  })
+
+  describe('manual refetches', () => {
+    it('should provide the cancel token to axios', async () => {
+      const { result, waitForNextUpdate } = renderHook(() =>
+        useAxios('', { manual: true })
+      )
+
+      axios.mockResolvedValueOnce({ data: 'whatever' })
+
+      act(() => {
+        result.current[1]()
       })
-    )
 
-    await waitForNextUpdate()
+      expect(axios).toHaveBeenCalledTimes(1)
 
-    rerender('new config')
+      expect(axios).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          cancelToken: token
+        })
+      )
 
-    expect(cancel).toHaveBeenCalled()
+      await waitForNextUpdate()
+    })
 
-    await waitForNextUpdate()
+    it('should cancel the outstanding manual refetch when the component unmounts', async () => {
+      const { result, waitForNextUpdate, unmount } = renderHook(() =>
+        useAxios('', { manual: true })
+      )
+
+      axios.mockResolvedValueOnce({ data: 'whatever' })
+
+      act(() => {
+        result.current[1]()
+      })
+
+      await waitForNextUpdate()
+
+      unmount()
+
+      expect(cancel).toHaveBeenCalled()
+    })
+
+    it('should cancel the outstanding manual refetch when the component refetches', async () => {
+      axios.mockResolvedValue({ data: 'whatever' })
+
+      const { result, waitForNextUpdate, rerender } = renderHook(
+        config => useAxios(config),
+        { initialProps: '' }
+      )
+
+      act(() => {
+        result.current[1]()
+      })
+
+      await waitForNextUpdate()
+
+      rerender('new config')
+
+      expect(cancel).toHaveBeenCalled()
+
+      await waitForNextUpdate()
+    })
   })
 })
 
@@ -295,20 +364,6 @@ describe('refetch', () => {
       await waitForNextUpdate()
     })
   })
-})
-
-it('should return the same reference to the fetch function', async () => {
-  axios.mockResolvedValue({ data: 'whatever' })
-
-  const { result, rerender, waitForNextUpdate } = renderHook(() => useAxios(''))
-
-  const firstRefetch = result.current[1]
-
-  rerender()
-
-  expect(result.current[1]).toBe(firstRefetch)
-
-  await waitForNextUpdate()
 })
 
 describe('manual option', () => {

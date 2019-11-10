@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react-hooks'
 import axios from 'axios'
 
-import useAxios, { __ssrPromises } from '../'
+import useAxios, { __ssrPromises } from '../src'
 import { mockCancelToken } from './testUtils'
 
 jest.mock('axios')

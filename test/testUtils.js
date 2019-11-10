@@ -13,6 +13,7 @@ export function mockCancelToken(axios) {
     })
   })
 
+  axios.isCancel = jest.fn()
   axios.CancelToken = CancelToken
 
   return { cancel, token }

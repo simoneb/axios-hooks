@@ -1,6 +1,7 @@
 const commonOptions = {
-  clearMocks: true,
-  coverageDirectory: 'coverage'
+  resetMocks: true,
+  coverageDirectory: 'coverage',
+  setupFiles: ['./test/setupTests.js']
 }
 
 const projects = [

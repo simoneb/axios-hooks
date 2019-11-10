@@ -97,6 +97,10 @@ async function request(config, dispatch) {
     dispatch({ type: actions.REQUEST_END, payload: response })
     return response
   } catch (err) {
+    if (axiosInstance.isCancel(err)) {
+      return
+    }
+
     dispatch({ type: actions.REQUEST_END, payload: err, error: true })
     throw err
   }
