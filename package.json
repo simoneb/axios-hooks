@@ -18,26 +18,26 @@
   "files": [
     "cjs/",
     "es/",
-    "src/index.js",
+    "src/",
     "/index.d.ts"
   ],
   "scripts": {
-    "build:commonjs": "cross-env BABEL_ENV=commonjs babel src/index.js --out-dir cjs",
-    "build:es": "babel src/index.js --out-dir es",
+    "build:commonjs": "cross-env BABEL_ENV=commonjs babel src --out-dir cjs",
+    "build:es": "babel src --out-dir es",
     "build": "run-p build:*",
     "clean": "rimraf cjs es coverage",
     "commit": "npx git-cz",
-    "format": "prettier --write \"src/**/*.{js,md,ts}\"",
-    "lint": "eslint src",
+    "format": "prettier --write \"{src,test}/**/*.{js,md,ts}\"",
+    "lint": "eslint src test",
     "prepare": "npm run clean && npm run build",
     "prepublishOnly": "npm run build",
     "release": "standard-version",
-    "pretest": "cp ./src/index.test.js ./src/index.test.ts && cp ./src/index.test.ssr.js ./src/index.test.ssr.ts && cp ./index.d.ts ./src",
+    "pretest": "cp ./test/index.test.js ./test/index.test.ts && cp ./test/index.test.ssr.js ./test/index.test.ssr.ts",
     "test": "jest --no-cache"
   },
   "dependencies": {
-    "@babel/runtime": "^7.6.3",
-    "lru-cache": "^5.1.1"
+    "@babel/runtime": "7.6.3",
+    "lru-cache": "5.1.1"
   },
   "peerDependencies": {
     "react": "^16.8.0-0",

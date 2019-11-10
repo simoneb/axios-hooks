@@ -1,8 +1,7 @@
 import { renderHook, act } from '@testing-library/react-hooks'
 import axios from 'axios'
 
-import useAxios, { configure, resetConfigure } from './'
-
+import useAxios, { configure, resetConfigure } from '../'
 import { mockCancelToken } from './testUtils'
 
 jest.mock('axios')
