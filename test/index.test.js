@@ -459,8 +459,6 @@ describe('configure', () => {
   it('should provide a custom implementation of axios', () => {
     const mockAxios = jest.fn().mockReturnValueOnce({ data: 'whatever' })
 
-    mockCancelToken(mockAxios)
-
     configure({ axios: mockAxios })
 
     const { waitForNextUpdate } = renderHook(() => useAxios(''))

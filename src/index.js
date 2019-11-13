@@ -1,5 +1,5 @@
 import React from 'react'
-import DefaultAxios from 'axios'
+import StaticAxios from 'axios'
 import LRU from 'lru-cache'
 
 const actions = {
@@ -14,7 +14,7 @@ let axiosInstance
 
 export function resetConfigure() {
   cache = new LRU()
-  axiosInstance = DefaultAxios
+  axiosInstance = StaticAxios
 }
 
 resetConfigure()
@@ -97,7 +97,7 @@ async function request(config, dispatch) {
     dispatch({ type: actions.REQUEST_END, payload: response })
     return response
   } catch (err) {
-    if (axiosInstance.isCancel(err)) {
+    if (StaticAxios.isCancel(err)) {
       return
     }
 
@@ -145,7 +145,7 @@ export default function useAxios(config, options) {
   }
 
   React.useEffect(() => {
-    cancelSourceRef.current = axiosInstance.CancelToken.source()
+    cancelSourceRef.current = StaticAxios.CancelToken.source()
 
     if (!options.manual) {
       executeRequest(
