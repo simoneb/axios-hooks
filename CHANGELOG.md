@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.7.2](https://github.com/simoneb/axios-hooks/compare/v1.7.1...v1.7.2) (2019-11-13)
+
+
+### Bug Fixes
+
+* do not dispatch state updates when requests are cancelled ([307c7c1](https://github.com/simoneb/axios-hooks/commit/307c7c1565e9f2d36f0e90bd19a86815dde2d8ce)), closes [#74](https://github.com/simoneb/axios-hooks/issues/74)
+* use StaticAxios for cancellation as AxiosInstance doesn't expose it ([4a63b6e](https://github.com/simoneb/axios-hooks/commit/4a63b6eab98f642372e1e2bb9d4429650183a1a9)), closes [#80](https://github.com/simoneb/axios-hooks/issues/80)
+* **deps:** update dependency @babel/runtime to v7.7.2 ([ebeab51](https://github.com/simoneb/axios-hooks/commit/ebeab5102d0aa60d856f10addc68de4be82c69a9))
+
 ### [1.7.2-0](https://github.com/simoneb/axios-hooks/compare/v1.7.1...v1.7.2-0) (2019-11-10)
 
 ### [1.7.1](https://github.com/simoneb/axios-hooks/compare/v1.7.0...v1.7.1) (2019-11-07)
