@@ -29,7 +29,27 @@ interface ConfigureOptions {
   cache?: LRUCache<any, any>
 }
 
-export default function useAxios<T = any>(
+interface UseAxios<T = any> {
+  (config: AxiosRequestConfig | string, options?: Options): [
+    ResponseValues<T>,
+    (config?: AxiosRequestConfig, options?: RefetchOptions) => AxiosPromise<T>
+  ]
+
+  loadCache(data: any[]): void
+  serializeCache(): Promise<any[]>
+
+  configure(options: ConfigureOptions): void
+  resetConfigure(): void
+
+  // private
+  __ssrPromises: Promise<any>[]
+}
+
+declare const defaultUseAxios: UseAxios
+
+export default defaultUseAxios
+
+export function useAxios<T = any>(
   config: AxiosRequestConfig | string,
   options?: Options
 ): [
@@ -45,3 +65,5 @@ export function resetConfigure(): void
 
 // private
 export const __ssrPromises: Promise<any>[]
+
+export function makeUseAxios<T>(options: ConfigureOptions): UseAxios<T>

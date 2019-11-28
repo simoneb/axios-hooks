@@ -2,6 +2,5 @@ es
 cjs
 node_modules
 npm-debug.log*
-src/index.d.ts
-*.test.ts
-*.test.ssr.ts
+*.test.ts*
+*.test.ssr.ts*
