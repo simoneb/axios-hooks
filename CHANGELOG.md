@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.8.0-0](https://github.com/simoneb/axios-hooks/compare/v1.7.2...v1.8.0-0) (2019-11-30)
+
+
+### Features
+
+* support multiple instances of useAxios configured independently ([2b0e9a5](https://github.com/simoneb/axios-hooks/commit/2b0e9a58ed55d581f2b06244d68fa8d5609ed50d)), closes [#98](https://github.com/simoneb/axios-hooks/issues/98)
+
 ### [1.7.2](https://github.com/simoneb/axios-hooks/compare/v1.7.1...v1.7.2) (2019-11-13)
 
 
