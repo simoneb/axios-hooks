@@ -274,9 +274,9 @@ ReactDOM.hydrate(<App />, document.getElementById('root'))
 
 ## Multiple Hook Instances
 
-Sometimes it is necessary to communicate with different APIs or use different caching strategies for different HTTP interactions. 
+Sometimes it is necessary to communicate with different APIs or use different caching strategies for different HTTP interactions.
 
-[`makeUseAxios`](#makeuseaxios-cache-axios) allows to create multiple instances of the `useAxios` React Hook which can be configured and managed independently. 
+[`makeUseAxios`](#makeuseaxios-cache-axios) allows to create multiple instances of the `useAxios` React Hook which can be configured and managed independently.
 
 In other words, `makeUseAxios` is a factory of `useAxios`, which returns a React Hook configured against the provided `axios` or `cache` instances.
 
@@ -291,13 +291,11 @@ import axios from 'axios'
 import { makeUseAxios } from 'axios-hooks'
 
 const useAxios = makeUseAxios({
-  axios: axios.create({ baseUrl: 'https://api.myjson.com '})
+  axios: axios.create({ baseURL: 'https://api.myjson.com' })
 })
 
 function App() {
-  const [{ data, loading, error }, refetch] = useAxios(
-    '/bins/820fc'
-  )
+  const [{ data, loading, error }, refetch] = useAxios('/bins/820fc')
 
   if (loading) return <p>Loading...</p>
   if (error) return <p>Error!</p>
@@ -310,7 +308,6 @@ function App() {
   )
 }
 ```
-
 
 ## Promises
 
