@@ -76,7 +76,7 @@
     "rimraf": "3.0.0",
     "standard-version": "7.0.1",
     "ts-jest": "24.2.0",
-    "typescript": "3.7.2"
+    "typescript": "3.7.3"
   },
   "husky": {
     "hooks": {
