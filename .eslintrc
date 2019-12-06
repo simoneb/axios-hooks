@@ -12,8 +12,7 @@
   },
   "env": {
     "browser": true,
-    "node": true,
-    "jest": true
+    "node": true
   },
   "globals": {
     "Promise": true

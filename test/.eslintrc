@@ -1,0 +1,12 @@
+{
+  "parser": "babel-eslint",
+  "extends": ["plugin:react/recommended"],
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "env": {
+    "jest": true
+  }
+}
