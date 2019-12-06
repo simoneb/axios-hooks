@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.8.0](https://github.com/simoneb/axios-hooks/compare/v1.8.0-2...v1.8.0) (2019-12-06)
+
+
+### Bug Fixes
+
+* correct @babel/preset-react version ([181ddcf](https://github.com/simoneb/axios-hooks/commit/181ddcf9509007f661332fb0f9904ea30af90022))
+
 ## [1.8.0-2](https://github.com/simoneb/axios-hooks/compare/v1.8.0-1...v1.8.0-2) (2019-12-06)
 
 
