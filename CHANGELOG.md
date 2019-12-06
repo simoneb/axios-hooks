@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.8.0-2](https://github.com/simoneb/axios-hooks/compare/v1.8.0-1...v1.8.0-2) (2019-12-06)
+
+
+### Bug Fixes
+
+* ts definitions for makeUseAxios ([13b20cc](https://github.com/simoneb/axios-hooks/commit/13b20ccf1a84e57b4771168b86338925052f6a9c))
+
 ## [1.8.0-1](https://github.com/simoneb/axios-hooks/compare/v1.7.2...v1.8.0-1) (2019-12-06)
 
 
