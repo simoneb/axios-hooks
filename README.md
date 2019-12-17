@@ -81,7 +81,7 @@ Returns:
 
 - `data` - The [success response](https://github.com/axios/axios#response-schema) data property (for convenient access).
 - `loading` - True if the request is in progress, otherwise False.
-- `error` - The [error](https://github.com/axios/.axios#handling-errors) value
+- `error` - The [error](https://github.com/axios/axios#handling-errors) value
 - `response` - The whole [success response](https://github.com/axios/axios#response-schema) object.
 
 - `execute([config[, options]])` - A function to execute the request manually, bypassing the cache by default.
