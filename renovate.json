@@ -2,5 +2,6 @@
   "extends": ["config:base"],
   "automerge": true,
   "stabilityDays": 7,
+  "prCreation": "not-pending",
   "masterIssue": true
 }
