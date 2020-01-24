@@ -188,6 +188,7 @@ export function makeUseAxios(configurationOptions) {
 
     const refetch = React.useCallback(
       (configOverride, options) => {
+        cancelSourceRef.current = StaticAxios.CancelToken.source()
         return executeRequest(
           {
             cancelToken: cancelSourceRef.current.token,
