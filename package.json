@@ -54,7 +54,7 @@
     "@types/jest": "24.9.0",
     "@types/lru-cache": "5.1.0",
     "@types/node": "12.12.24",
-    "@types/react": "16.9.17",
+    "@types/react": "16.9.19",
     "@types/react-dom": "16.9.5",
     "axios": "0.19.2",
     "babel-eslint": "10.0.3",
