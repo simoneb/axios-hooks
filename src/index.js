@@ -196,7 +196,7 @@ export function makeUseAxios(configurationOptions) {
           },
           { useCache: false, ...options },
           dispatch
-        )
+        ).catch(() => {})
       },
       // eslint-disable-next-line react-hooks/exhaustive-deps
       [stringifiedConfig]
