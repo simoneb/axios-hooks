@@ -88,8 +88,7 @@
   },
   "lint-staged": {
     "src/**/*.{js,md}": [
-      "prettier --write",
-      "git add"
+      "eslint --fix"
     ]
   },
   "config": {

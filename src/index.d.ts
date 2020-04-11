@@ -26,7 +26,7 @@ export interface RefetchOptions {
 
 export interface ConfigureOptions {
   axios?: AxiosInstance | AxiosStatic | any
-  cache?: LRUCache<any, any>
+  cache?: LRUCache<any, any> | false
 }
 
 export interface UseAxios {
