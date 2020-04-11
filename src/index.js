@@ -32,18 +32,17 @@ export function makeUseAxios(configurationOptions) {
     axiosInstance = StaticAxios
   }
 
-  resetConfigure()
-
   function configure(options = {}) {
-    if (options.axios) {
+    if (options.axios !== undefined) {
       axiosInstance = options.axios
     }
 
-    if (options.cache) {
+    if (options.cache !== undefined) {
       cache = options.cache
     }
   }
 
+  resetConfigure()
   configure(configurationOptions)
 
   function loadCache(data) {
@@ -140,7 +139,7 @@ export function makeUseAxios(configurationOptions) {
   }
 
   function executeRequest(config, options, dispatch) {
-    if (options.useCache) {
+    if (cache && options.useCache) {
       return executeRequestWithCache(config, dispatch)
     }
 

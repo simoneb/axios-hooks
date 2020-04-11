@@ -49,6 +49,33 @@ describe('makeUseAxios', () => {
     expect(makeUseAxios({})).toBeTruthy()
   })
 
+  it('should provide a custom implementation of axios', () => {
+    const mockAxios = jest.fn().mockResolvedValueOnce({ data: 'whatever' })
+
+    const useAxios = makeUseAxios({ axios: mockAxios })
+
+    const { waitForNextUpdate } = renderHook(() => useAxios(''))
+
+    expect(mockAxios).toHaveBeenCalled()
+
+    return waitForNextUpdate()
+  })
+
+  it('should allow to disable cache', async () => {
+    const useAxios = makeUseAxios({ cache: false })
+
+    axios.mockResolvedValueOnce({ data: 'whatever' })
+
+    const { waitForNextUpdate } = renderHook(() => useAxios(''))
+
+    await waitForNextUpdate()
+
+    expect(axios).toHaveBeenCalledTimes(1)
+    expect(axios).toHaveBeenCalledWith(
+      expect.not.objectContaining({ adapter: expect.any(Function) })
+    )
+  })
+
   describe('standard tests', () => {
     const useAxios = makeUseAxios({})
 
@@ -58,20 +85,6 @@ describe('makeUseAxios', () => {
       const useAxios = makeUseAxios({ axios })
 
       standardTests(useAxios, useAxios.configure, useAxios.resetConfigure)
-    })
-  })
-
-  describe('custom tests', () => {
-    it('should use the provided axios instance', () => {
-      const mockAxios = jest.fn().mockResolvedValueOnce({ data: 'whatever' })
-
-      const useAxios = makeUseAxios({ axios: mockAxios })
-
-      const { waitForNextUpdate } = renderHook(() => useAxios(''))
-
-      expect(mockAxios).toHaveBeenCalled()
-
-      return waitForNextUpdate()
     })
   })
 })
@@ -511,6 +524,21 @@ function standardTests(useAxios, configure, resetConfigure) {
       expect(mockAxios).toHaveBeenCalled()
 
       return waitForNextUpdate()
+    })
+
+    it('should allow to disable cache', async () => {
+      configure({ cache: false })
+
+      axios.mockResolvedValueOnce({ data: 'whatever' })
+
+      const { waitForNextUpdate } = renderHook(() => useAxios(''))
+
+      await waitForNextUpdate()
+
+      expect(axios).toHaveBeenCalledTimes(1)
+      expect(axios).toHaveBeenCalledWith(
+        expect.not.objectContaining({ adapter: expect.any(Function) })
+      )
     })
   })
 }
