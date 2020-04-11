@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.10.0-0](https://github.com/simoneb/axios-hooks/compare/v1.9.0...v1.10.0-0) (2020-04-11)
+
+
+### Features
+
+* **199:** add ability to disable cache ([b8f504a](https://github.com/simoneb/axios-hooks/commit/b8f504a1e85f415d70f17d1d38b6c17b33a1372f)), closes [#199](https://github.com/simoneb/axios-hooks/issues/199)
+
 ## [1.9.0](https://github.com/simoneb/axios-hooks/compare/v1.8.0...v1.9.0) (2019-12-12)
 
 
