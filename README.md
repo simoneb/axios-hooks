@@ -28,7 +28,7 @@ import useAxios from 'axios-hooks'
 
 function App() {
   const [{ data, loading, error }, refetch] = useAxios(
-    'https://api.myjson.com/bins/820fc'
+    'https://reqres.in/api/users?delay=1'
   )
 
   if (loading) return <p>Loading...</p>
@@ -157,7 +157,7 @@ import LRU from 'lru-cache'
 import Axios from 'axios'
 
 const axios = Axios.create({
-  baseURL: 'https://api.myjson.com/'
+  baseURL: 'https://reqres.in/api',
 })
 
 const cache = new LRU({ max: 10 })
@@ -182,7 +182,7 @@ import useAxios from 'axios-hooks'
 
 function App() {
   const [{ data: getData, loading: getLoading, error: getError }] = useAxios(
-    'https://api.myjson.com/bins/820fc'
+    'https://reqres.in/api/users/1'
   )
 
   const [
@@ -190,7 +190,7 @@ function App() {
     executePut
   ] = useAxios(
     {
-      url: 'https://api.myjson.com/bins/820fc',
+      url: 'https://reqres.in/api/users/1',
       method: 'PUT'
     },
     { manual: true }
@@ -292,11 +292,11 @@ import axios from 'axios'
 import { makeUseAxios } from 'axios-hooks'
 
 const useAxios = makeUseAxios({
-  axios: axios.create({ baseURL: 'https://api.myjson.com' })
+  axios: axios.create({ baseURL: 'https://reqres.in/api' })
 })
 
 function App() {
-  const [{ data, loading, error }, refetch] = useAxios('/bins/820fc')
+  const [{ data, loading, error }, refetch] = useAxios('/users?delay=1')
 
   if (loading) return <p>Loading...</p>
   if (error) return <p>Error!</p>
