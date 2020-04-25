@@ -1,12 +1,5 @@
 language: node_js
-node_js: 11
-sudo: false
 script:
   - npm run lint
-  - npm test
-deploy:
-  skip_cleanup: true
-  provider: script
-  script: bash scripts/publish.sh
-  on:
-    tags: true
+  - npm test -- --coverage
+  - bash <(curl -s https://codecov.io/bash)
