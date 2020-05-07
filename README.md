@@ -54,6 +54,15 @@ function App() {
 - [loadCache](#loadcachecache)
 - [makeUseAxios](#makeuseaxios-cache-axios-)
 
+### Examples
+
+- [Quick Start](https://codesandbox.io/s/2oxrlq8rjr)
+- [Manual Request](https://codesandbox.io/s/axioshooks-manual-request-bq9w4)
+- [Using makeUseAxios](https://codesandbox.io/s/axios-hooks-makeuseaxios-kfuym)
+- [Configuration Example](https://codesandbox.io/s/oqvxw6mpyq)
+- [Pagination](https://codesandbox.io/s/axios-hooks-pagination-1wk3u)
+- [Infinite Scrolling](https://codesandbox.io/s/axios-hooks-infinite-scrolling-42nw6)
+
 ### Guides
 
 - [Configuration](#configuration)
