@@ -75,7 +75,7 @@
     "react-dom": "16.13.1",
     "react-test-renderer": "16.13.1",
     "rimraf": "3.0.2",
-    "standard-version": "7.1.0",
+    "standard-version": "8.0.0",
     "ts-jest": "25.4.0",
     "typescript": "3.8.3"
   },
