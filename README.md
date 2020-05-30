@@ -62,6 +62,7 @@ function App() {
 - [Configuration Example](https://codesandbox.io/s/oqvxw6mpyq)
 - [Pagination](https://codesandbox.io/s/axios-hooks-pagination-1wk3u)
 - [Infinite Scrolling](https://codesandbox.io/s/axios-hooks-infinite-scrolling-42nw6)
+- [Request Chaining](https://codesandbox.io/s/axios-hooks-request-chaining-wn12l)
 
 ### Guides
 
@@ -85,7 +86,7 @@ The main React hook to execute HTTP requests.
   - `manual` ( `false` ) - If true, the request is not executed immediately. Useful for non-GET requests that should not be executed when the component renders. Use the `execute` function returned when invoking the hook to execute the request manually.
   - `useCache` ( `true` ) - Allows caching to be enabled/disabled for the hook. It doesn't affect the `execute` function returned by the hook.
 
-Returns:
+**Returns**
 
 `[{ data, loading, error, response }, execute]`
 
@@ -98,6 +99,10 @@ Returns:
   - `config` - Same `config` object as `axios`, which is _shallow-merged_ with the config object provided when invoking the hook. Useful to provide arguments to non-GET requests.
   - `options` - An options object.
     - `useCache` ( `false` ) - Allows caching to be enabled/disabled for this "execute" function.
+  
+  **Returns**
+  
+  A promise containing the response. If the request is unsuccessful, an exception is thrown and must be handled manually.
 
 ### configure({ cache, axios })
 
@@ -110,7 +115,7 @@ Allows to provide custom instances of cache and axios.
 
 Dumps the request-response cache, to use in server side sendering scenarios.
 
-Returns:
+**Returns**
 
 `Promise<Array>` A serializable representation of the request-response cache ready to be used by `loadCache`
 
@@ -127,7 +132,7 @@ Creates an instance of the `useAxios` hook configured with the supplied cache an
 - `cache` An instance of [lru-cache](https://github.com/isaacs/node-lru-cache), or `false` to disable the cache
 - `axios` An instance of [axios](https://github.com/axios/axios#creating-an-instance)
 
-Returns:
+**Returns**
 
 An instance of `useAxios` React Hook which will always use the provided cache and axios instance.
 
