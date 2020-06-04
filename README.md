@@ -65,6 +65,7 @@ function App() {
 - [Request Chaining](https://codesandbox.io/s/axios-hooks-request-chaining-wn12l)
 - [react-native](https://snack.expo.io/@simoneb/axios-hooks-react-native)
 - [With react-sortable-hoc](https://codesandbox.io/s/axios-hooks-react-sortable-hoc-eo3oy)
+- [With react-router](https://codesandbox.io/s/axios-hooks-react-router-26iwm)
 
 ### Guides
 
