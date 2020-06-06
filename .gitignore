@@ -1,6 +1,7 @@
 es
 cjs
 node_modules
+coverage
 npm-debug.log*
 *.test.ts*
 *.test.ssr.ts*

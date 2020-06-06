@@ -59,6 +59,7 @@ function App() {
 - [Quick start](https://codesandbox.io/s/2oxrlq8rjr)
 - [Manual request](https://codesandbox.io/s/axioshooks-manual-request-bq9w4)
 - [Error handling](https://codesandbox.io/s/axios-hooks-error-handling-gvi41)
+- [Caching](https://codesandbox.io/s/axios-hooks-caching-nm62v)
 - [Using makeUseAxios](https://codesandbox.io/s/axios-hooks-makeuseaxios-kfuym)
 - [Configuration](https://codesandbox.io/s/oqvxw6mpyq)
 - [Pagination](https://codesandbox.io/s/axios-hooks-pagination-1wk3u)
@@ -100,12 +101,13 @@ The main React hook to execute HTTP requests.
 - `response` - The whole [success response](https://github.com/axios/axios#response-schema) object.
 
 - `execute([config[, options]])` - A function to execute the request manually, bypassing the cache by default.
+
   - `config` - Same `config` object as `axios`, which is _shallow-merged_ with the config object provided when invoking the hook. Useful to provide arguments to non-GET requests.
   - `options` - An options object.
     - `useCache` ( `false` ) - Allows caching to be enabled/disabled for this "execute" function.
-  
+
   **Returns**
-  
+
   A promise containing the response. If the request is unsuccessful, an exception is thrown and must be handled manually.
 
 ### configure({ cache, axios })

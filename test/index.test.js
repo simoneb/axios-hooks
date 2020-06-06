@@ -1,9 +1,12 @@
 import { renderHook, act } from '@testing-library/react-hooks'
 import axios from 'axios'
 
-import useAxiosStatic, {
-  configure as configureStatic,
-  resetConfigure as resetConfigureStatic,
+import defaultUseAxios, {
+  configure as defaultConfigure,
+  resetConfigure as defaultResetConfigure,
+  clearCache as defaultClearCache,
+  loadCache as defaultLoadCache,
+  serializeCache as defaultSerializeCache,
   makeUseAxios
 } from '../src'
 import { mockCancelToken } from './testUtils'
@@ -36,8 +39,15 @@ afterEach(() => {
   expect(errors).toEqual([])
 })
 
-describe('useAxiosStatic', () => {
-  standardTests(useAxiosStatic, configureStatic, resetConfigureStatic)
+describe('default useAxios', () => {
+  standardTests(
+    defaultUseAxios,
+    defaultConfigure,
+    defaultResetConfigure,
+    defaultClearCache,
+    defaultLoadCache,
+    defaultSerializeCache
+  )
 })
 
 describe('makeUseAxios', () => {
@@ -52,49 +62,105 @@ describe('makeUseAxios', () => {
   it('should provide a custom implementation of axios', () => {
     const mockAxios = jest.fn().mockResolvedValueOnce({ data: 'whatever' })
 
-    const useAxios = makeUseAxios({ axios: mockAxios })
+    const setup = makeSetup(makeUseAxios({ axios: mockAxios }))
 
-    const { waitForNextUpdate } = renderHook(() => useAxios(''))
+    const { waitForNextUpdate } = setup()
 
     expect(mockAxios).toHaveBeenCalled()
 
     return waitForNextUpdate()
   })
 
-  it('should allow to disable cache', async () => {
-    const useAxios = makeUseAxios({ cache: false })
+  describe('globally disabled cache', () => {
+    let setup
 
-    axios.mockResolvedValueOnce({ data: 'whatever' })
+    beforeEach(() => {
+      setup = makeSetup(makeUseAxios({ cache: false }))
+    })
 
-    const { waitForNextUpdate } = renderHook(() => useAxios(''))
+    it('should use local state across rerenders', async () => {
+      axios.mockResolvedValueOnce({ data: 'whatever' })
 
-    await waitForNextUpdate()
+      const { waitForNextUpdate, rerender } = setup()
 
-    expect(axios).toHaveBeenCalledTimes(1)
-    expect(axios).toHaveBeenCalledWith(
-      expect.not.objectContaining({ adapter: expect.any(Function) })
-    )
+      await waitForNextUpdate()
+
+      rerender()
+
+      expect(axios).toHaveBeenCalledTimes(1)
+    })
+
+    it('should hit network across component mounts', async () => {
+      axios.mockResolvedValue({ data: 'whatever' })
+
+      const { waitForNextUpdate, unmount } = setup()
+
+      await waitForNextUpdate()
+
+      unmount()
+
+      await setup().waitForNextUpdate()
+
+      expect(axios).toHaveBeenCalledTimes(2)
+    })
   })
 
   describe('standard tests', () => {
     const useAxios = makeUseAxios({})
 
-    standardTests(useAxios, useAxios.configure, useAxios.resetConfigure)
+    standardTests(
+      useAxios,
+      useAxios.configure,
+      useAxios.resetConfigure,
+      useAxios.clearCache,
+      useAxios.loadCache,
+      useAxios.serializeCache
+    )
 
     describe('with custom configuration', () => {
       const useAxios = makeUseAxios({ axios })
 
-      standardTests(useAxios, useAxios.configure, useAxios.resetConfigure)
+      standardTests(
+        useAxios,
+        useAxios.configure,
+        useAxios.resetConfigure,
+        useAxios.clearCache,
+        useAxios.loadCache,
+        useAxios.serializeCache
+      )
     })
   })
 })
 
-function standardTests(useAxios, configure, resetConfigure) {
+function makeSetup(useAxios) {
+  return (config = '', options = null) =>
+    renderHook(
+      ({ config, options }) => {
+        return useAxios(config, options)
+      },
+      {
+        initialProps: { config, options }
+      }
+    )
+}
+
+function standardTests(
+  useAxios,
+  configure,
+  resetConfigure,
+  clearCache,
+  loadCache,
+  serializeCache
+) {
+  const setup = makeSetup(useAxios)
+
+  beforeEach(clearCache)
+
   describe('basic functionality', () => {
-    it('should set loading to true and error to null', async () => {
+    it('should set loading to true and error to null before the request resolves', async () => {
       axios.mockResolvedValueOnce({ data: 'whatever' })
 
-      const { result, waitForNextUpdate } = renderHook(() => useAxios(''))
+      const { result, waitForNextUpdate } = setup()
 
       expect(result.current[0].loading).toBe(true)
       expect(result.current[0].error).toBe(null)
@@ -102,10 +168,10 @@ function standardTests(useAxios, configure, resetConfigure) {
       await waitForNextUpdate()
     })
 
-    it('should set loading to false when request completes and returns data', async () => {
+    it('should set loading to false when request resolves', async () => {
       axios.mockResolvedValueOnce({ data: 'whatever' })
 
-      const { result, waitForNextUpdate } = renderHook(() => useAxios(''))
+      const { result, waitForNextUpdate } = setup()
 
       await waitForNextUpdate()
 
@@ -119,7 +185,7 @@ function standardTests(useAxios, configure, resetConfigure) {
 
       axios.mockResolvedValueOnce(response)
 
-      const { result, waitForNextUpdate } = renderHook(() => useAxios(''))
+      const { result, waitForNextUpdate } = setup()
 
       await waitForNextUpdate()
 
@@ -128,12 +194,62 @@ function standardTests(useAxios, configure, resetConfigure) {
       expect(result.current[0].response).toBe(response)
     })
 
-    it('should reset error when request completes and returns data', async () => {
+    it('should set error when request fails', async () => {
       const error = new Error('boom')
 
       axios.mockRejectedValueOnce(error)
 
-      const { result, waitForNextUpdate } = renderHook(() => useAxios(''))
+      const { result, waitForNextUpdate } = setup()
+
+      await waitForNextUpdate()
+
+      expect(result.current[0].error).toBe(error)
+    })
+
+    it('should not reset error when component rerenders', async () => {
+      const error = new Error('boom')
+
+      axios.mockRejectedValueOnce(error)
+
+      const { result, waitForNextUpdate, rerender } = setup()
+
+      await waitForNextUpdate()
+
+      expect(result.current[0].error).toBe(error)
+
+      axios.mockResolvedValueOnce({ data: 'whatever' })
+
+      rerender()
+
+      expect(result.current[0].error).toBe(error)
+    })
+
+    it('should reset error when component remounts', async () => {
+      const error = new Error('boom')
+
+      axios.mockRejectedValueOnce(error)
+
+      const firstRender = setup()
+
+      await firstRender.waitForNextUpdate()
+
+      expect(firstRender.result.current[0].error).toBe(error)
+
+      axios.mockResolvedValueOnce({ data: 'whatever' })
+
+      const secondRender = setup()
+
+      await secondRender.waitForNextUpdate()
+
+      expect(secondRender.result.current[0].error).toBe(null)
+    })
+
+    it('should reset error when refetch succeeds', async () => {
+      const error = new Error('boom')
+
+      axios.mockRejectedValueOnce(error)
+
+      const { result, waitForNextUpdate } = setup()
 
       await waitForNextUpdate()
 
@@ -156,7 +272,7 @@ function standardTests(useAxios, configure, resetConfigure) {
 
       axios.mockRejectedValueOnce(error)
 
-      const { result, waitForNextUpdate } = renderHook(() => useAxios(''))
+      const { result, waitForNextUpdate } = setup()
 
       await waitForNextUpdate()
 
@@ -167,7 +283,7 @@ function standardTests(useAxios, configure, resetConfigure) {
     it('should refetch', async () => {
       axios.mockResolvedValue({ data: 'whatever' })
 
-      const { result, waitForNextUpdate } = renderHook(() => useAxios(''))
+      const { result, waitForNextUpdate } = setup()
 
       await waitForNextUpdate()
 
@@ -184,9 +300,7 @@ function standardTests(useAxios, configure, resetConfigure) {
     it('should return the same reference to the fetch function', async () => {
       axios.mockResolvedValue({ data: 'whatever' })
 
-      const { result, rerender, waitForNextUpdate } = renderHook(() =>
-        useAxios('')
-      )
+      const { result, rerender, waitForNextUpdate } = setup()
 
       const firstRefetch = result.current[1]
 
@@ -196,6 +310,23 @@ function standardTests(useAxios, configure, resetConfigure) {
 
       await waitForNextUpdate()
     })
+
+    it('should return the cached response on a new render', async () => {
+      const response = { data: 'whatever' }
+
+      axios.mockResolvedValueOnce(response)
+
+      await setup().waitForNextUpdate()
+
+      const { result } = setup()
+
+      expect(result.current[0]).toEqual({
+        loading: false,
+        error: null,
+        data: response.data,
+        response
+      })
+    })
   })
 
   describe('request cancellation', () => {
@@ -203,7 +334,7 @@ function standardTests(useAxios, configure, resetConfigure) {
       it('should provide the cancel token to axios', async () => {
         axios.mockResolvedValueOnce({ data: 'whatever' })
 
-        const { waitForNextUpdate } = renderHook(() => useAxios(''))
+        const { waitForNextUpdate } = setup()
 
         expect(axios).toHaveBeenCalledWith(
           expect.objectContaining({
@@ -217,7 +348,7 @@ function standardTests(useAxios, configure, resetConfigure) {
       it('should cancel the outstanding request when the component unmounts', async () => {
         axios.mockResolvedValueOnce({ data: 'whatever' })
 
-        const { waitForNextUpdate, unmount } = renderHook(() => useAxios(''))
+        const { waitForNextUpdate, unmount } = setup()
 
         await waitForNextUpdate()
 
@@ -229,14 +360,11 @@ function standardTests(useAxios, configure, resetConfigure) {
       it('should cancel the outstanding request when the component refetches due to a rerender', async () => {
         axios.mockResolvedValue({ data: 'whatever' })
 
-        const { waitForNextUpdate, rerender } = renderHook(
-          props => useAxios(props),
-          { initialProps: 'initial config' }
-        )
+        const { waitForNextUpdate, rerender } = setup('initial config')
 
         await waitForNextUpdate()
 
-        rerender('new config')
+        rerender({ config: 'new config', options: {} })
 
         expect(cancel).toHaveBeenCalled()
 
@@ -246,10 +374,7 @@ function standardTests(useAxios, configure, resetConfigure) {
       it('should not cancel the outstanding request when the component rerenders with same config', async () => {
         axios.mockResolvedValue({ data: 'whatever' })
 
-        const { waitForNextUpdate, rerender } = renderHook(
-          props => useAxios(props),
-          { initialProps: 'initial config' }
-        )
+        const { waitForNextUpdate, rerender } = setup('initial config')
 
         await waitForNextUpdate()
 
@@ -266,7 +391,7 @@ function standardTests(useAxios, configure, resetConfigure) {
           .fn()
           .mockImplementationOnce(err => err === cancellation)
 
-        const { result, wait } = renderHook(() => useAxios(''))
+        const { result, wait } = setup()
 
         // if we cancel we won't dispatch the error, hence there's no state update
         // to wait for. yet, if we don't try to wait, we won't know if we're handling
@@ -283,9 +408,7 @@ function standardTests(useAxios, configure, resetConfigure) {
 
     describe('manual refetches', () => {
       it('should provide the cancel token to axios', async () => {
-        const { result, waitForNextUpdate } = renderHook(() =>
-          useAxios('', { manual: true })
-        )
+        const { result, waitForNextUpdate } = setup('', { manual: true })
 
         axios.mockResolvedValueOnce({ data: 'whatever' })
 
@@ -305,9 +428,9 @@ function standardTests(useAxios, configure, resetConfigure) {
       })
 
       it('should cancel the outstanding manual refetch when the component unmounts', async () => {
-        const { result, waitForNextUpdate, unmount } = renderHook(() =>
-          useAxios('', { manual: true })
-        )
+        const { result, waitForNextUpdate, unmount } = setup('', {
+          manual: true
+        })
 
         axios.mockResolvedValueOnce({ data: 'whatever' })
 
@@ -325,10 +448,7 @@ function standardTests(useAxios, configure, resetConfigure) {
       it('should cancel the outstanding manual refetch when the component refetches', async () => {
         axios.mockResolvedValue({ data: 'whatever' })
 
-        const { result, waitForNextUpdate, rerender } = renderHook(
-          config => useAxios(config),
-          { initialProps: '' }
-        )
+        const { result, waitForNextUpdate, rerender } = setup()
 
         act(() => {
           result.current[1]()
@@ -336,7 +456,7 @@ function standardTests(useAxios, configure, resetConfigure) {
 
         await waitForNextUpdate()
 
-        rerender('new config')
+        rerender({ config: 'new config', options: {} })
 
         expect(cancel).toHaveBeenCalled()
 
@@ -355,6 +475,32 @@ function standardTests(useAxios, configure, resetConfigure) {
 
         expect(() => act(result.current[1])).rejects.toBe(cancellation)
       })
+
+      it('should return response from cache in hook results', async () => {
+        const response = { data: 'whatever' }
+
+        axios.mockResolvedValueOnce(response)
+
+        // first component renders and stores results in cache
+        await setup().waitForNextUpdate()
+
+        const { result } = setup('', { manual: true })
+
+        // no results on first render as it's a manual request
+        expect(result.current[0]).toEqual({ loading: false, error: null })
+
+        // refetch using cache
+        act(() => {
+          result.current[1]({}, { useCache: true })
+        })
+
+        expect(result.current[0]).toEqual({
+          loading: false,
+          error: null,
+          response,
+          data: response.data
+        })
+      })
     })
   })
 
@@ -370,13 +516,15 @@ function standardTests(useAxios, configure, resetConfigure) {
             current: [, refetch]
           },
           waitForNextUpdate
-        } = renderHook(() => useAxios(''))
+        } = setup()
 
         act(() => {
           expect(refetch()).resolves.toEqual(response)
         })
 
         await waitForNextUpdate()
+
+        expect(axios).toHaveBeenCalledTimes(2)
       })
 
       it('should resolve to the response when using cache', async () => {
@@ -389,13 +537,15 @@ function standardTests(useAxios, configure, resetConfigure) {
             current: [, refetch]
           },
           waitForNextUpdate
-        } = renderHook(() => useAxios(''))
+        } = setup()
+
+        await waitForNextUpdate()
 
         act(() => {
           expect(refetch({}, { useCache: true })).resolves.toEqual(response)
         })
 
-        await waitForNextUpdate()
+        expect(axios).toHaveBeenCalledTimes(1)
       })
     })
 
@@ -410,7 +560,9 @@ function standardTests(useAxios, configure, resetConfigure) {
             current: [, refetch]
           },
           waitForNextUpdate
-        } = renderHook(() => useAxios(''))
+        } = setup()
+
+        await waitForNextUpdate()
 
         act(() => {
           expect(refetch()).rejects.toEqual(error)
@@ -419,7 +571,7 @@ function standardTests(useAxios, configure, resetConfigure) {
         await waitForNextUpdate()
       })
 
-      it('should reject with the error when using cache', async () => {
+      it('should reject with the error and skip cache even when using cache', async () => {
         const error = new Error('boom')
 
         axios.mockRejectedValue(error)
@@ -429,7 +581,9 @@ function standardTests(useAxios, configure, resetConfigure) {
             current: [, refetch]
           },
           waitForNextUpdate
-        } = renderHook(() => useAxios(''))
+        } = setup()
+
+        await waitForNextUpdate()
 
         act(() => {
           expect(refetch({}, { useCache: true })).rejects.toEqual(error)
@@ -440,23 +594,21 @@ function standardTests(useAxios, configure, resetConfigure) {
     })
   })
 
-  describe('manual option', () => {
-    it('should set loading to false', async () => {
-      const { result } = renderHook(() => useAxios('', { manual: true }))
+  describe('manual requests', () => {
+    it('should set loading to false on initial render', async () => {
+      const { result } = setup('', { manual: true })
 
       expect(result.current[0].loading).toBe(false)
     })
 
-    it('should not execute request', () => {
-      renderHook(() => useAxios('', { manual: true }))
+    it('should not execute request immediately', () => {
+      setup('', { manual: true })
 
       expect(axios).not.toHaveBeenCalled()
     })
 
     it('should execute request manually and skip cache by default', async () => {
-      const { result, waitForNextUpdate } = renderHook(() =>
-        useAxios('', { manual: true })
-      )
+      const { result, waitForNextUpdate } = setup('', { manual: true })
 
       axios.mockResolvedValueOnce({ data: 'whatever' })
 
@@ -472,58 +624,112 @@ function standardTests(useAxios, configure, resetConfigure) {
       expect(result.current[0].data).toBe('whatever')
 
       expect(axios).toHaveBeenCalledTimes(1)
-      expect(axios).toHaveBeenCalledWith(
-        expect.not.objectContaining({ adapter: expect.any(Function) })
-      )
     })
 
     it('should allow using the cache', async () => {
-      const { result, waitForNextUpdate } = renderHook(() =>
-        useAxios('', { manual: true })
-      )
+      const { result, waitForNextUpdate } = setup('', { manual: true })
 
-      axios.mockResolvedValueOnce({ data: 'whatever' })
+      const response = { data: 'whatever' }
+      axios.mockResolvedValueOnce(response)
 
+      // first manual request
       act(() => {
-        result.current[1]({}, { useCache: true })
+        result.current[1]()
       })
 
       await waitForNextUpdate()
 
+      // cache hit
+      act(() => {
+        result.current[1]({}, { useCache: true })
+      })
+
+      expect(result.current[0]).toEqual({
+        loading: false,
+        error: null,
+        response,
+        data: response.data
+      })
+
       expect(axios).toHaveBeenCalledTimes(1)
-      expect(axios).toHaveBeenCalledWith(
-        expect.objectContaining({ adapter: expect.any(Function) })
-      )
+    })
+
+    it('should not return response even if there is a cached one', async () => {
+      axios.mockResolvedValueOnce({ data: 'whatever' })
+
+      await setup().waitForNextUpdate()
+
+      const { result } = setup('', { manual: true })
+
+      expect(result.current[0]).toEqual({ loading: false, error: null })
     })
   })
 
   describe('useCache option', () => {
-    it('should use cache by default', async () => {
+    it('should use local state across rerenders', async () => {
       axios.mockResolvedValueOnce({ data: 'whatever' })
 
-      const { waitForNextUpdate } = renderHook(() => useAxios(''))
+      const { waitForNextUpdate, rerender } = setup()
 
       await waitForNextUpdate()
 
+      rerender()
+
       expect(axios).toHaveBeenCalledTimes(1)
-      expect(axios).toHaveBeenCalledWith(
-        expect.objectContaining({ adapter: expect.any(Function) })
-      )
     })
 
-    it('should allow disabling cache', async () => {
+    it('should not hit network across component mounts by default', async () => {
       axios.mockResolvedValueOnce({ data: 'whatever' })
 
-      const { waitForNextUpdate } = renderHook(() =>
-        useAxios('', { useCache: false })
-      )
+      const { waitForNextUpdate, unmount } = setup()
 
       await waitForNextUpdate()
 
+      unmount()
+
+      setup()
+
       expect(axios).toHaveBeenCalledTimes(1)
-      expect(axios).toHaveBeenCalledWith(
-        expect.not.objectContaining({ adapter: expect.any(Function) })
-      )
+    })
+
+    it('should use local state across rerenders even when cache disabled', async () => {
+      axios.mockResolvedValueOnce({ data: 'whatever' })
+
+      const { waitForNextUpdate, rerender } = setup('', { useCache: false })
+
+      await waitForNextUpdate()
+
+      rerender()
+
+      expect(axios).toHaveBeenCalledTimes(1)
+    })
+
+    it('should hit network across component mounts when cache disabled', async () => {
+      axios.mockResolvedValue({ data: 'whatever' })
+
+      const { waitForNextUpdate, unmount } = setup('', { useCache: false })
+
+      await waitForNextUpdate()
+
+      unmount()
+
+      await setup('', { useCache: false }).waitForNextUpdate()
+
+      expect(axios).toHaveBeenCalledTimes(2)
+    })
+
+    it('should store result in cache even when disabled', async () => {
+      axios.mockResolvedValue({ data: 'whatever' })
+
+      const { waitForNextUpdate, unmount } = setup('', { useCache: false })
+
+      await waitForNextUpdate()
+
+      unmount()
+
+      setup()
+
+      expect(axios).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -535,26 +741,55 @@ function standardTests(useAxios, configure, resetConfigure) {
 
       configure({ axios: mockAxios })
 
-      const { waitForNextUpdate } = renderHook(() => useAxios(''))
+      const { waitForNextUpdate } = setup()
 
       expect(mockAxios).toHaveBeenCalled()
 
       return waitForNextUpdate()
     })
 
-    it('should allow to disable cache', async () => {
-      configure({ cache: false })
+    describe('with globally disabled cache', () => {
+      it('should use local state across rerenders', async () => {
+        configure({ cache: false })
 
-      axios.mockResolvedValueOnce({ data: 'whatever' })
+        axios.mockResolvedValueOnce({ data: 'whatever' })
 
-      const { waitForNextUpdate } = renderHook(() => useAxios(''))
+        const { waitForNextUpdate, rerender } = setup()
 
-      await waitForNextUpdate()
+        await waitForNextUpdate()
 
-      expect(axios).toHaveBeenCalledTimes(1)
-      expect(axios).toHaveBeenCalledWith(
-        expect.not.objectContaining({ adapter: expect.any(Function) })
-      )
+        rerender()
+
+        expect(axios).toHaveBeenCalledTimes(1)
+      })
+
+      it('should hit network across component mounts', async () => {
+        configure({ cache: false })
+
+        axios.mockResolvedValue({ data: 'whatever' })
+
+        const { waitForNextUpdate, unmount } = setup()
+
+        await waitForNextUpdate()
+
+        unmount()
+
+        await setup().waitForNextUpdate()
+
+        expect(axios).toHaveBeenCalledTimes(2)
+      })
+    })
+  })
+
+  describe('loadCache', () => {
+    it('should load cache', () => {
+      loadCache({ some: 'data' })
+    })
+  })
+
+  describe('serializeCache', () => {
+    it('should serialize cache', () => {
+      serializeCache()
     })
   })
 }
