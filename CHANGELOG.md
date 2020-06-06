@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0-0](https://github.com/simoneb/axios-hooks/compare/v1.10.0...v2.0.0-0) (2020-06-06)
+
+
+### ⚠ BREAKING CHANGES
+
+* store response in cache when skipping cache for request
+
+### Features
+
+* store response in cache when skipping cache for request ([7dda4ac](https://github.com/simoneb/axios-hooks/commit/7dda4acc55b225f565d6eb3e892026fd0951d706))
+
 ## [1.10.0](https://github.com/simoneb/axios-hooks/compare/v1.10.0-0...v1.10.0) (2020-04-13)
 
 ## [1.10.0-0](https://github.com/simoneb/axios-hooks/compare/v1.9.0...v1.10.0-0) (2020-04-11)
