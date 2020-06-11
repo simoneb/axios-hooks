@@ -50,7 +50,7 @@
     "@babel/preset-react": "7.10.1",
     "@commitlint/cli": "8.3.5",
     "@commitlint/config-conventional": "8.3.4",
-    "@testing-library/react-hooks": "3.2.1",
+    "@testing-library/react-hooks": "3.3.0",
     "@types/jest": "25.2.3",
     "@types/lru-cache": "5.1.0",
     "@types/node": "12.12.24",
