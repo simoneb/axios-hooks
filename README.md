@@ -116,7 +116,7 @@ Allows to provide custom instances of cache and axios.
 
 ### serializeCache()
 
-Dumps the request-response cache, to use in server side sendering scenarios.
+Dumps the request-response cache, to use in server side rendering scenarios.
 
 **Returns**
 
