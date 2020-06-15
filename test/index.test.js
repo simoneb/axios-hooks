@@ -33,7 +33,7 @@ beforeEach(() => {
 
 afterEach(() => {
   // assert that no errors were logged during tests
-  expect(errors.length).toBe(0)
+  expect(errors).toEqual([])
 })
 
 describe('useAxiosStatic', () => {
@@ -341,6 +341,19 @@ function standardTests(useAxios, configure, resetConfigure) {
         expect(cancel).toHaveBeenCalled()
 
         await waitForNextUpdate()
+      })
+
+      it('should throw an error when the request is canceled', async () => {
+        const cancellation = new Error('canceled')
+
+        axios.mockRejectedValueOnce(cancellation)
+        axios.isCancel = jest
+          .fn()
+          .mockImplementationOnce(err => err === cancellation)
+
+        const { result } = renderHook(() => useAxios('', { manual: true }))
+
+        expect(() => act(result.current[1])).rejects.toBe(cancellation)
       })
     })
   })
