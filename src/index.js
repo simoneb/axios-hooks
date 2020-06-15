@@ -170,7 +170,7 @@ export function makeUseAxios(configurationOptions) {
       )
     }
 
-    React.useEffect(() => {
+    React.useLayoutEffect(() => {
       cancelSourceRef.current = StaticAxios.CancelToken.source()
 
       if (!options.manual) {
