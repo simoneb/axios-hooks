@@ -56,13 +56,14 @@ function App() {
 
 ### Examples
 
-- [Quick Start](https://codesandbox.io/s/2oxrlq8rjr)
-- [Manual Request](https://codesandbox.io/s/axioshooks-manual-request-bq9w4)
+- [Quick start](https://codesandbox.io/s/2oxrlq8rjr)
+- [Manual request](https://codesandbox.io/s/axioshooks-manual-request-bq9w4)
+- [Error handling](https://codesandbox.io/s/axios-hooks-error-handling-gvi41)
 - [Using makeUseAxios](https://codesandbox.io/s/axios-hooks-makeuseaxios-kfuym)
-- [Configuration Example](https://codesandbox.io/s/oqvxw6mpyq)
+- [Configuration](https://codesandbox.io/s/oqvxw6mpyq)
 - [Pagination](https://codesandbox.io/s/axios-hooks-pagination-1wk3u)
-- [Infinite Scrolling](https://codesandbox.io/s/axios-hooks-infinite-scrolling-42nw6)
-- [Request Chaining](https://codesandbox.io/s/axios-hooks-request-chaining-wn12l)
+- [Infinite scrolling](https://codesandbox.io/s/axios-hooks-infinite-scrolling-42nw6)
+- [Request chaining](https://codesandbox.io/s/axios-hooks-request-chaining-wn12l)
 - [react-native](https://snack.expo.io/@simoneb/axios-hooks-react-native)
 - [With react-sortable-hoc](https://codesandbox.io/s/axios-hooks-react-sortable-hoc-eo3oy)
 - [With react-router](https://codesandbox.io/s/axios-hooks-react-router-26iwm)
