@@ -157,7 +157,7 @@ export function makeUseAxios(configurationOptions) {
 
     options = { manual: false, useCache: true, ...options }
 
-    const cancelSourceRef = React.useRef(StaticAxios.CancelToken.source())
+    const cancelSourceRef = React.useRef()
 
     const [state, dispatch] = React.useReducer(
       reducer,
@@ -170,14 +170,24 @@ export function makeUseAxios(configurationOptions) {
       )
     }
 
-    const withCancelToken = React.useCallback(config => {
-      cancelSourceRef.current.cancel()
-      cancelSourceRef.current = StaticAxios.CancelToken.source()
-
-      config.cancelToken = cancelSourceRef.current.token
-
-      return config
+    const cancelOutstandingRequest = React.useCallback(() => {
+      if (cancelSourceRef.current) {
+        cancelSourceRef.current.cancel()
+      }
     }, [])
+
+    const withCancelToken = React.useCallback(
+      config => {
+        cancelOutstandingRequest()
+
+        cancelSourceRef.current = StaticAxios.CancelToken.source()
+
+        config.cancelToken = cancelSourceRef.current.token
+
+        return config
+      },
+      [cancelOutstandingRequest]
+    )
 
     React.useEffect(() => {
       if (!options.manual) {
@@ -188,7 +198,7 @@ export function makeUseAxios(configurationOptions) {
         ).catch(() => {})
       }
 
-      return () => cancelSourceRef.current.cancel()
+      return cancelOutstandingRequest
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [stringifiedConfig])
 
