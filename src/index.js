@@ -170,13 +170,19 @@ export function makeUseAxios(configurationOptions) {
       )
     }
 
+    const withCancelToken = React.useCallback(config => {
+      cancelSourceRef.current.cancel()
+      cancelSourceRef.current = StaticAxios.CancelToken.source()
+
+      config.cancelToken = cancelSourceRef.current.token
+
+      return config
+    }, [])
+
     React.useEffect(() => {
       if (!options.manual) {
-        cancelSourceRef.current.cancel()
-        cancelSourceRef.current = StaticAxios.CancelToken.source()
-
         executeRequest(
-          { cancelToken: cancelSourceRef.current.token, ...config },
+          withCancelToken(config),
           options,
           dispatch
         ).catch(() => {})
@@ -188,15 +194,11 @@ export function makeUseAxios(configurationOptions) {
 
     const refetch = React.useCallback(
       (configOverride, options) => {
-        cancelSourceRef.current.cancel()
-        cancelSourceRef.current = StaticAxios.CancelToken.source()
-
         return executeRequest(
-          {
-            cancelToken: cancelSourceRef.current.token,
+          withCancelToken({
             ...config,
             ...configOverride
-          },
+          }),
           { useCache: false, ...options },
           dispatch
         )
