@@ -157,7 +157,7 @@ export function makeUseAxios(configurationOptions) {
 
     options = { manual: false, useCache: true, ...options }
 
-    const cancelSourceRef = React.useRef()
+    const cancelSourceRef = React.useRef(StaticAxios.CancelToken.source())
 
     const [state, dispatch] = React.useReducer(
       reducer,
@@ -170,7 +170,7 @@ export function makeUseAxios(configurationOptions) {
       )
     }
 
-    React.useLayoutEffect(() => {
+    React.useEffect(() => {
       cancelSourceRef.current = StaticAxios.CancelToken.source()
 
       if (!options.manual) {
@@ -187,6 +187,9 @@ export function makeUseAxios(configurationOptions) {
 
     const refetch = React.useCallback(
       (configOverride, options) => {
+        cancelSourceRef.current.cancel()
+        cancelSourceRef.current = StaticAxios.CancelToken.source()
+
         return executeRequest(
           {
             cancelToken: cancelSourceRef.current.token,
