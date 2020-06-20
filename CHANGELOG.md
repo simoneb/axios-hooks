@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.10.1-4](https://github.com/simoneb/axios-hooks/compare/v1.10.1-3...v1.10.1-4) (2020-06-20)
+
+
+### Bug Fixes
+
+* **250:** more robust cancellation approach ([e4f9189](https://github.com/simoneb/axios-hooks/commit/e4f91891f8b86edbc40f70fad57686d564956881))
+
 ### [1.10.1-3](https://github.com/simoneb/axios-hooks/compare/v1.10.1-2...v1.10.1-3) (2020-06-20)
 
 
