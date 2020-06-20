@@ -171,9 +171,10 @@ export function makeUseAxios(configurationOptions) {
     }
 
     React.useEffect(() => {
-      cancelSourceRef.current = StaticAxios.CancelToken.source()
-
       if (!options.manual) {
+        cancelSourceRef.current.cancel()
+        cancelSourceRef.current = StaticAxios.CancelToken.source()
+
         executeRequest(
           { cancelToken: cancelSourceRef.current.token, ...config },
           options,
