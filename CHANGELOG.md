@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.10.1](https://github.com/simoneb/axios-hooks/compare/v1.10.0...v1.10.1) (2020-06-21)
+
+
+* optimize re-rendering with correct initState ([d7aef70](https://github.com/simoneb/axios-hooks/commit/d7aef708e662b7acebfe1ed967e44609bd270816))
+
 ## [1.10.0](https://github.com/simoneb/axios-hooks/compare/v1.10.0-0...v1.10.0) (2020-04-13)
 
 ## [1.10.0-0](https://github.com/simoneb/axios-hooks/compare/v1.9.0...v1.10.0-0) (2020-04-11)
