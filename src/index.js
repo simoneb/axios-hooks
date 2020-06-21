@@ -122,11 +122,10 @@ export function makeUseAxios(configurationOptions) {
       dispatch({ type: actions.REQUEST_END, payload: response })
       return response
     } catch (err) {
-      if (StaticAxios.isCancel(err)) {
-        return
+      if (!StaticAxios.isCancel(err)) {
+        dispatch({ type: actions.REQUEST_END, payload: err, error: true })
       }
 
-      dispatch({ type: actions.REQUEST_END, payload: err, error: true })
       throw err
     }
   }
@@ -171,29 +170,45 @@ export function makeUseAxios(configurationOptions) {
       )
     }
 
-    React.useEffect(() => {
-      cancelSourceRef.current = StaticAxios.CancelToken.source()
+    const cancelOutstandingRequest = React.useCallback(() => {
+      if (cancelSourceRef.current) {
+        cancelSourceRef.current.cancel()
+      }
+    }, [])
 
+    const withCancelToken = React.useCallback(
+      config => {
+        cancelOutstandingRequest()
+
+        cancelSourceRef.current = StaticAxios.CancelToken.source()
+
+        config.cancelToken = cancelSourceRef.current.token
+
+        return config
+      },
+      [cancelOutstandingRequest]
+    )
+
+    React.useEffect(() => {
       if (!options.manual) {
         executeRequest(
-          { cancelToken: cancelSourceRef.current.token, ...config },
+          withCancelToken(config),
           options,
           dispatch
         ).catch(() => {})
       }
 
-      return () => cancelSourceRef.current.cancel()
+      return cancelOutstandingRequest
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [stringifiedConfig])
 
     const refetch = React.useCallback(
       (configOverride, options) => {
         return executeRequest(
-          {
-            cancelToken: cancelSourceRef.current.token,
+          withCancelToken({
             ...config,
             ...configOverride
-          },
+          }),
           { useCache: false, ...options },
           dispatch
         )
