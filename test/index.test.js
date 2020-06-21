@@ -91,12 +91,13 @@ describe('makeUseAxios', () => {
 
 function standardTests(useAxios, configure, resetConfigure) {
   describe('basic functionality', () => {
-    it('should set loading to true', async () => {
+    it('should set loading to true and error to null', async () => {
       axios.mockResolvedValueOnce({ data: 'whatever' })
 
       const { result, waitForNextUpdate } = renderHook(() => useAxios(''))
 
       expect(result.current[0].loading).toBe(true)
+      expect(result.current[0].error).toBe(null)
 
       await waitForNextUpdate()
     })
@@ -109,6 +110,7 @@ function standardTests(useAxios, configure, resetConfigure) {
       await waitForNextUpdate()
 
       expect(result.current[0].loading).toBe(false)
+      expect(result.current[0].error).toBe(null)
       expect(result.current[0].data).toBe('whatever')
     })
 
@@ -122,6 +124,7 @@ function standardTests(useAxios, configure, resetConfigure) {
       await waitForNextUpdate()
 
       expect(result.current[0].loading).toBe(false)
+      expect(result.current[0].error).toBe(null)
       expect(result.current[0].response).toBe(response)
     })
 

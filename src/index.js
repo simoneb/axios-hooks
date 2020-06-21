@@ -90,7 +90,8 @@ export function makeUseAxios(configurationOptions) {
 
   function createInitialState(options) {
     return {
-      loading: !options.manual
+      loading: !options.manual,
+      error: null
     }
   }
 
