@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.11.0](https://github.com/simoneb/axios-hooks/compare/v1.10.1...v1.11.0) (2020-06-21)
+
+
+### Features
+
+* **250:** all axios-hooks-generated requests cancel each other ([0de127e](https://github.com/simoneb/axios-hooks/commit/0de127e304937e61013ad2415770ca6cc06bc401)), closes [#250](https://github.com/simoneb/axios-hooks/issues/250)
+
 ### [1.10.1](https://github.com/simoneb/axios-hooks/compare/v1.10.0...v1.10.1) (2020-06-21)
 
 
