@@ -29,6 +29,10 @@ export {
   clearCache
 }
 
+function isReactEvent(obj) {
+  return obj && obj.nativeEvent && obj.nativeEvent instanceof Event
+}
+
 function createCacheKey(config) {
   const cleanedConfig = { ...config }
   delete cleanedConfig.cancelToken
@@ -226,7 +230,7 @@ export function makeUseAxios(configurationOptions) {
         return request(
           withCancelToken({
             ...config,
-            ...configOverride
+            ...(isReactEvent(configOverride) ? null : configOverride)
           }),
           { useCache: false, ...options },
           dispatch
