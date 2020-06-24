@@ -2,6 +2,46 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0](https://github.com/simoneb/axios-hooks/compare/v1.11.0...v2.0.0) (2020-06-24)
+
+
+### ⚠ BREAKING CHANGES
+
+* This release introduces a fundamental change in the caching mechanism.
+
+The main difference is that requests that don't use the cache
+will store the response in the cache anyway, making the behavior
+of the library more intuitive and predictable.
+
+In other words, `{ useCache: false }` will only skip _reading_ from the cache,
+but it will write the response to the cache in any case.
+
+The docs contain a caching example providing a full overview of
+how the new caching behavior works.
+
+A potential side effect of the new behavior, which we tried mitigating,
+is that the `refetch` function returned by the hook, which was always
+skipping the cache previously, now stores the response in cache.
+Because of this, it must generate a key for the cache, which is created
+based on the configuration provided as the first argument to the `refetch`
+function itself.
+
+Because the `refetch` function is often provided directly to DOM event handlers:
+
+```
+<button onClick={refetch} />
+```
+
+this would no longer work because the first argument will be the React event and
+we cannot generate a cache key from that, and it wouldn't make much sense either.
+Because this is a fairly common scenario, we implemented a specific handling for
+this case. If the first argument is an event, it is ignored and considered as if
+no configuration override was provided.
+
+### Features
+
+* store response in cache when skipping cache for request ([fff9ffe](https://github.com/simoneb/axios-hooks/commit/fff9ffed1fe6d6f35c3c6bac7fa132470e16b5bb))
+
 ## [1.11.0](https://github.com/simoneb/axios-hooks/compare/v1.10.1...v1.11.0) (2020-06-21)
 
 
