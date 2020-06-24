@@ -40,17 +40,19 @@ export interface UseAxios {
 
   configure(options: ConfigureOptions): void
   resetConfigure(): void
+  clearCache(): void
 
   // private
   __ssrPromises: Promise<any>[]
 }
 
-declare const defaultUseAxios: UseAxios
+declare const useAxios: UseAxios
 
-export default defaultUseAxios
+export default useAxios
 
 export function loadCache(data: any[]): void
 export function serializeCache(): Promise<any[]>
+export function clearCache(): void
 
 export function configure(options: ConfigureOptions): void
 export function resetConfigure(): void

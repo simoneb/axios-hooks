@@ -7,19 +7,48 @@ const actions = {
   REQUEST_END: 'REQUEST_END'
 }
 
-const defaultUseAxios = makeUseAxios()
+const useAxios = makeUseAxios()
 
 const {
   __ssrPromises,
   resetConfigure,
   configure,
   loadCache,
-  serializeCache
-} = defaultUseAxios
+  serializeCache,
+  clearCache
+} = useAxios
 
-export default defaultUseAxios
+export default useAxios
 
-export { __ssrPromises, resetConfigure, configure, loadCache, serializeCache }
+export {
+  __ssrPromises,
+  resetConfigure,
+  configure,
+  loadCache,
+  serializeCache,
+  clearCache
+}
+
+function isReactEvent(obj) {
+  return obj && obj.nativeEvent && obj.nativeEvent instanceof Event
+}
+
+function createCacheKey(config) {
+  const cleanedConfig = { ...config }
+  delete cleanedConfig.cancelToken
+
+  return JSON.stringify(cleanedConfig)
+}
+
+function configToObject(config) {
+  if (typeof config === 'string') {
+    return {
+      url: config
+    }
+  }
+
+  return config
+}
 
 export function makeUseAxios(configurationOptions) {
   let cache
@@ -59,39 +88,40 @@ export function makeUseAxios(configurationOptions) {
     return cache.dump()
   }
 
+  function clearCache() {
+    cache.reset()
+  }
+
   return Object.assign(useAxios, {
     __ssrPromises,
     resetConfigure,
     configure,
     loadCache,
-    serializeCache
+    serializeCache,
+    clearCache
   })
 
-  async function cacheAdapter(config) {
-    const cacheKey = JSON.stringify(config)
-    const hit = cache.get(cacheKey)
-
-    if (hit) {
-      return hit
+  function tryStoreInCache(config, response) {
+    if (!cache) {
+      return
     }
 
-    delete config.adapter
-
-    const response = await axiosInstance(config)
+    const cacheKey = createCacheKey(config)
 
     const responseForCache = { ...response }
     delete responseForCache.config
     delete responseForCache.request
 
     cache.set(cacheKey, responseForCache)
-
-    return response
   }
 
-  function createInitialState(options) {
+  function createInitialState(config, options) {
+    const response = !options.manual && tryGetFromCache(config, options)
+
     return {
-      loading: !options.manual,
-      error: null
+      loading: !options.manual && !response,
+      error: null,
+      ...(response ? { data: response.data, response } : null)
     }
   }
 
@@ -110,16 +140,34 @@ export function makeUseAxios(configurationOptions) {
           ...(action.error ? {} : { data: action.payload.data }),
           [action.error ? 'error' : 'response']: action.payload
         }
-      default:
-        return state
     }
   }
 
-  async function request(config, dispatch) {
+  function tryGetFromCache(config, options, dispatch) {
+    if (!cache || !options.useCache) {
+      return
+    }
+
+    const cacheKey = createCacheKey(config)
+    const response = cache.get(cacheKey)
+
+    if (response && dispatch) {
+      dispatch({ type: actions.REQUEST_END, payload: response })
+    }
+
+    return response
+  }
+
+  async function executeRequest(config, dispatch) {
     try {
       dispatch({ type: actions.REQUEST_START })
+
       const response = await axiosInstance(config)
+
+      tryStoreInCache(config, response)
+
       dispatch({ type: actions.REQUEST_END, payload: response })
+
       return response
     } catch (err) {
       if (!StaticAxios.isCancel(err)) {
@@ -130,28 +178,15 @@ export function makeUseAxios(configurationOptions) {
     }
   }
 
-  function executeRequestWithCache(config, dispatch) {
-    return request({ ...config, adapter: cacheAdapter }, dispatch)
-  }
-
-  function executeRequestWithoutCache(config, dispatch) {
-    return request(config, dispatch)
-  }
-
-  function executeRequest(config, options, dispatch) {
-    if (cache && options.useCache) {
-      return executeRequestWithCache(config, dispatch)
-    }
-
-    return executeRequestWithoutCache(config, dispatch)
+  async function request(config, options, dispatch) {
+    return (
+      tryGetFromCache(config, options, dispatch) ||
+      executeRequest(config, dispatch)
+    )
   }
 
   function useAxios(config, options) {
-    if (typeof config === 'string') {
-      config = {
-        url: config
-      }
-    }
+    config = configToObject(config)
 
     const stringifiedConfig = JSON.stringify(config)
 
@@ -161,13 +196,11 @@ export function makeUseAxios(configurationOptions) {
 
     const [state, dispatch] = React.useReducer(
       reducer,
-      createInitialState(options)
+      createInitialState(config, options)
     )
 
     if (typeof window === 'undefined' && !options.manual) {
-      useAxios.__ssrPromises.push(
-        axiosInstance({ ...config, adapter: cacheAdapter })
-      )
+      useAxios.__ssrPromises.push(axiosInstance(config))
     }
 
     const cancelOutstandingRequest = React.useCallback(() => {
@@ -191,11 +224,7 @@ export function makeUseAxios(configurationOptions) {
 
     React.useEffect(() => {
       if (!options.manual) {
-        executeRequest(
-          withCancelToken(config),
-          options,
-          dispatch
-        ).catch(() => {})
+        request(withCancelToken(config), options, dispatch).catch(() => {})
       }
 
       return cancelOutstandingRequest
@@ -204,10 +233,12 @@ export function makeUseAxios(configurationOptions) {
 
     const refetch = React.useCallback(
       (configOverride, options) => {
-        return executeRequest(
+        configOverride = configToObject(configOverride)
+
+        return request(
           withCancelToken({
             ...config,
-            ...configOverride
+            ...(isReactEvent(configOverride) ? null : configOverride)
           }),
           { useCache: false, ...options },
           dispatch
