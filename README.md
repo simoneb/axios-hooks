@@ -65,6 +65,7 @@ function App() {
 - [Pagination](https://codesandbox.io/s/axios-hooks-pagination-1wk3u)
 - [Infinite scrolling](https://codesandbox.io/s/axios-hooks-infinite-scrolling-42nw6)
 - [Request chaining](https://codesandbox.io/s/axios-hooks-request-chaining-wn12l)
+- [Options change detection](https://codesandbox.io/s/axios-hooks-options-change-v23tl)
 - [react-native](https://snack.expo.io/@simoneb/axios-hooks-react-native)
 - [With react-sortable-hoc](https://codesandbox.io/s/axios-hooks-react-sortable-hoc-eo3oy)
 - [With react-router](https://codesandbox.io/s/axios-hooks-react-router-26iwm)

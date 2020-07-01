@@ -695,7 +695,7 @@ function standardTests(
     })
   })
 
-  describe('manual requests', () => {
+  describe('manual option', () => {
     it('should set loading to false on initial render', async () => {
       const { result } = setup('', { manual: true })
 
@@ -829,6 +829,68 @@ function standardTests(
       unmount()
 
       setup()
+
+      expect(axios).toHaveBeenCalledTimes(1)
+    })
+  })
+
+  describe('option change detection', () => {
+    it('manual:false to manual:true with cache disabled should execute first request only', async () => {
+      axios.mockResolvedValue({ data: 'whatever' })
+
+      const { waitForNextUpdate, rerender } = setup('', {
+        manual: false,
+        useCache: false
+      })
+
+      await waitForNextUpdate()
+
+      rerender({ config: '', options: { manual: true } })
+
+      expect(axios).toHaveBeenCalledTimes(1)
+    })
+
+    it('manual:true to manual:false with cache disabled should execute second request only', async () => {
+      axios.mockResolvedValue({ data: 'whatever' })
+
+      const { waitForNextUpdate, rerender } = setup('', {
+        manual: true,
+        useCache: false
+      })
+
+      rerender({ config: '', options: { manual: false } })
+
+      await waitForNextUpdate()
+
+      expect(axios).toHaveBeenCalledTimes(1)
+    })
+
+    it('useCache:true to useCache:false should execute both requests', async () => {
+      axios.mockResolvedValue({ data: 'whatever' })
+
+      const { waitForNextUpdate, rerender } = setup('', {
+        useCache: true
+      })
+
+      await waitForNextUpdate()
+
+      rerender({ config: '', options: { useCache: false } })
+
+      await waitForNextUpdate()
+
+      expect(axios).toHaveBeenCalledTimes(2)
+    })
+
+    it('useCache:false to useCache:true should execute first request only', async () => {
+      axios.mockResolvedValue({ data: 'whatever' })
+
+      const { waitForNextUpdate, rerender } = setup('', {
+        useCache: false
+      })
+
+      await waitForNextUpdate()
+
+      rerender({ config: '', options: { useCache: true } })
 
       expect(axios).toHaveBeenCalledTimes(1)
     })
