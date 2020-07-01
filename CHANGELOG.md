@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.1.0-0](https://github.com/simoneb/axios-hooks/compare/v2.0.0...v2.1.0-0) (2020-07-01)
+
+
+### Features
+
+* **269:** options re-evaluation ([2fc8cf0](https://github.com/simoneb/axios-hooks/commit/2fc8cf09129babe1c13f12ad55a9eda68d55f74f))
+
 ## [2.0.0](https://github.com/simoneb/axios-hooks/compare/v1.11.0...v2.0.0) (2020-06-24)
 
 
