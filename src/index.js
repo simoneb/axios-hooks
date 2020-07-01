@@ -186,11 +186,17 @@ export function makeUseAxios(configurationOptions) {
   }
 
   function useAxios(config, options) {
-    config = configToObject(config)
+    config = React.useMemo(
+      () => configToObject(config),
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      [JSON.stringify(config)]
+    )
 
-    const stringifiedConfig = JSON.stringify(config)
-
-    options = { manual: false, useCache: true, ...options }
+    options = React.useMemo(
+      () => ({ manual: false, useCache: true, ...options }),
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      [JSON.stringify(options)]
+    )
 
     const cancelSourceRef = React.useRef()
 
@@ -228,8 +234,7 @@ export function makeUseAxios(configurationOptions) {
       }
 
       return cancelOutstandingRequest
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [stringifiedConfig])
+    }, [config, options, withCancelToken, cancelOutstandingRequest])
 
     const refetch = React.useCallback(
       (configOverride, options) => {
@@ -244,8 +249,7 @@ export function makeUseAxios(configurationOptions) {
           dispatch
         )
       },
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      [stringifiedConfig]
+      [config, withCancelToken]
     )
 
     return [state, refetch]
