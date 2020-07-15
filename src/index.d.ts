@@ -9,7 +9,7 @@ import {
 import LRUCache from 'lru-cache'
 
 export interface ResponseValues<T> {
-  data: T
+  data?: T
   loading: boolean
   error?: AxiosError
   response?: AxiosResponse
