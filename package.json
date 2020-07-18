@@ -36,7 +36,7 @@
   },
   "dependencies": {
     "@babel/runtime": "7.10.4",
-    "lru-cache": "5.1.1"
+    "lru-cache": "6.0.0"
   },
   "peerDependencies": {
     "react": "^16.8.0-0",
