@@ -29,6 +29,11 @@ export interface ConfigureOptions {
   cache?: LRUCache<any, any> | false
 }
 
+export interface CancellationReasons {
+  NEW_REQUEST: string
+  UNMOUNTED: string
+}
+
 export interface UseAxios {
   <T = any>(config: AxiosRequestConfig | string, options?: Options): [
     ResponseValues<T>,
@@ -44,6 +49,7 @@ export interface UseAxios {
 
   // private
   __ssrPromises: Promise<any>[]
+  __cancellationReasons: CancellationReasons
 }
 
 declare const useAxios: UseAxios
@@ -59,5 +65,6 @@ export function resetConfigure(): void
 
 // private
 export const __ssrPromises: Promise<any>[]
+export const __cancellationReasons: CancellationReasons
 
 export function makeUseAxios(options: ConfigureOptions): UseAxios

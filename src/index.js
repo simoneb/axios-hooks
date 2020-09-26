@@ -7,6 +7,11 @@ const actions = {
   REQUEST_END: 'REQUEST_END'
 }
 
+const __cancellationReasons = {
+  NEW_REQUEST: 'A newer request was made.',
+  UNMOUNTED: 'The component was unmounted.'
+}
+
 const useAxios = makeUseAxios()
 
 const {
@@ -26,7 +31,8 @@ export {
   configure,
   loadCache,
   serializeCache,
-  clearCache
+  clearCache,
+  __cancellationReasons
 }
 
 function isReactEvent(obj) {
@@ -209,15 +215,22 @@ export function makeUseAxios(configurationOptions) {
       useAxios.__ssrPromises.push(axiosInstance(config))
     }
 
-    const cancelOutstandingRequest = React.useCallback(() => {
+    const cancelOutstandingRequest = React.useCallback(message => {
       if (cancelSourceRef.current) {
-        cancelSourceRef.current.cancel()
+        cancelSourceRef.current.cancel({
+          source: 'useAxios',
+          ...message
+        })
+        cancelSourceRef.current = undefined
       }
     }, [])
 
     const withCancelToken = React.useCallback(
       config => {
-        cancelOutstandingRequest()
+        cancelOutstandingRequest({
+          url: config?.url,
+          reason: __cancellationReasons.NEW_REQUEST
+        })
 
         cancelSourceRef.current = StaticAxios.CancelToken.source()
 
@@ -233,7 +246,12 @@ export function makeUseAxios(configurationOptions) {
         request(withCancelToken(config), options, dispatch).catch(() => {})
       }
 
-      return cancelOutstandingRequest
+      return () => {
+        cancelOutstandingRequest({
+          url: config?.url,
+          reason: __cancellationReasons.UNMOUNTED
+        })
+      }
     }, [config, options, withCancelToken, cancelOutstandingRequest])
 
     const refetch = React.useCallback(

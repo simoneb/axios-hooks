@@ -9,7 +9,8 @@ import defaultUseAxios, {
   clearCache as defaultClearCache,
   loadCache as defaultLoadCache,
   serializeCache as defaultSerializeCache,
-  makeUseAxios
+  makeUseAxios,
+  __cancellationReasons
 } from '../src'
 import { mockCancelToken } from './testUtils'
 
@@ -354,9 +355,17 @@ function standardTests(
 
         await waitForNextUpdate()
 
+        expect(cancel).not.toHaveBeenCalled()
+
         unmount()
 
-        expect(cancel).toHaveBeenCalled()
+        expect(cancel).toHaveBeenLastCalledWith(
+          expect.objectContaining({
+            source: 'useAxios',
+            url: '',
+            reason: __cancellationReasons.UNMOUNTED
+          })
+        )
       })
 
       it('should cancel the outstanding request when the component refetches due to a rerender', async () => {
@@ -366,9 +375,18 @@ function standardTests(
 
         await waitForNextUpdate()
 
+        expect(cancel).not.toHaveBeenCalled()
+
         rerender({ config: 'new config', options: {} })
 
-        expect(cancel).toHaveBeenCalled()
+        expect(cancel).toHaveBeenCalledTimes(1)
+        expect(cancel).toHaveBeenLastCalledWith(
+          expect.objectContaining({
+            source: 'useAxios',
+            url: 'initial config',
+            reason: __cancellationReasons.UNMOUNTED
+          })
+        )
 
         await waitForNextUpdate()
       })
