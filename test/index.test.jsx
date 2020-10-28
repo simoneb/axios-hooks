@@ -393,13 +393,13 @@ function standardTests(
           .fn()
           .mockImplementationOnce(err => err === cancellation)
 
-        const { result, wait } = setup()
+        const { result, waitFor } = setup()
 
         // if we cancel we won't dispatch the error, hence there's no state update
         // to wait for. yet, if we don't try to wait, we won't know if we're handling
         // the error properly because the return value will not have the error until a
         // state update happens. it would be great to have a better way to test this
-        await wait(
+        await waitFor(
           () => {
             expect(result.current[0].error).toBeNull()
           },
