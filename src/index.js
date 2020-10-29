@@ -212,6 +212,7 @@ export function makeUseAxios(configurationOptions) {
     const cancelOutstandingRequest = React.useCallback(() => {
       if (cancelSourceRef.current) {
         cancelSourceRef.current.cancel()
+        cancelSourceRef.current = undefined
       }
     }, [])
 

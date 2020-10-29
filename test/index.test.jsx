@@ -354,9 +354,11 @@ function standardTests(
 
         await waitForNextUpdate()
 
+        expect(cancel).not.toHaveBeenCalled()
+
         unmount()
 
-        expect(cancel).toHaveBeenCalled()
+        expect(cancel).toHaveBeenCalledTimes(1)
       })
 
       it('should cancel the outstanding request when the component refetches due to a rerender', async () => {
@@ -366,9 +368,11 @@ function standardTests(
 
         await waitForNextUpdate()
 
+        expect(cancel).not.toHaveBeenCalled()
+
         rerender({ config: 'new config', options: {} })
 
-        expect(cancel).toHaveBeenCalled()
+        expect(cancel).toHaveBeenCalledTimes(1)
 
         await waitForNextUpdate()
       })
