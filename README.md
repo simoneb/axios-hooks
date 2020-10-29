@@ -1,6 +1,6 @@
 # axios-hooks
 
-[![Build Status](https://travis-ci.org/simoneb/axios-hooks.svg?branch=master)](https://travis-ci.org/simoneb/axios-hooks)
+![Node.js CI](https://github.com/simoneb/axios-hooks/workflows/Node.js%20CI/badge.svg)
 [![codecov](https://codecov.io/gh/simoneb/axios-hooks/branch/master/graph/badge.svg)](https://codecov.io/gh/simoneb/axios-hooks)
 [![npm version](https://badge.fury.io/js/axios-hooks.svg)](https://badge.fury.io/js/axios-hooks)
 [![bundlephobia](https://badgen.net/bundlephobia/minzip/axios-hooks)](https://bundlephobia.com/result?p=axios-hooks)
