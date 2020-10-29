@@ -39,7 +39,7 @@
     "lru-cache": "6.0.0"
   },
   "peerDependencies": {
-    "react": "^16.8.0-0",
+    "react": "^16.8.0-0 || ^17.0.0",
     "axios": "^0.18.0 || ^0.19.0 || ^0.20.0"
   },
   "devDependencies": {
@@ -72,9 +72,9 @@
     "lint-staged": "10.5.0",
     "npm-run-all": "4.1.5",
     "prettier": "2.1.2",
-    "react": "16.13.1",
-    "react-dom": "16.13.1",
-    "react-test-renderer": "16.13.1",
+    "react": "17.0.1",
+    "react-dom": "17.0.1",
+    "react-test-renderer": "17.0.1",
     "rimraf": "3.0.2",
     "standard-version": "9.0.0",
     "ts-jest": "26.4.3",
