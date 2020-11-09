@@ -4,6 +4,5 @@
   "automergeType": "branch",
   "dependencyDashboard": true,
   "labels": ["renovate"],
-  "prCreation": "not-pending",
-  "stabilityDays": 7
+  "prCreation": "not-pending"
 }
