@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.2.0](https://github.com/simoneb/axios-hooks/compare/v2.1.0...v2.2.0) (2020-11-18)
+
+
+### Bug Fixes
+
+* **deps:** update dependency lru-cache to v6 ([e589be6](https://github.com/simoneb/axios-hooks/commit/e589be6100130269c4dcdc202288018d1a45cebb))
+* **typings:** improve typing of the error and response properties on ResponseValues ([4479a90](https://github.com/simoneb/axios-hooks/commit/4479a906a8db61511a06f5836c6cb9a5c7729e80))
+
 ## [2.1.0](https://github.com/simoneb/axios-hooks/compare/v2.0.0...v2.1.0) (2020-07-04)
 
 
