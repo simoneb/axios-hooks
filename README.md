@@ -59,6 +59,7 @@ function App() {
 - [Quick start](https://codesandbox.io/s/2oxrlq8rjr)
 - [Manual request](https://codesandbox.io/s/axioshooks-manual-request-bq9w4)
 - [Error handling](https://codesandbox.io/s/axios-hooks-error-handling-gvi41)
+- [Authentication and token refresh](https://codesandbox.io/s/axios-hooks-authentication-zyeyh)
 - [Caching](https://codesandbox.io/s/axios-hooks-caching-nm62v)
 - [Using makeUseAxios](https://codesandbox.io/s/axios-hooks-makeuseaxios-kfuym)
 - [Configuration](https://codesandbox.io/s/oqvxw6mpyq)
