@@ -59,7 +59,7 @@
     "@types/react-dom": "17.0.0",
     "axios": "0.21.0",
     "babel-eslint": "10.1.0",
-    "cross-env": "7.0.2",
+    "cross-env": "7.0.3",
     "cz-conventional-changelog": "3.3.0",
     "eslint": "7.14.0",
     "eslint-config-prettier": "6.15.0",
