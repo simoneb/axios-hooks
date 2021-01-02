@@ -30,9 +30,15 @@ export interface ConfigureOptions {
 }
 
 export interface UseAxios {
-  <TResponse = any, TError = any>(config: AxiosRequestConfig | string, options?: Options): [
+  <TResponse = any, TError = any>(
+    config: AxiosRequestConfig | string,
+    options?: Options
+  ): [
     ResponseValues<TResponse, TError>,
-    (config?: AxiosRequestConfig, options?: RefetchOptions) => AxiosPromise<TResponse>
+    (
+      config?: AxiosRequestConfig,
+      options?: RefetchOptions
+    ) => AxiosPromise<TResponse>
   ]
 
   loadCache(data: any[]): void

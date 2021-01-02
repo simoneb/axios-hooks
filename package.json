@@ -24,12 +24,10 @@
     "build:commonjs": "cross-env BABEL_ENV=commonjs babel src --out-dir cjs",
     "build:es": "babel src --out-dir es",
     "build": "run-p build:*",
-    "clean": "rimraf cjs es coverage",
-    "commit": "npx git-cz",
+    "clean": "rimraf cjs es",
     "format": "prettier --write \"{src,test}/**/*.{js?(x),md,ts?(x)}\"",
     "lint": "eslint src test",
     "prepare": "npm run clean && npm run build",
-    "prepublishOnly": "npm run build",
     "release": "standard-version",
     "pretest": "cp ./test/index.test.jsx ./test/index.test.tsx && cp ./test/index.test.ssr.jsx ./test/index.test.ssr.tsx",
     "test": "jest --no-cache"
@@ -60,14 +58,13 @@
     "axios": "0.21.1",
     "babel-eslint": "10.1.0",
     "cross-env": "7.0.3",
-    "cz-conventional-changelog": "3.3.0",
     "eslint": "7.17.0",
     "eslint-config-prettier": "7.1.0",
     "eslint-plugin-import": "2.22.1",
     "eslint-plugin-prettier": "3.3.0",
     "eslint-plugin-react": "7.22.0",
     "eslint-plugin-react-hooks": "4.2.0",
-    "husky": "5.0.6",
+    "husky": "4.3.6",
     "jest": "26.6.3",
     "lint-staged": "10.5.3",
     "npm-run-all": "4.1.5",
@@ -88,13 +85,8 @@
     }
   },
   "lint-staged": {
-    "src/**/*.{js?(x),md}": [
+    "{src,test}/**/*.{js?(x),md}": [
       "eslint --fix"
     ]
-  },
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
-    }
   }
 }
