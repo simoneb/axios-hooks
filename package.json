@@ -50,7 +50,7 @@
     "@commitlint/config-conventional": "11.0.0",
     "@testing-library/react": "11.2.2",
     "@testing-library/react-hooks": "4.0.0",
-    "@types/jest": "26.0.19",
+    "@types/jest": "26.0.20",
     "@types/lru-cache": "5.1.0",
     "@types/node": "12.12.24",
     "@types/react": "17.0.0",
