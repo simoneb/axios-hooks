@@ -49,7 +49,7 @@
     "@commitlint/cli": "11.0.0",
     "@commitlint/config-conventional": "11.0.0",
     "@testing-library/react": "11.2.3",
-    "@testing-library/react-hooks": "4.0.0",
+    "@testing-library/react-hooks": "4.0.1",
     "@types/jest": "26.0.20",
     "@types/lru-cache": "5.1.0",
     "@types/node": "12.12.24",
