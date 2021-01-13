@@ -18,6 +18,7 @@ export interface ResponseValues<TResponse, TError> {
 export interface Options {
   manual?: boolean
   useCache?: boolean
+  ssr?: boolean
 }
 
 export interface RefetchOptions {
@@ -27,6 +28,7 @@ export interface RefetchOptions {
 export interface ConfigureOptions {
   axios?: AxiosInstance | AxiosStatic | any
   cache?: LRUCache<any, any> | false
+  defaultOptions?: Options
 }
 
 export interface UseAxios {
@@ -66,4 +68,4 @@ export function resetConfigure(): void
 // private
 export const __ssrPromises: Promise<any>[]
 
-export function makeUseAxios(options: ConfigureOptions): UseAxios
+export function makeUseAxios(options?: ConfigureOptions): UseAxios

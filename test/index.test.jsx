@@ -58,7 +58,7 @@ describe('makeUseAxios', () => {
   })
 
   it('should not throw', () => {
-    expect(makeUseAxios({})).toBeTruthy()
+    expect(makeUseAxios()).toBeTruthy()
   })
 
   it('should provide a custom implementation of axios', () => {
@@ -107,8 +107,48 @@ describe('makeUseAxios', () => {
     })
   })
 
+  describe('default hook options', () => {
+    describe('manual', () => {
+      it('should override default manual option', () => {
+        const setup = makeSetup(
+          makeUseAxios({ defaultOptions: { manual: true } })
+        )
+
+        setup()
+
+        expect(axios).not.toHaveBeenCalled()
+      })
+    })
+
+    describe('useCache', () => {
+      it('should override default useCache option', async () => {
+        const setup = makeSetup(
+          makeUseAxios({ defaultOptions: { useCache: false } })
+        )
+
+        axios.mockResolvedValue({ data: 'whatever' })
+
+        const { waitForNextUpdate, unmount } = setup()
+
+        await waitForNextUpdate()
+
+        unmount()
+
+        await setup().waitForNextUpdate()
+
+        expect(axios).toHaveBeenCalledTimes(2)
+      })
+    })
+
+    describe('ssr', () => {
+      it('should be able to set ssr option', () => {
+        makeSetup(makeUseAxios({ defaultOptions: { ssr: false } }))
+      })
+    })
+  })
+
   describe('standard tests', () => {
-    const useAxios = makeUseAxios({})
+    const useAxios = makeUseAxios()
 
     standardTests(
       useAxios,
@@ -940,6 +980,42 @@ function standardTests(
         await setup().waitForNextUpdate()
 
         expect(axios).toHaveBeenCalledTimes(2)
+      })
+    })
+
+    describe('default hook options', () => {
+      describe('manual', () => {
+        it('should override default manual option', () => {
+          configure({ defaultOptions: { manual: true } })
+
+          setup()
+
+          expect(axios).not.toHaveBeenCalled()
+        })
+      })
+
+      describe('useCache', () => {
+        it('should override default useCache option', async () => {
+          configure({ defaultOptions: { useCache: false } })
+
+          axios.mockResolvedValue({ data: 'whatever' })
+
+          const { waitForNextUpdate, unmount } = setup()
+
+          await waitForNextUpdate()
+
+          unmount()
+
+          await setup().waitForNextUpdate()
+
+          expect(axios).toHaveBeenCalledTimes(2)
+        })
+      })
+
+      describe('ssr', () => {
+        it('should be able to set ssr option', () => {
+          configure({ defaultOptions: { ssr: false } })
+        })
       })
     })
   })
