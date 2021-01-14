@@ -7,6 +7,12 @@ const actions = {
   REQUEST_END: 'REQUEST_END'
 }
 
+const DEFAULT_OPTIONS = {
+  manual: false,
+  useCache: true,
+  ssr: true
+}
+
 const useAxios = makeUseAxios()
 
 const {
@@ -50,15 +56,17 @@ function configToObject(config) {
   return config
 }
 
-export function makeUseAxios(configurationOptions) {
+export function makeUseAxios(configureOptions) {
   let cache
   let axiosInstance
+  let defaultOptions
 
   const __ssrPromises = []
 
   function resetConfigure() {
     cache = new LRU()
     axiosInstance = StaticAxios
+    defaultOptions = DEFAULT_OPTIONS
   }
 
   function configure(options = {}) {
@@ -69,10 +77,14 @@ export function makeUseAxios(configurationOptions) {
     if (options.cache !== undefined) {
       cache = options.cache
     }
+
+    if (options.defaultOptions !== undefined) {
+      defaultOptions = { ...DEFAULT_OPTIONS, ...options.defaultOptions }
+    }
   }
 
   resetConfigure()
-  configure(configurationOptions)
+  configure(configureOptions)
 
   function loadCache(data) {
     cache.load(data)
@@ -193,7 +205,7 @@ export function makeUseAxios(configurationOptions) {
     )
 
     options = React.useMemo(
-      () => ({ manual: false, useCache: true, ...options }),
+      () => ({ ...defaultOptions, ...options }),
       // eslint-disable-next-line react-hooks/exhaustive-deps
       [JSON.stringify(options)]
     )
@@ -205,7 +217,7 @@ export function makeUseAxios(configurationOptions) {
       createInitialState(config, options)
     )
 
-    if (typeof window === 'undefined' && !options.manual) {
+    if (typeof window === 'undefined' && options.ssr && !options.manual) {
       useAxios.__ssrPromises.push(axiosInstance(config))
     }
 
