@@ -264,6 +264,6 @@ export function makeUseAxios(configureOptions) {
       [config, withCancelToken]
     )
 
-    return [state, refetch]
+    return [state, refetch, cancelOutstandingRequest]
   }
 }

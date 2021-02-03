@@ -399,6 +399,18 @@ function standardTests(
         expect(cancel).toHaveBeenCalled()
       })
 
+      it('should cancel the outstanding request when the cancel method is called', async () => {
+        axios.mockResolvedValue({ data: 'whatever' })
+
+        const { waitForNextUpdate, result } = setup()
+
+        await waitForNextUpdate()
+
+        result.current[2]()
+
+        expect(cancel).toHaveBeenCalled()
+      })
+
       it('should cancel the outstanding request when the component refetches due to a rerender', async () => {
         axios.mockResolvedValue({ data: 'whatever' })
 
