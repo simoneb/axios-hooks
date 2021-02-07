@@ -399,6 +399,18 @@ function standardTests(
         expect(cancel).toHaveBeenCalled()
       })
 
+      it('should cancel the outstanding request when the cancel method is called', async () => {
+        axios.mockResolvedValue({ data: 'whatever' })
+
+        const { waitForNextUpdate, result } = setup()
+
+        await waitForNextUpdate()
+
+        result.current[2]()
+
+        expect(cancel).toHaveBeenCalled()
+      })
+
       it('should cancel the outstanding request when the component refetches due to a rerender', async () => {
         axios.mockResolvedValue({ data: 'whatever' })
 
@@ -423,6 +435,20 @@ function standardTests(
         rerender()
 
         expect(cancel).not.toHaveBeenCalled()
+      })
+
+      it('should cancel the outstanding request when the cancel method is called after the component rerenders with same config', async () => {
+        axios.mockResolvedValue({ data: 'whatever' })
+
+        const { waitForNextUpdate, rerender, result } = setup('initial config')
+
+        await waitForNextUpdate()
+
+        rerender()
+
+        result.current[2]()
+
+        expect(cancel).toHaveBeenCalled()
       })
 
       it('should not dispatch an error when the request is canceled', async () => {
@@ -503,6 +529,22 @@ function standardTests(
         expect(cancel).toHaveBeenCalled()
 
         await waitForNextUpdate()
+      })
+
+      it('should cancel the outstanding manual refetch when the cancel method is called', async () => {
+        axios.mockResolvedValue({ data: 'whatever' })
+
+        const { result, waitForNextUpdate } = setup('', { manual: true })
+
+        act(() => {
+          result.current[1]()
+        })
+
+        await waitForNextUpdate()
+
+        result.current[2]()
+
+        expect(cancel).toHaveBeenCalled()
       })
 
       it('should throw an error when the request is canceled', async () => {

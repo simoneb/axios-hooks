@@ -40,7 +40,8 @@ export interface UseAxios {
     (
       config?: AxiosRequestConfig,
       options?: RefetchOptions
-    ) => AxiosPromise<TResponse>
+    ) => AxiosPromise<TResponse>,
+    () => void
   ]
 
   loadCache(data: any[]): void
