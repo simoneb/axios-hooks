@@ -96,7 +96,7 @@ The main React hook to execute HTTP requests.
 
 **Returns**
 
-`[{ data, loading, error, response }, execute]`
+`[{ data, loading, error, response }, execute, manualCancel]`
 
 - `data` - The [success response](https://github.com/axios/axios#response-schema) data property (for convenient access).
 - `loading` - True if the request is in progress, otherwise False.
@@ -112,6 +112,8 @@ The main React hook to execute HTTP requests.
   **Returns**
 
   A promise containing the response. If the request is unsuccessful, an exception is thrown and must be handled manually.
+  
+- `manualCancel()` - A function to cancel outstanding requests manually.
 
 ### configure({ cache, axios, defaultOptions })
 
@@ -244,6 +246,47 @@ function App() {
 }
 ```
 
+## Manual Cancellation
+
+The cancellation method can be used to cancel an outstanding request whether it be 
+from the automatic hook request or from the `manual` execute method.
+
+### Example
+
+In the example below we use the `useAxios` hook with its automatic and manual requests.
+We can call the cancellation programmatically or via controls.
+
+```js
+function App() {
+  const [pagination, setPagination] = useState({});
+  const [{ data, loading }, refetch, cancelRequest] = useAxios({
+    url: "/users?delay=5",
+    params: { ...pagination }
+  });
+
+  const handleFetch = () => {
+    setPagination({ per_page: 2, page: 2 });
+  };
+
+  const externalRefetch = async () => {
+    try {
+      await refetch();
+    } catch(e) {
+      // Handle cancellation
+    }
+  };
+
+  return (
+    <div>
+      <button onClick={handleFetch}>refetch</button>
+      <button onClick={externalRefetch}>External Refetch</button>
+      <button disabled={!loading} onClick={cancelRequest}>Cancel Request</button>
+      {loading && <p>...loading</p>}
+      <pre>{JSON.stringify(data, null, 2)}</pre>
+    </div>
+  );
+}
+```
 ## Server Side Rendering
 
 `axios-hooks` seamlessly supports server side rendering scenarios, by preloading data on the server and providing the data to the client, so that the client doesn't need to reload it.
