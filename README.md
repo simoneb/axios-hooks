@@ -75,6 +75,7 @@ function App() {
 
 - [Configuration](#configuration)
 - [Manual Requests](#manual-requests)
+- [Manual Cancellation](#manual-cancellation)
 - [Server Side Rendering](#server-side-rendering)
 - [Multiple Hook Instances](#multiple-hook-instances)
 
@@ -96,7 +97,7 @@ The main React hook to execute HTTP requests.
 
 **Returns**
 
-`[{ data, loading, error, response }, execute]`
+`[{ data, loading, error, response }, execute, manualCancel]`
 
 - `data` - The [success response](https://github.com/axios/axios#response-schema) data property (for convenient access).
 - `loading` - True if the request is in progress, otherwise False.
@@ -108,6 +109,7 @@ The main React hook to execute HTTP requests.
   - `config` - Same `config` object as `axios`, which is _shallow-merged_ with the config object provided when invoking the hook. Useful to provide arguments to non-GET requests.
   - `options` - An options object.
     - `useCache` ( `false` ) - Allows caching to be enabled/disabled for this "execute" function.
+- `manualCancel()` - A function to cancel outstanding requests manually.
 
   **Returns**
 
@@ -244,6 +246,47 @@ function App() {
 }
 ```
 
+## Manual Cancellation
+
+The cancellation method can be used to cancel an outstanding request whether it be 
+from the automatic hook request or from the `manual` execute method.
+
+### Example
+
+In the example below we use the `useAxios` hook with its automatic and manual requests.
+We can call the cancellation programmatically or via controls.
+
+```js
+function App() {
+  const [pagination, setPagination] = useState({});
+  const [{ data, loading }, refetch, cancelRequest] = useAxios({
+    url: "/users?delay=5",
+    params: { ...pagination }
+  });
+
+  const handleFetch = () => {
+    setPagination({ per_page: 2, page: 2 });
+  };
+
+  const externalRefetch = async () => {
+    try {
+      await refetch();
+    } catch(e) {
+      // Handle cancellation
+    }
+  };
+
+  return (
+    <div>
+      <button onClick={handleFetch}>refetch</button>
+      <button onClick={externalRefetch}>External Refetch</button>
+      <button disabled={!loading} onClick={cancelRequest}>Cancel Request</button>
+      {loading && <p>...loading</p>}
+      <pre>{JSON.stringify(data, null, 2)}</pre>
+    </div>
+  );
+}
+```
 ## Server Side Rendering
 
 `axios-hooks` seamlessly supports server side rendering scenarios, by preloading data on the server and providing the data to the client, so that the client doesn't need to reload it.
