@@ -75,6 +75,7 @@ function App() {
 
 - [Configuration](#configuration)
 - [Manual Requests](#manual-requests)
+- [Manual Cancellation](#manual-cancellation)
 - [Server Side Rendering](#server-side-rendering)
 - [Multiple Hook Instances](#multiple-hook-instances)
 
@@ -108,12 +109,11 @@ The main React hook to execute HTTP requests.
   - `config` - Same `config` object as `axios`, which is _shallow-merged_ with the config object provided when invoking the hook. Useful to provide arguments to non-GET requests.
   - `options` - An options object.
     - `useCache` ( `false` ) - Allows caching to be enabled/disabled for this "execute" function.
+- `manualCancel()` - A function to cancel outstanding requests manually.
 
   **Returns**
 
   A promise containing the response. If the request is unsuccessful, an exception is thrown and must be handled manually.
-  
-- `manualCancel()` - A function to cancel outstanding requests manually.
 
 ### configure({ cache, axios, defaultOptions })
 
