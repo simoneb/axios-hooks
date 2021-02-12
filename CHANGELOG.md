@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.4.0-0](https://github.com/simoneb/axios-hooks/compare/v2.3.0...v2.4.0-0) (2021-02-12)
+
+
+### Features
+
+* add two more tests of the cancel method ([9612292](https://github.com/simoneb/axios-hooks/commit/961229226b05ab8d55a01e35b0adc3424f7415b8))
+* return the cancelOutstandingRequest method in the index after the refetch method ([c6346c0](https://github.com/simoneb/axios-hooks/commit/c6346c0bb0d6184060d9ccb97f21082b9344dc42))
+
 ## [2.3.0](https://github.com/simoneb/axios-hooks/compare/v2.2.0...v2.3.0) (2021-01-14)
 
 
