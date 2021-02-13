@@ -52,7 +52,7 @@
     "@testing-library/react-hooks": "4.0.1",
     "@types/jest": "26.0.20",
     "@types/lru-cache": "5.1.0",
-    "@types/node": "12.12.24",
+    "@types/node": "12.20.0",
     "@types/react": "17.0.2",
     "@types/react-dom": "17.0.1",
     "axios": "0.21.1",
