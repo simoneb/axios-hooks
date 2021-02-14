@@ -149,10 +149,12 @@ export function makeUseAxios(configureOptions) {
         return {
           ...state,
           loading: false,
-          // ...(action.error ? {} : { data: action.payload.data }),
-          // [action.error ? 'error' : 'response']: action.payload
-          ...(action.error || action.isCancel ? {} : { data: action.payload.data }),
-          ...(action.isCancel ? {} : {[action.error ? 'error' : 'response']: action.payload})
+          ...(action.error || action.isManualCancel
+            ? {}
+            : { data: action.payload.data }),
+          ...(action.isManualCancel
+            ? {}
+            : { [action.error ? 'error' : 'response']: action.payload })
         }
     }
   }
@@ -186,9 +188,9 @@ export function makeUseAxios(configureOptions) {
     } catch (err) {
       if (!StaticAxios.isCancel(err)) {
         dispatch({ type: actions.REQUEST_END, payload: err, error: true })
-      } else if(isCancelledManually.current) {
-        isCancelledManually.current = false;
-        dispatch({ type: actions.REQUEST_END, isCancel: true})
+      } else if (isCancelledManually.current) {
+        isCancelledManually.current = false
+        dispatch({ type: actions.REQUEST_END, isManualCancel: true })
       }
 
       throw err
@@ -214,8 +216,8 @@ export function makeUseAxios(configureOptions) {
       // eslint-disable-next-line react-hooks/exhaustive-deps
       [JSON.stringify(options)]
     )
-    
-    const isCancelledManually = React.useRef(false);
+
+    const isCancelledManually = React.useRef(false)
 
     const cancelSourceRef = React.useRef()
 
@@ -228,18 +230,23 @@ export function makeUseAxios(configureOptions) {
       useAxios.__ssrPromises.push(axiosInstance(config))
     }
 
-    const cancelOutstandingRequest = React.useCallback((hookCancel) => {
-      if(!hookCancel) {
-        isCancelledManually.current = true;
-      }
+    const cancelOutstandingRequest = React.useCallback(manualCancel => {
       if (cancelSourceRef.current) {
+        if (manualCancel) {
+          isCancelledManually.current = true
+        }
         cancelSourceRef.current.cancel()
       }
     }, [])
 
+    const cancelManually = React.useCallback(
+      () => cancelOutstandingRequest(true),
+      []
+    )
+
     const withCancelToken = React.useCallback(
       config => {
-        cancelOutstandingRequest(true)
+        cancelOutstandingRequest()
 
         cancelSourceRef.current = StaticAxios.CancelToken.source()
 
@@ -252,7 +259,12 @@ export function makeUseAxios(configureOptions) {
 
     React.useEffect(() => {
       if (!options.manual) {
-        request(withCancelToken(config), options, dispatch, isCancelledManually).catch(() => {})
+        request(
+          withCancelToken(config),
+          options,
+          dispatch,
+          isCancelledManually
+        ).catch(() => {})
       }
 
       return cancelOutstandingRequest
@@ -275,6 +287,6 @@ export function makeUseAxios(configureOptions) {
       [config, withCancelToken]
     )
 
-    return [state, refetch, cancelOutstandingRequest]
+    return [state, refetch, cancelManually]
   }
 }
