@@ -174,7 +174,7 @@ export function makeUseAxios(configureOptions) {
     return response
   }
 
-  async function executeRequest(config, dispatch, isCancelledManually) {
+  async function executeRequest(config, dispatch, isMounted, isCancelledManually) {
     try {
       dispatch({ type: actions.REQUEST_START })
 
@@ -188,7 +188,7 @@ export function makeUseAxios(configureOptions) {
     } catch (err) {
       if (!StaticAxios.isCancel(err)) {
         dispatch({ type: actions.REQUEST_END, payload: err, error: true })
-      } else if (isCancelledManually.current) {
+      } else if (isMounted.current && isCancelledManually.current) {
         isCancelledManually.current = false
         dispatch({ type: actions.REQUEST_END, isManualCancel: true })
       }
@@ -197,10 +197,10 @@ export function makeUseAxios(configureOptions) {
     }
   }
 
-  async function request(config, options, dispatch, isCancelledManually) {
+  async function request(config, options, dispatch, isMounted, isCancelledManually) {
     return (
       tryGetFromCache(config, options, dispatch) ||
-      executeRequest(config, dispatch, isCancelledManually)
+      executeRequest(config, dispatch, isMounted, isCancelledManually)
     )
   }
 
@@ -218,7 +218,7 @@ export function makeUseAxios(configureOptions) {
     )
 
     const isCancelledManually = React.useRef(false)
-
+    const isMounted = React.useRef(false);
     const cancelSourceRef = React.useRef()
 
     const [state, dispatch] = React.useReducer(
@@ -256,18 +256,23 @@ export function makeUseAxios(configureOptions) {
       },
       [cancelOutstandingRequest]
     )
-
+    React.useEffect(() => {
+      isMounted.current = true;
+      return () => { isMounted.current = false; }
+    }, [])
+    
     React.useEffect(() => {
       if (!options.manual) {
         request(
           withCancelToken(config),
           options,
           dispatch,
+          isMounted,
           isCancelledManually
         ).catch(() => {})
       }
 
-      return cancelOutstandingRequest
+      return () => cancelOutstandingRequest(options.manual)
     }, [config, options, withCancelToken, cancelOutstandingRequest])
 
     const refetch = React.useCallback(
@@ -281,6 +286,7 @@ export function makeUseAxios(configureOptions) {
           }),
           { useCache: false, ...options },
           dispatch,
+          isMounted,
           isCancelledManually
         )
       },
