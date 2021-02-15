@@ -1,6 +1,6 @@
 import React from 'react'
 import axios from 'axios'
-import { render, fireEvent, wait, waitFor } from '@testing-library/react'
+import { render, fireEvent } from '@testing-library/react'
 import { renderHook, act } from '@testing-library/react-hooks'
 
 import defaultUseAxios, {
