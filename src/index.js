@@ -193,9 +193,11 @@ export function makeUseAxios(configureOptions) {
     } catch (err) {
       if (!StaticAxios.isCancel(err)) {
         dispatch({ type: actions.REQUEST_END, payload: err, error: true })
-      } else if (isMounted.current && isCancelledManually.current) {
-        isCancelledManually.current = false
-        dispatch({ type: actions.REQUEST_END, isManualCancel: true })
+      } else {
+        if (isMounted.current && isCancelledManually.current) {
+          isCancelledManually.current = false
+          dispatch({ type: actions.REQUEST_END, isManualCancel: true })
+        }
       }
 
       throw err
@@ -252,7 +254,7 @@ export function makeUseAxios(configureOptions) {
 
     const cancelManually = React.useCallback(
       () => cancelOutstandingRequest(true),
-      []
+      [cancelOutstandingRequest]
     )
 
     const withCancelToken = React.useCallback(
