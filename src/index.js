@@ -174,7 +174,12 @@ export function makeUseAxios(configureOptions) {
     return response
   }
 
-  async function executeRequest(config, dispatch, isMounted, isCancelledManually) {
+  async function executeRequest(
+    config,
+    dispatch,
+    isMounted,
+    isCancelledManually
+  ) {
     try {
       dispatch({ type: actions.REQUEST_START })
 
@@ -197,7 +202,13 @@ export function makeUseAxios(configureOptions) {
     }
   }
 
-  async function request(config, options, dispatch, isMounted, isCancelledManually) {
+  async function request(
+    config,
+    options,
+    dispatch,
+    isMounted,
+    isCancelledManually
+  ) {
     return (
       tryGetFromCache(config, options, dispatch) ||
       executeRequest(config, dispatch, isMounted, isCancelledManually)
@@ -218,7 +229,7 @@ export function makeUseAxios(configureOptions) {
     )
 
     const isCancelledManually = React.useRef(false)
-    const isMounted = React.useRef(false);
+    const isMounted = React.useRef(false)
     const cancelSourceRef = React.useRef()
 
     const [state, dispatch] = React.useReducer(
@@ -257,10 +268,12 @@ export function makeUseAxios(configureOptions) {
       [cancelOutstandingRequest]
     )
     React.useEffect(() => {
-      isMounted.current = true;
-      return () => { isMounted.current = false; }
+      isMounted.current = true
+      return () => {
+        isMounted.current = false
+      }
     }, [])
-    
+
     React.useEffect(() => {
       if (!options.manual) {
         request(

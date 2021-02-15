@@ -1,6 +1,6 @@
 import React from 'react'
 import axios from 'axios'
-import { render, fireEvent } from '@testing-library/react'
+import { render, fireEvent, wait, waitFor } from '@testing-library/react'
 import { renderHook, act } from '@testing-library/react-hooks'
 
 import defaultUseAxios, {
@@ -408,7 +408,8 @@ function standardTests(
 
         result.current[2]()
 
-        expect(cancel).toHaveBeenCalled()
+        expect(cancel).toHaveBeenCalledTimes(1)
+        expect(result.current[0].loading).toBe(false)
       })
 
       it('should cancel the outstanding request when the component refetches due to a rerender', async () => {
@@ -449,6 +450,7 @@ function standardTests(
         result.current[2]()
 
         expect(cancel).toHaveBeenCalled()
+        expect(result.current[0].loading).toBe(false)
       })
 
       it('should not dispatch an error when the request is canceled', async () => {
@@ -544,7 +546,28 @@ function standardTests(
 
         result.current[2]()
 
-        expect(cancel).toHaveBeenCalled()
+        expect(cancel).toHaveBeenCalledTimes(1)
+        expect(result.current[0].loading).toBe(false)
+      })
+
+      it('should cancel manual request when the config options change', async () => {
+        axios.mockResolvedValue({ data: 'whatever' })
+
+        const { result, waitForNextUpdate, rerender } = setup('', {
+          manual: true
+        })
+
+        act(() => {
+          result.current[1]()
+        })
+
+        rerender({ config: 'new url', options: { manual: true } })
+
+        await waitForNextUpdate()
+
+        expect(result.current[0].loading).toBe(false)
+        expect(cancel).toHaveBeenCalledTimes(1)
+        expect(axios).toHaveBeenCalledTimes(1)
       })
 
       it('should throw an error when the request is canceled', async () => {
