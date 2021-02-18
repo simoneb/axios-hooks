@@ -474,6 +474,41 @@ function standardTests(
           { timeout: 1000, suppressErrors: false }
         )
       })
+
+      it('should return previous state after cancel', async () => {
+        const response = { data: 'whatever' }
+
+        const cancellation = new Error('canceled')
+
+        axios.isCancel = jest
+          .fn()
+          .mockImplementationOnce(err => err === cancellation)
+
+        axios
+          .mockResolvedValueOnce(response)
+          .mockRejectedValueOnce(cancellation)
+
+        const { result, waitForNextUpdate, rerender } = setup('', {
+          manual: true
+        })
+
+        act(() => {
+          result.current[1]()
+        })
+
+        await waitForNextUpdate()
+
+        rerender({ config: 'test', options: { manual: false } })
+
+        result.current[2]()
+
+        await waitForNextUpdate()
+
+        expect(axios).toHaveBeenCalledTimes(2)
+        expect(result.current[0].error).toBeNull()
+        expect(result.current[0].loading).toBe(false)
+        expect(result.current[0].response).toBe(response)
+      })
     })
 
     describe('manual refetches', () => {
