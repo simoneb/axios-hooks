@@ -33,7 +33,7 @@
     "test": "jest --no-cache"
   },
   "dependencies": {
-    "@babel/runtime": "7.13.4",
+    "@babel/runtime": "7.13.6",
     "lru-cache": "6.0.0"
   },
   "peerDependencies": {
@@ -43,7 +43,7 @@
   "devDependencies": {
     "@babel/cli": "7.13.0",
     "@babel/core": "7.13.1",
-    "@babel/plugin-transform-runtime": "7.13.5",
+    "@babel/plugin-transform-runtime": "7.13.6",
     "@babel/preset-env": "7.13.5",
     "@babel/preset-react": "7.12.13",
     "@commitlint/cli": "12.0.0",
