@@ -74,7 +74,7 @@
     "react-test-renderer": "17.0.1",
     "rimraf": "3.0.2",
     "standard-version": "9.1.1",
-    "ts-jest": "26.5.1",
+    "ts-jest": "26.5.2",
     "typescript": "4.1.5"
   },
   "husky": {
