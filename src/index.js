@@ -197,12 +197,8 @@ export function makeUseAxios(configureOptions) {
     )
   }
 
-  function useAxios(config, options) {
-    config = React.useMemo(
-      () => configToObject(config),
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      [JSON.stringify(config)]
-    )
+  function useAxios(_config, options) {
+    const config = React.useMemo(() => configToObject(_config), [_config])
 
     options = React.useMemo(
       () => ({ ...defaultOptions, ...options }),
