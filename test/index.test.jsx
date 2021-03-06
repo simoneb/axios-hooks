@@ -66,7 +66,7 @@ describe('makeUseAxios', () => {
 
     const setup = makeSetup(makeUseAxios({ axios: mockAxios }))
 
-    const { waitForNextUpdate } = setup()
+    const { waitForNextUpdate } = setup('')
 
     expect(mockAxios).toHaveBeenCalled()
 
@@ -83,7 +83,7 @@ describe('makeUseAxios', () => {
     it('should use local state across rerenders', async () => {
       axios.mockResolvedValueOnce({ data: 'whatever' })
 
-      const { waitForNextUpdate, rerender } = setup()
+      const { waitForNextUpdate, rerender } = setup('')
 
       await waitForNextUpdate()
 
@@ -95,13 +95,13 @@ describe('makeUseAxios', () => {
     it('should hit network across component mounts', async () => {
       axios.mockResolvedValue({ data: 'whatever' })
 
-      const { waitForNextUpdate, unmount } = setup()
+      const { waitForNextUpdate, unmount } = setup('')
 
       await waitForNextUpdate()
 
       unmount()
 
-      await setup().waitForNextUpdate()
+      await setup('').waitForNextUpdate()
 
       expect(axios).toHaveBeenCalledTimes(2)
     })
@@ -114,7 +114,7 @@ describe('makeUseAxios', () => {
           makeUseAxios({ defaultOptions: { manual: true } })
         )
 
-        setup()
+        setup('')
 
         expect(axios).not.toHaveBeenCalled()
       })
@@ -128,13 +128,13 @@ describe('makeUseAxios', () => {
 
         axios.mockResolvedValue({ data: 'whatever' })
 
-        const { waitForNextUpdate, unmount } = setup()
+        const { waitForNextUpdate, unmount } = setup('')
 
         await waitForNextUpdate()
 
         unmount()
 
-        await setup().waitForNextUpdate()
+        await setup('').waitForNextUpdate()
 
         expect(axios).toHaveBeenCalledTimes(2)
       })
@@ -175,7 +175,7 @@ describe('makeUseAxios', () => {
 })
 
 function makeSetup(useAxios) {
-  return (config = '', options = null) =>
+  return (config, options = undefined) =>
     renderHook(
       ({ config, options }) => {
         return useAxios(config, options)
@@ -202,7 +202,7 @@ function standardTests(
     it('should set loading to true and error to null before the request resolves', async () => {
       axios.mockResolvedValueOnce({ data: 'whatever' })
 
-      const { result, waitForNextUpdate } = setup()
+      const { result, waitForNextUpdate } = setup('')
 
       expect(result.current[0].loading).toBe(true)
       expect(result.current[0].error).toBe(null)
@@ -213,7 +213,7 @@ function standardTests(
     it('should set loading to false when request resolves', async () => {
       axios.mockResolvedValueOnce({ data: 'whatever' })
 
-      const { result, waitForNextUpdate } = setup()
+      const { result, waitForNextUpdate } = setup('')
 
       await waitForNextUpdate()
 
@@ -227,7 +227,7 @@ function standardTests(
 
       axios.mockResolvedValueOnce(response)
 
-      const { result, waitForNextUpdate } = setup()
+      const { result, waitForNextUpdate } = setup('')
 
       await waitForNextUpdate()
 
@@ -241,7 +241,7 @@ function standardTests(
 
       axios.mockRejectedValueOnce(error)
 
-      const { result, waitForNextUpdate } = setup()
+      const { result, waitForNextUpdate } = setup('')
 
       await waitForNextUpdate()
 
@@ -253,7 +253,7 @@ function standardTests(
 
       axios.mockRejectedValueOnce(error)
 
-      const { result, waitForNextUpdate, rerender } = setup()
+      const { result, waitForNextUpdate, rerender } = setup('')
 
       await waitForNextUpdate()
 
@@ -271,7 +271,7 @@ function standardTests(
 
       axios.mockRejectedValueOnce(error)
 
-      const firstRender = setup()
+      const firstRender = setup('')
 
       await firstRender.waitForNextUpdate()
 
@@ -279,7 +279,7 @@ function standardTests(
 
       axios.mockResolvedValueOnce({ data: 'whatever' })
 
-      const secondRender = setup()
+      const secondRender = setup('')
 
       await secondRender.waitForNextUpdate()
 
@@ -291,7 +291,7 @@ function standardTests(
 
       axios.mockRejectedValueOnce(error)
 
-      const { result, waitForNextUpdate } = setup()
+      const { result, waitForNextUpdate } = setup('')
 
       await waitForNextUpdate()
 
@@ -314,7 +314,7 @@ function standardTests(
 
       axios.mockRejectedValueOnce(error)
 
-      const { result, waitForNextUpdate } = setup()
+      const { result, waitForNextUpdate } = setup('')
 
       await waitForNextUpdate()
 
@@ -325,7 +325,7 @@ function standardTests(
     it('should refetch', async () => {
       axios.mockResolvedValue({ data: 'whatever' })
 
-      const { result, waitForNextUpdate } = setup()
+      const { result, waitForNextUpdate } = setup('')
 
       await waitForNextUpdate()
 
@@ -342,7 +342,7 @@ function standardTests(
     it('should return the same reference to the fetch function', async () => {
       axios.mockResolvedValue({ data: 'whatever' })
 
-      const { result, rerender, waitForNextUpdate } = setup()
+      const { result, rerender, waitForNextUpdate } = setup('')
 
       const firstRefetch = result.current[1]
 
@@ -358,9 +358,9 @@ function standardTests(
 
       axios.mockResolvedValueOnce(response)
 
-      await setup().waitForNextUpdate()
+      await setup('').waitForNextUpdate()
 
-      const { result } = setup()
+      const { result } = setup('')
 
       expect(result.current[0]).toEqual({
         loading: false,
@@ -376,7 +376,7 @@ function standardTests(
       it('should provide the cancel token to axios', async () => {
         axios.mockResolvedValueOnce({ data: 'whatever' })
 
-        const { waitForNextUpdate } = setup()
+        const { waitForNextUpdate } = setup('')
 
         expect(axios).toHaveBeenCalledWith(
           expect.objectContaining({
@@ -390,7 +390,7 @@ function standardTests(
       it('should cancel the outstanding request when the component unmounts', async () => {
         axios.mockResolvedValueOnce({ data: 'whatever' })
 
-        const { waitForNextUpdate, unmount } = setup()
+        const { waitForNextUpdate, unmount } = setup('')
 
         await waitForNextUpdate()
 
@@ -402,7 +402,7 @@ function standardTests(
       it('should cancel the outstanding request when the cancel method is called', async () => {
         axios.mockResolvedValue({ data: 'whatever' })
 
-        const { waitForNextUpdate, result } = setup()
+        const { waitForNextUpdate, result } = setup('')
 
         await waitForNextUpdate()
 
@@ -425,7 +425,7 @@ function standardTests(
         await waitForNextUpdate()
       })
 
-      it('should not cancel the outstanding request when the component rerenders with same config', async () => {
+      it('should not cancel the outstanding request when the component rerenders with same string config', async () => {
         axios.mockResolvedValue({ data: 'whatever' })
 
         const { waitForNextUpdate, rerender } = setup('initial config')
@@ -433,6 +433,42 @@ function standardTests(
         await waitForNextUpdate()
 
         rerender()
+
+        expect(cancel).not.toHaveBeenCalled()
+      })
+
+      it('should not cancel the outstanding request when the component rerenders with same object config', async () => {
+        axios.mockResolvedValue({ data: 'whatever' })
+
+        const { waitForNextUpdate, rerender } = setup({ some: 'config' })
+
+        await waitForNextUpdate()
+
+        rerender()
+
+        expect(cancel).not.toHaveBeenCalled()
+      })
+
+      it('should not cancel the outstanding request when the component rerenders with equal string config', async () => {
+        axios.mockResolvedValue({ data: 'whatever' })
+
+        const { waitForNextUpdate, rerender } = setup('initial config')
+
+        await waitForNextUpdate()
+
+        rerender({ config: 'initial config' })
+
+        expect(cancel).not.toHaveBeenCalled()
+      })
+
+      it('should not cancel the outstanding request when the component rerenders with equal object config', async () => {
+        axios.mockResolvedValue({ data: 'whatever' })
+
+        const { waitForNextUpdate, rerender } = setup({ some: 'config' })
+
+        await waitForNextUpdate()
+
+        rerender({ config: { some: 'config' } })
 
         expect(cancel).not.toHaveBeenCalled()
       })
@@ -459,7 +495,7 @@ function standardTests(
           .fn()
           .mockImplementationOnce(err => err === cancellation)
 
-        const { result, waitFor } = setup()
+        const { result, waitFor } = setup('')
 
         // if we cancel we won't dispatch the error, hence there's no state update
         // to wait for. yet, if we don't try to wait, we won't know if we're handling
@@ -516,7 +552,7 @@ function standardTests(
       it('should cancel the outstanding manual refetch when the component refetches', async () => {
         axios.mockResolvedValue({ data: 'whatever' })
 
-        const { result, waitForNextUpdate, rerender } = setup()
+        const { result, waitForNextUpdate, rerender } = setup('')
 
         act(() => {
           result.current[1]()
@@ -566,7 +602,7 @@ function standardTests(
         axios.mockResolvedValueOnce(response)
 
         // first component renders and stores results in cache
-        await setup().waitForNextUpdate()
+        await setup('').waitForNextUpdate()
 
         const { result } = setup('', { manual: true })
 
@@ -600,7 +636,7 @@ function standardTests(
             current: [, refetch]
           },
           waitForNextUpdate
-        } = setup()
+        } = setup('')
 
         act(() => {
           expect(refetch()).resolves.toEqual(response)
@@ -621,7 +657,7 @@ function standardTests(
             current: [, refetch]
           },
           waitForNextUpdate
-        } = setup()
+        } = setup('')
 
         await waitForNextUpdate()
 
@@ -644,7 +680,7 @@ function standardTests(
             current: [, refetch]
           },
           waitForNextUpdate
-        } = setup()
+        } = setup('')
 
         await waitForNextUpdate()
 
@@ -665,7 +701,7 @@ function standardTests(
             current: [, refetch]
           },
           waitForNextUpdate
-        } = setup()
+        } = setup('')
 
         await waitForNextUpdate()
 
@@ -840,7 +876,7 @@ function standardTests(
     it('should not return response even if there is a cached one', async () => {
       axios.mockResolvedValueOnce({ data: 'whatever' })
 
-      await setup().waitForNextUpdate()
+      await setup('').waitForNextUpdate()
 
       const { result } = setup('', { manual: true })
 
@@ -852,7 +888,7 @@ function standardTests(
     it('should use local state across rerenders', async () => {
       axios.mockResolvedValueOnce({ data: 'whatever' })
 
-      const { waitForNextUpdate, rerender } = setup()
+      const { waitForNextUpdate, rerender } = setup('')
 
       await waitForNextUpdate()
 
@@ -864,13 +900,13 @@ function standardTests(
     it('should not hit network across component mounts by default', async () => {
       axios.mockResolvedValueOnce({ data: 'whatever' })
 
-      const { waitForNextUpdate, unmount } = setup()
+      const { waitForNextUpdate, unmount } = setup('')
 
       await waitForNextUpdate()
 
       unmount()
 
-      setup()
+      setup('')
 
       expect(axios).toHaveBeenCalledTimes(1)
     })
@@ -910,7 +946,7 @@ function standardTests(
 
       unmount()
 
-      setup()
+      setup('')
 
       expect(axios).toHaveBeenCalledTimes(1)
     })
@@ -986,7 +1022,7 @@ function standardTests(
 
       configure({ axios: mockAxios })
 
-      const { waitForNextUpdate } = setup()
+      const { waitForNextUpdate } = setup('')
 
       expect(mockAxios).toHaveBeenCalled()
 
@@ -999,7 +1035,7 @@ function standardTests(
 
         axios.mockResolvedValueOnce({ data: 'whatever' })
 
-        const { waitForNextUpdate, rerender } = setup()
+        const { waitForNextUpdate, rerender } = setup('')
 
         await waitForNextUpdate()
 
@@ -1013,13 +1049,13 @@ function standardTests(
 
         axios.mockResolvedValue({ data: 'whatever' })
 
-        const { waitForNextUpdate, unmount } = setup()
+        const { waitForNextUpdate, unmount } = setup('')
 
         await waitForNextUpdate()
 
         unmount()
 
-        await setup().waitForNextUpdate()
+        await setup('').waitForNextUpdate()
 
         expect(axios).toHaveBeenCalledTimes(2)
       })
@@ -1030,7 +1066,7 @@ function standardTests(
         it('should override default manual option', () => {
           configure({ defaultOptions: { manual: true } })
 
-          setup()
+          setup('')
 
           expect(axios).not.toHaveBeenCalled()
         })
@@ -1042,13 +1078,13 @@ function standardTests(
 
           axios.mockResolvedValue({ data: 'whatever' })
 
-          const { waitForNextUpdate, unmount } = setup()
+          const { waitForNextUpdate, unmount } = setup('')
 
           await waitForNextUpdate()
 
           unmount()
 
-          await setup().waitForNextUpdate()
+          await setup('').waitForNextUpdate()
 
           expect(axios).toHaveBeenCalledTimes(2)
         })
