@@ -1,6 +1,7 @@
 import React from 'react'
 import StaticAxios from 'axios'
 import LRU from 'lru-cache'
+import { dequal as deepEqual } from 'dequal/lite'
 
 const actions = {
   REQUEST_START: 'REQUEST_START',
@@ -197,17 +198,17 @@ export function makeUseAxios(configureOptions) {
     )
   }
 
-  function useAxios(config, options) {
-    config = React.useMemo(
-      () => configToObject(config),
+  function useAxios(_config, _options) {
+    const config = React.useMemo(
+      () => configToObject(_config),
       // eslint-disable-next-line react-hooks/exhaustive-deps
-      [JSON.stringify(config)]
+      useDeepCompareMemoize(_config)
     )
 
-    options = React.useMemo(
-      () => ({ ...defaultOptions, ...options }),
+    const options = React.useMemo(
+      () => ({ ...defaultOptions, ..._options }),
       // eslint-disable-next-line react-hooks/exhaustive-deps
-      [JSON.stringify(options)]
+      useDeepCompareMemoize(_options)
     )
 
     const cancelSourceRef = React.useRef()
@@ -266,4 +267,16 @@ export function makeUseAxios(configureOptions) {
 
     return [state, refetch, cancelOutstandingRequest]
   }
+}
+
+function useDeepCompareMemoize(value) {
+  const ref = React.useRef()
+  const signalRef = React.useRef(0)
+
+  if (!deepEqual(value, ref.current)) {
+    ref.current = value
+    signalRef.current += 1
+  }
+
+  return [signalRef.current]
 }
