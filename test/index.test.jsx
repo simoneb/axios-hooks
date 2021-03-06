@@ -452,11 +452,11 @@ function standardTests(
       it('should not cancel the outstanding request when the component rerenders with equal string config', async () => {
         axios.mockResolvedValue({ data: 'whatever' })
 
-        const { waitForNextUpdate, rerender } = setup('initial config')
+        const { waitForNextUpdate, rerender } = setup('initial config', {})
 
         await waitForNextUpdate()
 
-        rerender({ config: 'initial config' })
+        rerender({ config: 'initial config', options: {} })
 
         expect(cancel).not.toHaveBeenCalled()
       })
@@ -464,11 +464,11 @@ function standardTests(
       it('should not cancel the outstanding request when the component rerenders with equal object config', async () => {
         axios.mockResolvedValue({ data: 'whatever' })
 
-        const { waitForNextUpdate, rerender } = setup({ some: 'config' })
+        const { waitForNextUpdate, rerender } = setup({ some: 'config' }, {})
 
         await waitForNextUpdate()
 
-        rerender({ config: { some: 'config' } })
+        rerender({ config: { some: 'config' }, options: {} })
 
         expect(cancel).not.toHaveBeenCalled()
       })
