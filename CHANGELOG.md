@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.4.0](https://github.com/simoneb/axios-hooks/compare/v2.4.0-0...v2.4.0) (2021-03-05)
+
+
+### Features
+
+* remove config serialization ([06a8197](https://github.com/simoneb/axios-hooks/commit/06a819728d7631c0ac26e774b447885597ba6c2f))
+
 ## [2.4.0-0](https://github.com/simoneb/axios-hooks/compare/v2.3.0...v2.4.0-0) (2021-02-12)
 
 
