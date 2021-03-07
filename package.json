@@ -1,6 +1,6 @@
 {
   "name": "axios-hooks",
-  "version": "2.4.0",
+  "version": "2.5.0-0",
   "description": "axios-hooks",
   "keywords": [
     "axios",
@@ -34,6 +34,7 @@
   },
   "dependencies": {
     "@babel/runtime": "7.13.9",
+    "dequal": "2.0.2",
     "lru-cache": "6.0.0"
   },
   "peerDependencies": {

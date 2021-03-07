@@ -1,6 +1,7 @@
 import React from 'react'
 import StaticAxios from 'axios'
 import LRU from 'lru-cache'
+import { dequal as deepEqual } from 'dequal/lite'
 
 const actions = {
   REQUEST_START: 'REQUEST_START',
@@ -53,7 +54,7 @@ function configToObject(config) {
     }
   }
 
-  return config
+  return Object.assign({}, config)
 }
 
 export function makeUseAxios(configureOptions) {
@@ -217,13 +218,17 @@ export function makeUseAxios(configureOptions) {
     )
   }
 
-  function useAxios(_config, options) {
-    const config = React.useMemo(() => configToObject(_config), [_config])
-
-    options = React.useMemo(
-      () => ({ ...defaultOptions, ...options }),
+  function useAxios(_config, _options) {
+    const config = React.useMemo(
+      () => configToObject(_config),
       // eslint-disable-next-line react-hooks/exhaustive-deps
-      [JSON.stringify(options)]
+      useDeepCompareMemoize(_config)
+    )
+
+    const options = React.useMemo(
+      () => ({ ...defaultOptions, ..._options }),
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      useDeepCompareMemoize(_options)
     )
 
     const isCancelledManually = React.useRef(false)
@@ -306,4 +311,16 @@ export function makeUseAxios(configureOptions) {
 
     return [state, refetch, cancelManually]
   }
+}
+
+function useDeepCompareMemoize(value) {
+  const ref = React.useRef()
+  const signalRef = React.useRef(0)
+
+  if (!deepEqual(value, ref.current)) {
+    ref.current = value
+    signalRef.current += 1
+  }
+
+  return [signalRef.current]
 }
