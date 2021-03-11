@@ -226,16 +226,11 @@ export function makeUseAxios(configureOptions) {
       useAxios.__ssrPromises.push(axiosInstance(config))
     }
 
-    const cancelOutstandingRequest = React.useCallback(manualCancel => {
+    const cancelOutstandingRequest = React.useCallback(() => {
       if (cancelSourceRef.current) {
         cancelSourceRef.current.cancel()
       }
     }, [])
-
-    const cancelManually = React.useCallback(
-      () => cancelOutstandingRequest(true),
-      [cancelOutstandingRequest]
-    )
 
     const withCancelToken = React.useCallback(
       config => {
@@ -255,7 +250,7 @@ export function makeUseAxios(configureOptions) {
         request(withCancelToken(config), options, dispatch).catch(() => {})
       }
 
-      return () => cancelOutstandingRequest(options.manual)
+      return () => cancelOutstandingRequest()
     }, [config, options, withCancelToken, cancelOutstandingRequest])
 
     const refetch = React.useCallback(
@@ -274,7 +269,7 @@ export function makeUseAxios(configureOptions) {
       [config, withCancelToken]
     )
 
-    return [state, refetch, cancelManually]
+    return [state, refetch, cancelOutstandingRequest]
   }
 }
 
