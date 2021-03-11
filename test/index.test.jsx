@@ -489,6 +489,20 @@ function standardTests(
         expect(result.current[0].loading).toBe(false)
       })
 
+      it('should not dispatch an error when the request is canceled', async () => {
+        const cancellation = new Error('canceled')
+
+        axios.mockRejectedValueOnce(cancellation)
+        axios.isCancel = jest
+          .fn()
+          .mockImplementationOnce(err => err === cancellation)
+
+        const { result, waitForNextUpdate } = setup('')
+
+        await waitForNextUpdate()
+        expect(result.current[0].error).toBeNull()
+      })
+
       it('should return previous state after cancel', async () => {
         const response = { data: 'whatever' }
 
