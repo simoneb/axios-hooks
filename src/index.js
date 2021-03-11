@@ -250,7 +250,7 @@ export function makeUseAxios(configureOptions) {
         request(withCancelToken(config), options, dispatch).catch(() => {})
       }
 
-      return () => cancelOutstandingRequest()
+      return cancelOutstandingRequest
     }, [config, options, withCancelToken, cancelOutstandingRequest])
 
     const refetch = React.useCallback(
