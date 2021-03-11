@@ -5,7 +5,8 @@ import { dequal as deepEqual } from 'dequal/lite'
 
 const actions = {
   REQUEST_START: 'REQUEST_START',
-  REQUEST_END: 'REQUEST_END'
+  REQUEST_END: 'REQUEST_END',
+  REQUEST_CANCELED: 'REQUEST_CANCELED'
 }
 
 const DEFAULT_OPTIONS = {
@@ -150,13 +151,11 @@ export function makeUseAxios(configureOptions) {
         return {
           ...state,
           loading: false,
-          ...(action.error || action.isManualCancel
-            ? {}
-            : { data: action.payload.data }),
-          ...(action.isManualCancel
-            ? {}
-            : { [action.error ? 'error' : 'response']: action.payload })
+          ...(action.error ? {} : { data: action.payload.data }),
+          [action.error ? 'error' : 'response']: action.payload
         }
+      case actions.REQUEST_CANCELED:
+        return { ...state, loading: false }
     }
   }
 
@@ -175,12 +174,7 @@ export function makeUseAxios(configureOptions) {
     return response
   }
 
-  async function executeRequest(
-    config,
-    dispatch,
-    isMounted,
-    isCancelledManually
-  ) {
+  async function executeRequest(config, dispatch) {
     try {
       dispatch({ type: actions.REQUEST_START })
 
@@ -195,26 +189,16 @@ export function makeUseAxios(configureOptions) {
       if (!StaticAxios.isCancel(err)) {
         dispatch({ type: actions.REQUEST_END, payload: err, error: true })
       } else {
-        if (isMounted.current && isCancelledManually.current) {
-          isCancelledManually.current = false
-          dispatch({ type: actions.REQUEST_END, isManualCancel: true })
-        }
+        dispatch({ type: actions.REQUEST_CANCELED })
       }
-
       throw err
     }
   }
 
-  async function request(
-    config,
-    options,
-    dispatch,
-    isMounted,
-    isCancelledManually
-  ) {
+  async function request(config, options, dispatch) {
     return (
       tryGetFromCache(config, options, dispatch) ||
-      executeRequest(config, dispatch, isMounted, isCancelledManually)
+      executeRequest(config, dispatch)
     )
   }
 
@@ -231,8 +215,6 @@ export function makeUseAxios(configureOptions) {
       useDeepCompareMemoize(_options)
     )
 
-    const isCancelledManually = React.useRef(false)
-    const isMounted = React.useRef(false)
     const cancelSourceRef = React.useRef()
 
     const [state, dispatch] = React.useReducer(
@@ -246,9 +228,6 @@ export function makeUseAxios(configureOptions) {
 
     const cancelOutstandingRequest = React.useCallback(manualCancel => {
       if (cancelSourceRef.current) {
-        if (manualCancel) {
-          isCancelledManually.current = true
-        }
         cancelSourceRef.current.cancel()
       }
     }, [])
@@ -270,22 +249,10 @@ export function makeUseAxios(configureOptions) {
       },
       [cancelOutstandingRequest]
     )
-    React.useEffect(() => {
-      isMounted.current = true
-      return () => {
-        isMounted.current = false
-      }
-    }, [])
 
     React.useEffect(() => {
       if (!options.manual) {
-        request(
-          withCancelToken(config),
-          options,
-          dispatch,
-          isMounted,
-          isCancelledManually
-        ).catch(() => {})
+        request(withCancelToken(config), options, dispatch).catch(() => {})
       }
 
       return () => cancelOutstandingRequest(options.manual)
@@ -301,9 +268,7 @@ export function makeUseAxios(configureOptions) {
             ...(isReactEvent(configOverride) ? null : configOverride)
           }),
           { useCache: false, ...options },
-          dispatch,
-          isMounted,
-          isCancelledManually
+          dispatch
         )
       },
       [config, withCancelToken]
