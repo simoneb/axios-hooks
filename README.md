@@ -73,6 +73,7 @@ function App() {
 
 ### Guides
 
+- [Refresh Behavior](#refresh-behavior)
 - [Configuration](#configuration)
 - [Manual Requests](#manual-requests)
 - [Manual Cancellation](#manual-cancellation)
@@ -83,7 +84,14 @@ function App() {
 
 The package exports one default export and named exports:
 
-`import useAxios, { configure, loadCache, serializeCache } from 'axios-hooks'`
+```js
+import useAxios, { 
+  configure, 
+  loadCache, 
+  serializeCache,
+  makeUseAxios
+} from 'axios-hooks'
+```
 
 ### useAxios(url|config, options)
 
@@ -109,11 +117,12 @@ The main React hook to execute HTTP requests.
   - `config` - Same `config` object as `axios`, which is _shallow-merged_ with the config object provided when invoking the hook. Useful to provide arguments to non-GET requests.
   - `options` - An options object.
     - `useCache` ( `false` ) - Allows caching to be enabled/disabled for this "execute" function.
-- `manualCancel()` - A function to cancel outstanding requests manually.
 
   **Returns**
 
-  A promise containing the response. If the request is unsuccessful, an exception is thrown and must be handled manually.
+  A promise containing the response. If the request is unsuccessful, the promise reects and the rejection must be handled manually.
+
+- `manualCancel()` - A function to cancel outstanding requests manually.
 
 ### configure({ cache, axios, defaultOptions })
 
@@ -157,6 +166,14 @@ The returned value, besides being a function that can be used as a React Hook, a
 - `serializeCache`
 
 which are the same as the package's named exports but limited to the `useAxios` instance returned by `makeUseAxios`.
+
+## Refresh Behavior
+
+The arguments provided to `useAxios(config[,options])` are watched for changes and compared using deep object comparison.
+
+When they change, if the configuration allows a request to be fired (e.g. `manual:false`), any pending request is canceled and a new request is triggered.
+
+Because of this, it's important to make sure that the arguments to `useAxios` preserve deep equality across component renders. This is often the case unless functions (e.g. axios interceptors or transformers) are provided to a configuration object. In that case, those functions need to be memoized or they will trigger a request execution at each render, leading to an infinite loop.
 
 ## Configuration
 
