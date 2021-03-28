@@ -408,7 +408,8 @@ function standardTests(
 
         result.current[2]()
 
-        expect(cancel).toHaveBeenCalled()
+        expect(cancel).toHaveBeenCalledTimes(1)
+        expect(result.current[0].loading).toBe(false)
       })
 
       it('should cancel the outstanding request when the component refetches due to a rerender', async () => {
@@ -485,6 +486,7 @@ function standardTests(
         result.current[2]()
 
         expect(cancel).toHaveBeenCalled()
+        expect(result.current[0].loading).toBe(false)
       })
 
       it('should not dispatch an error when the request is canceled', async () => {
@@ -495,18 +497,45 @@ function standardTests(
           .fn()
           .mockImplementationOnce(err => err === cancellation)
 
-        const { result, waitFor } = setup('')
+        const { result, waitForNextUpdate } = setup('')
 
-        // if we cancel we won't dispatch the error, hence there's no state update
-        // to wait for. yet, if we don't try to wait, we won't know if we're handling
-        // the error properly because the return value will not have the error until a
-        // state update happens. it would be great to have a better way to test this
-        await waitFor(
-          () => {
-            expect(result.current[0].error).toBeNull()
-          },
-          { timeout: 1000, suppressErrors: false }
-        )
+        await waitForNextUpdate()
+        expect(result.current[0].error).toBeNull()
+      })
+
+      it('should return previous state after cancel', async () => {
+        const response = { data: 'whatever' }
+
+        const cancellation = new Error('canceled')
+
+        axios.isCancel = jest
+          .fn()
+          .mockImplementationOnce(err => err === cancellation)
+
+        axios
+          .mockResolvedValueOnce(response)
+          .mockRejectedValueOnce(cancellation)
+
+        const { result, waitForNextUpdate, rerender } = setup('', {
+          manual: true
+        })
+
+        act(() => {
+          result.current[1]()
+        })
+
+        await waitForNextUpdate()
+
+        rerender({ config: 'test', options: { manual: false } })
+
+        result.current[2]()
+
+        await waitForNextUpdate()
+
+        expect(axios).toHaveBeenCalledTimes(2)
+        expect(result.current[0].error).toBeNull()
+        expect(result.current[0].loading).toBe(false)
+        expect(result.current[0].response).toBe(response)
       })
     })
 
@@ -580,7 +609,28 @@ function standardTests(
 
         result.current[2]()
 
-        expect(cancel).toHaveBeenCalled()
+        expect(cancel).toHaveBeenCalledTimes(1)
+        expect(result.current[0].loading).toBe(false)
+      })
+
+      it('should cancel manual request when the config options change', async () => {
+        axios.mockResolvedValue({ data: 'whatever' })
+
+        const { result, waitForNextUpdate, rerender } = setup('', {
+          manual: true
+        })
+
+        act(() => {
+          result.current[1]()
+        })
+
+        rerender({ config: 'new url', options: { manual: true } })
+
+        await waitForNextUpdate()
+
+        expect(result.current[0].loading).toBe(false)
+        expect(cancel).toHaveBeenCalledTimes(1)
+        expect(axios).toHaveBeenCalledTimes(1)
       })
 
       it('should throw an error when the request is canceled', async () => {
