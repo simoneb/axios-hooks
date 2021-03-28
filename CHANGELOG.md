@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.5.1](https://github.com/simoneb/axios-hooks/compare/v2.5.0...v2.5.1) (2021-03-28)
+
+
+### Features
+
+* **typings:** expose return type of useAxios ([3273ba1](https://github.com/simoneb/axios-hooks/commit/3273ba1fba2f7417bdc7844e77fe47ecd6fe2761))
+
 ## [2.5.0](https://github.com/simoneb/axios-hooks/compare/v2.5.0-0...v2.5.0) (2021-03-12)
 
 ## [2.5.0-0](https://github.com/simoneb/axios-hooks/compare/v2.4.1...v2.5.0-0) (2021-03-06)
