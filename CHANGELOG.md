@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.6.0](https://github.com/simoneb/axios-hooks/compare/v2.5.1...v2.6.0) (2021-03-28)
+
+
+### Features
+
+* reset hook state when config changes with outstanding manual fetch ([8b2f166](https://github.com/simoneb/axios-hooks/commit/8b2f166c41c453026fde4dc9eded1c9ee927cc46))
+* update the hook state when cancelled manually ([203541b](https://github.com/simoneb/axios-hooks/commit/203541bb3ad52f2bd95d453ff0ffd3d1663e2794))
+
 ### [2.5.1](https://github.com/simoneb/axios-hooks/compare/v2.5.0...v2.5.1) (2021-03-28)
 
 
