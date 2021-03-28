@@ -31,18 +31,20 @@ export interface ConfigureOptions {
   defaultOptions?: Options
 }
 
+export type UseAxiosResult<TResponse = any, TError = any> = [
+  ResponseValues<TResponse, TError>,
+  (
+    config?: AxiosRequestConfig,
+    options?: RefetchOptions
+  ) => AxiosPromise<TResponse>,
+  () => void
+]
+
 export interface UseAxios {
   <TResponse = any, TError = any>(
     config: AxiosRequestConfig | string,
     options?: Options
-  ): [
-    ResponseValues<TResponse, TError>,
-    (
-      config?: AxiosRequestConfig,
-      options?: RefetchOptions
-    ) => AxiosPromise<TResponse>,
-    () => void
-  ]
+  ): UseAxiosResult<TResponse, TError>
 
   loadCache(data: any[]): void
   serializeCache(): Promise<any[]>
