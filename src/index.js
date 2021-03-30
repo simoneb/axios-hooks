@@ -5,8 +5,7 @@ import { dequal as deepEqual } from 'dequal/lite'
 
 const actions = {
   REQUEST_START: 'REQUEST_START',
-  REQUEST_END: 'REQUEST_END',
-  REQUEST_CANCELED: 'REQUEST_CANCELED'
+  REQUEST_END: 'REQUEST_END'
 }
 
 const DEFAULT_OPTIONS = {
@@ -154,8 +153,6 @@ export function makeUseAxios(configureOptions) {
           ...(action.error ? {} : { data: action.payload.data }),
           [action.error ? 'error' : 'response']: action.payload
         }
-      case actions.REQUEST_CANCELED:
-        return { ...state, loading: false }
     }
   }
 
@@ -188,9 +185,8 @@ export function makeUseAxios(configureOptions) {
     } catch (err) {
       if (!StaticAxios.isCancel(err)) {
         dispatch({ type: actions.REQUEST_END, payload: err, error: true })
-      } else {
-        dispatch({ type: actions.REQUEST_CANCELED })
       }
+
       throw err
     }
   }
