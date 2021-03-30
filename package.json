@@ -49,7 +49,7 @@
     "@babel/preset-react": "7.13.13",
     "@commitlint/cli": "12.0.1",
     "@commitlint/config-conventional": "12.0.1",
-    "@testing-library/react": "11.2.5",
+    "@testing-library/react": "11.2.6",
     "@testing-library/react-hooks": "4.0.1",
     "@types/jest": "26.0.22",
     "@types/lru-cache": "5.1.0",
