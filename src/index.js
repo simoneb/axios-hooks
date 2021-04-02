@@ -5,7 +5,8 @@ import { dequal as deepEqual } from 'dequal/lite'
 
 const actions = {
   REQUEST_START: 'REQUEST_START',
-  REQUEST_END: 'REQUEST_END'
+  REQUEST_END: 'REQUEST_END',
+  REQUEST_CANCELLED: 'REQUEST_CANCELLED'
 }
 
 const DEFAULT_OPTIONS = {
@@ -153,6 +154,8 @@ export function makeUseAxios(configureOptions) {
           ...(action.error ? {} : { data: action.payload.data }),
           [action.error ? 'error' : 'response']: action.payload
         }
+      case actions.REQUEST_CANCELLED:
+        return { ...state, loading: false }
     }
   }
 
@@ -222,11 +225,18 @@ export function makeUseAxios(configureOptions) {
       useAxios.__ssrPromises.push(axiosInstance(config))
     }
 
-    const cancelOutstandingRequest = React.useCallback(() => {
+    const cancelOutstandingRequest = React.useCallback(resetState => {
       if (cancelSourceRef.current) {
         cancelSourceRef.current.cancel()
       }
+      if (resetState) {
+        dispatch({ type: actions.REQUEST_CANCELLED })
+      }
     }, [])
+
+    const cancelManually = React.useCallback(() => {
+      cancelOutstandingRequest(true)
+    }, [cancelOutstandingRequest])
 
     const withCancelToken = React.useCallback(
       config => {
@@ -246,7 +256,7 @@ export function makeUseAxios(configureOptions) {
         request(withCancelToken(config), options, dispatch).catch(() => {})
       }
 
-      return cancelOutstandingRequest
+      return () => cancelOutstandingRequest(options.manual)
     }, [config, options, withCancelToken, cancelOutstandingRequest])
 
     const refetch = React.useCallback(
@@ -265,7 +275,7 @@ export function makeUseAxios(configureOptions) {
       [config, withCancelToken]
     )
 
-    return [state, refetch, cancelOutstandingRequest]
+    return [state, refetch, cancelManually]
   }
 }
 

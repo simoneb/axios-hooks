@@ -396,7 +396,27 @@ function standardTests(
 
         unmount()
 
-        expect(cancel).toHaveBeenCalled()
+        expect(cancel).toHaveBeenCalledTimes(1)
+      })
+
+      it('should cancel the outstanding manual request when the component unmounts', async () => {
+        axios.mockResolvedValueOnce({ data: 'whatever' })
+
+        const { waitForNextUpdate, unmount, result } = setup('', {
+          manual: true
+        })
+
+        act(() => {
+          result.current[1]()
+        })
+
+        expect(result.current[0].loading).toBe(true)
+
+        await waitForNextUpdate()
+
+        unmount()
+
+        expect(cancel).toHaveBeenCalledTimes(1)
       })
 
       it('should cancel the outstanding request when the cancel method is called', async () => {
@@ -406,7 +426,9 @@ function standardTests(
 
         await waitForNextUpdate()
 
-        result.current[2]()
+        act(() => {
+          result.current[2]()
+        })
 
         expect(cancel).toHaveBeenCalled()
       })
@@ -482,7 +504,9 @@ function standardTests(
 
         rerender()
 
-        result.current[2]()
+        act(() => {
+          result.current[2]()
+        })
 
         expect(cancel).toHaveBeenCalled()
       })
@@ -578,9 +602,47 @@ function standardTests(
 
         await waitForNextUpdate()
 
-        result.current[2]()
+        act(() => {
+          result.current[2]()
+        })
 
         expect(cancel).toHaveBeenCalled()
+      })
+
+      it('should return previous state after cancel', async () => {
+        const response = { data: 'whatever' }
+
+        const cancellation = new Error('canceled')
+
+        axios.isCancel = jest
+          .fn()
+          .mockImplementationOnce(err => err === cancellation)
+
+        axios
+          .mockResolvedValueOnce(response)
+          .mockRejectedValueOnce(cancellation)
+
+        const { result, waitForNextUpdate, rerender } = setup('', {
+          manual: true
+        })
+
+        act(() => {
+          result.current[1]()
+        })
+
+        await waitForNextUpdate()
+
+        rerender({ config: 'test', options: { manual: false } })
+
+        act(() => {
+          result.current[2]()
+        })
+
+        expect(cancel).toHaveBeenCalledTimes(3)
+        expect(axios).toHaveBeenCalledTimes(2)
+        expect(result.current[0].error).toBeNull()
+        expect(result.current[0].loading).toBe(false)
+        expect(result.current[0].response).toBe(response)
       })
 
       it('should throw an error when the request is canceled', async () => {
