@@ -52,7 +52,7 @@ function App() {
 - [configure](#configure-cache-axios-defaultoptions)
 - [serializeCache](#serializeCache)
 - [loadCache](#loadcachecache)
-- [makeUseAxios](#makeuseaxios-cache-axios-defaultoptions)
+- [makeUseAxios](#makeuseaxios-cache-axios-defaultoptions-)
 
 ### Examples
 
