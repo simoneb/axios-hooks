@@ -173,7 +173,7 @@ The arguments provided to `useAxios(config[,options])` are watched for changes a
 
 When they change, if the configuration allows a request to be fired (e.g. `manual:false`), any pending request is canceled and a new request is triggered.
 
-Because of this, it's important to make sure that the arguments to `useAxios` preserve deep equality across component renders. This is often the case unless functions (e.g. axios interceptors or transformers) are provided to a configuration object. In that case, those functions need to be memoized or they will trigger a request execution at each render, leading to an infinite loop.
+Because of this, it's important to make sure that the arguments to `useAxios` preserve deep equality across component renders. This is often the case unless functions (e.g. axios transformers) are provided to a configuration object. In that case, those functions need to be memoized or they will trigger a request execution at each render, leading to an infinite loop.
 
 ## Configuration
 
