@@ -1,4 +1,4 @@
-name: Node.js CI
+name: ci
 
 on:
   push:
@@ -8,17 +8,11 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [14.x]
-
     steps:
       - uses: actions/checkout@v2
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
+      - uses: actions/setup-node@v2
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 14.x
       - run: npm ci
       - run: npm run lint
       - run: npm test -- --coverage

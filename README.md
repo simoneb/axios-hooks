@@ -1,6 +1,6 @@
 # axios-hooks
 
-![Node.js CI](https://github.com/simoneb/axios-hooks/workflows/Node.js%20CI/badge.svg)
+![ci](https://github.com/simoneb/axios-hooks/workflows/ci/badge.svg)
 [![codecov](https://codecov.io/gh/simoneb/axios-hooks/branch/master/graph/badge.svg)](https://codecov.io/gh/simoneb/axios-hooks)
 [![npm version](https://badge.fury.io/js/axios-hooks.svg)](https://badge.fury.io/js/axios-hooks)
 [![bundlephobia](https://badgen.net/bundlephobia/minzip/axios-hooks)](https://bundlephobia.com/result?p=axios-hooks)
@@ -85,9 +85,9 @@ function App() {
 The package exports one default export and named exports:
 
 ```js
-import useAxios, { 
-  configure, 
-  loadCache, 
+import useAxios, {
+  configure,
+  loadCache,
   serializeCache,
   makeUseAxios
 } from 'axios-hooks'
@@ -265,7 +265,7 @@ function App() {
 
 ## Manual Cancellation
 
-The cancellation method can be used to cancel an outstanding request whether it be 
+The cancellation method can be used to cancel an outstanding request whether it be
 from the automatic hook request or from the `manual` execute method.
 
 ### Example
@@ -275,35 +275,38 @@ We can call the cancellation programmatically or via controls.
 
 ```js
 function App() {
-  const [pagination, setPagination] = useState({});
+  const [pagination, setPagination] = useState({})
   const [{ data, loading }, refetch, cancelRequest] = useAxios({
-    url: "/users?delay=5",
+    url: '/users?delay=5',
     params: { ...pagination }
-  });
+  })
 
   const handleFetch = () => {
-    setPagination({ per_page: 2, page: 2 });
-  };
+    setPagination({ per_page: 2, page: 2 })
+  }
 
   const externalRefetch = async () => {
     try {
-      await refetch();
-    } catch(e) {
+      await refetch()
+    } catch (e) {
       // Handle cancellation
     }
-  };
+  }
 
   return (
     <div>
       <button onClick={handleFetch}>refetch</button>
       <button onClick={externalRefetch}>External Refetch</button>
-      <button disabled={!loading} onClick={cancelRequest}>Cancel Request</button>
+      <button disabled={!loading} onClick={cancelRequest}>
+        Cancel Request
+      </button>
       {loading && <p>...loading</p>}
       <pre>{JSON.stringify(data, null, 2)}</pre>
     </div>
-  );
+  )
 }
 ```
+
 ## Server Side Rendering
 
 `axios-hooks` seamlessly supports server side rendering scenarios, by preloading data on the server and providing the data to the client, so that the client doesn't need to reload it.

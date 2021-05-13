@@ -1,8 +1,0 @@
-{
-  "extends": ["config:base", ":preserveSemverRanges"],
-  "automerge": true,
-  "automergeType": "branch",
-  "dependencyDashboard": true,
-  "labels": ["renovate"],
-  "prCreation": "not-pending"
-}
