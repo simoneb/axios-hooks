@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.6.2](https://github.com/simoneb/axios-hooks/compare/v2.6.1...v2.6.2) (2021-05-13)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @babel/runtime to v7.13.17 ([259ea08](https://github.com/simoneb/axios-hooks/commit/259ea087174890284efda69f91b00537e9f9c7ce))
+
 ### [2.6.1](https://github.com/simoneb/axios-hooks/compare/v2.6.0...v2.6.1) (2021-03-30)
 
 ## [2.6.0](https://github.com/simoneb/axios-hooks/compare/v2.5.1...v2.6.0) (2021-03-28)
