@@ -501,12 +501,9 @@ function standardTests(
         // to wait for. yet, if we don't try to wait, we won't know if we're handling
         // the error properly because the return value will not have the error until a
         // state update happens. it would be great to have a better way to test this
-        await waitFor(
-          () => {
-            expect(result.current[0].error).toBeNull()
-          },
-          { timeout: 1000, suppressErrors: false }
-        )
+        await waitFor(() => {
+          expect(result.current[0].error).toBeNull()
+        })
       })
     })
 
