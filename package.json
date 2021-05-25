@@ -50,7 +50,7 @@
     "@commitlint/cli": "12.1.4",
     "@commitlint/config-conventional": "12.1.4",
     "@testing-library/react": "11.2.7",
-    "@testing-library/react-hooks": "6.0.0",
+    "@testing-library/react-hooks": "7.0.0",
     "@types/jest": "26.0.23",
     "@types/lru-cache": "5.1.0",
     "@types/node": "15.6.1",
