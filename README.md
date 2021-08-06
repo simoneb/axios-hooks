@@ -49,7 +49,7 @@ function App() {
 ### API
 
 - [useAxios](#useaxiosurlconfig-options)
-- [configure](#configure-cache-axios-defaultoptions)
+- [configure](#configure-cache-axios-defaultoptions-)
 - [serializeCache](#serializeCache)
 - [loadCache](#loadcachecache)
 - [makeUseAxios](#makeuseaxios-cache-axios-defaultoptions-)
