@@ -11,7 +11,8 @@ const actions = {
 const DEFAULT_OPTIONS = {
   manual: false,
   useCache: true,
-  ssr: true
+  ssr: true,
+  cancelPrev: true
 }
 
 const useAxios = makeUseAxios()
@@ -230,7 +231,9 @@ export function makeUseAxios(configureOptions) {
 
     const withCancelToken = React.useCallback(
       config => {
-        cancelOutstandingRequest()
+        if (cancelPrev) {
+          cancelOutstandingRequest()
+        }
 
         cancelSourceRef.current = StaticAxios.CancelToken.source()
 
