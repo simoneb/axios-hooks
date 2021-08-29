@@ -102,6 +102,8 @@ The main React hook to execute HTTP requests.
   - `manual` ( `false` ) - If true, the request is not executed immediately. Useful for non-GET requests that should not be executed when the component renders. Use the `execute` function returned when invoking the hook to execute the request manually.
   - `useCache` ( `true` ) - Allows caching to be enabled/disabled for the hook. It doesn't affect the `execute` function returned by the hook.
   - `ssr` ( `true` ) - Enables or disables SSR support
+  - `autoCancel` ( `true` ) - Enables or disables automatic cancellation of pending requests whether it be
+    from the automatic hook request or from the `manual` execute method
 
 **Returns**
 
@@ -171,7 +173,7 @@ which are the same as the package's named exports but limited to the `useAxios` 
 
 The arguments provided to `useAxios(config[,options])` are watched for changes and compared using deep object comparison.
 
-When they change, if the configuration allows a request to be fired (e.g. `manual:false`), any pending request is canceled and a new request is triggered.
+When they change, if the configuration allows a request to be fired (e.g. `manual:false`), any pending request is canceled and a new request is triggered, to avoid automatic cancellation you should use `autoCancel:false` option
 
 Because of this, it's important to make sure that the arguments to `useAxios` preserve deep equality across component renders. This is often the case unless functions (e.g. axios transformers) are provided to a configuration object. In that case, those functions need to be memoized or they will trigger a request execution at each render, leading to an infinite loop.
 
@@ -181,7 +183,7 @@ Unless provided via the `configure` function, `axios-hooks` uses as defaults:
 
 - `axios` - the default `axios` package export
 - `cache` - a new instance of the default `lru-cache` package export, with no arguments
-- `defaultOptions` - `{ manual: false, useCache: true, ssr: true }`
+- `defaultOptions` - `{ manual: false, useCache: true, ssr: true, autoCancel: true }`
 
 These defaults may not suit your needs, for example:
 
@@ -241,7 +243,7 @@ function App() {
     },
     { manual: true }
   )
-
+  
   function updateData() {
     executePut({
       data: {
