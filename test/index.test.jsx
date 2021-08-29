@@ -376,7 +376,7 @@ function standardTests(
       it('should skip default cancellation before request if options.autoCancel is set to false', async () => {
         axios.mockResolvedValue({ data: 'whatever' })
 
-        const { waitForNextUpdate, rerender } = setup('initial config', {
+        const { waitForNextUpdate, rerender } = setup('', {
           autoCancel: false
         })
 
@@ -385,8 +385,6 @@ function standardTests(
         rerender()
 
         expect(cancel).not.toHaveBeenCalled()
-
-        await waitForNextUpdate()
       })
 
       it('should provide the cancel token to axios', async () => {

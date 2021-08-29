@@ -231,7 +231,7 @@ export function makeUseAxios(configureOptions) {
 
     const withCancelToken = React.useCallback(
       config => {
-        if (option.autoCancel) {
+        if (options.autoCancel) {
           cancelOutstandingRequest()
         }
 
@@ -241,7 +241,7 @@ export function makeUseAxios(configureOptions) {
 
         return config
       },
-      [cancelOutstandingRequest]
+      [cancelOutstandingRequest, options.autoCancel]
     )
 
     React.useEffect(() => {
