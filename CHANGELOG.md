@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.7.0](https://github.com/simoneb/axios-hooks/compare/v2.6.3...v2.7.0) (2021-08-29)
+
+
+### Features
+
+* skip automatic request cancellation ([#533](https://github.com/simoneb/axios-hooks/issues/533)) ([624ea44](https://github.com/simoneb/axios-hooks/commit/624ea4426a5609c2c928b56be1e99ab06c23ac93))
+
 ### [2.6.3](https://github.com/simoneb/axios-hooks/compare/v2.6.2...v2.6.3) (2021-05-17)
 
 ### [2.6.2](https://github.com/simoneb/axios-hooks/compare/v2.6.1...v2.6.2) (2021-05-13)
