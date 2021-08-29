@@ -233,15 +233,17 @@ function App() {
     'https://reqres.in/api/users/1'
   )
 
-  const [{ data: putData, loading: putLoading, error: putError }, executePut] =
-    useAxios(
-      {
-        url: 'https://reqres.in/api/users/1',
-        method: 'PUT'
-      },
-      { manual: true }
-    )
-
+  const [
+    { data: putData, loading: putLoading, error: putError },
+    executePut
+  ] = useAxios(
+    {
+      url: 'https://reqres.in/api/users/1',
+      method: 'PUT'
+    },
+    { manual: true }
+  )
+  
   function updateData() {
     executePut({
       data: {
