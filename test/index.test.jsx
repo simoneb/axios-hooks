@@ -373,15 +373,20 @@ function standardTests(
 
   describe('request cancellation', () => {
     describe('effect-generated requests', () => {
-      it('should skip default cancelleation before request if options.cancelPrev is set to false', async () => {
+      it('should skip default cancellation before request if options.autoCancel is set to false', async () => {
         axios.mockResolvedValue({ data: 'whatever' })
 
-        const { waitForNextUpdate } = setup('initial config', {
-          cancelPrev: false
+        const { waitForNextUpdate, rerender } = setup('initial config', {
+          autoCancel: false
         })
 
         await waitForNextUpdate()
+
+        rerender()
+
         expect(cancel).not.toHaveBeenCalled()
+
+        await waitForNextUpdate()
       })
 
       it('should provide the cancel token to axios', async () => {

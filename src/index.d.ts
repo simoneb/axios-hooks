@@ -19,7 +19,7 @@ export interface Options {
   manual?: boolean
   useCache?: boolean
   ssr?: boolean
-  cancelPrev?: boolean
+  autoCancel?: boolean
 }
 
 export interface RefetchOptions {

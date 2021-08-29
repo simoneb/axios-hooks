@@ -12,7 +12,7 @@ const DEFAULT_OPTIONS = {
   manual: false,
   useCache: true,
   ssr: true,
-  cancelPrev: true
+  autoCancel: true
 }
 
 const useAxios = makeUseAxios()
@@ -231,7 +231,7 @@ export function makeUseAxios(configureOptions) {
 
     const withCancelToken = React.useCallback(
       config => {
-        if (cancelPrev) {
+        if (option.autoCancel) {
           cancelOutstandingRequest()
         }
 
