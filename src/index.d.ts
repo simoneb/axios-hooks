@@ -11,7 +11,7 @@ import LRUCache from 'lru-cache'
 export interface ResponseValues<TResponse, TError> {
   data?: TResponse
   loading: boolean
-  error?: AxiosError<TError>
+  error: AxiosError<TError> | null
   response?: AxiosResponse<TResponse>
 }
 
