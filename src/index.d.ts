@@ -8,11 +8,11 @@ import {
 } from 'axios'
 import LRUCache from 'lru-cache'
 
-export interface ResponseValues<TResponse, TError> {
+export interface ResponseValues<TResponse, TBody, TError> {
   data?: TResponse
   loading: boolean
-  error: AxiosError<TError> | null
-  response?: AxiosResponse<TResponse>
+  error: AxiosError<TError, TBody> | null
+  response?: AxiosResponse<TResponse, TBody>
 }
 
 export interface Options {
@@ -32,20 +32,20 @@ export interface ConfigureOptions {
   defaultOptions?: Options
 }
 
-export type UseAxiosResult<TResponse = any, TError = any> = [
-  ResponseValues<TResponse, TError>,
+export type UseAxiosResult<TResponse = any, TBody = any, TError = any> = [
+  ResponseValues<TResponse, TBody, TError>,
   (
-    config?: AxiosRequestConfig,
+    config?: AxiosRequestConfig<TBody>,
     options?: RefetchOptions
   ) => AxiosPromise<TResponse>,
   () => void
 ]
 
 export interface UseAxios {
-  <TResponse = any, TError = any>(
-    config: AxiosRequestConfig | string,
+  <TResponse = any, TBody = any, TError = any>(
+    config: AxiosRequestConfig<TBody> | string,
     options?: Options
-  ): UseAxiosResult<TResponse, TError>
+  ): UseAxiosResult<TResponse, TBody, TError>
 
   loadCache(data: any[]): void
   serializeCache(): Promise<any[]>
