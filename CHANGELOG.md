@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.0.0](https://github.com/simoneb/axios-hooks/compare/v2.7.0...v3.0.0) (2021-10-31)
+
+
+### ⚠ BREAKING CHANGES
+
+* requires axios@^0.24.0
+
+### Features
+
+* apply type-safe for AxiosRequestConfig data parameter ([#611](https://github.com/simoneb/axios-hooks/issues/611)) ([eb05b0a](https://github.com/simoneb/axios-hooks/commit/eb05b0a3358585d051e03365a6924a5fb90a71b4))
+
 ## [2.7.0](https://github.com/simoneb/axios-hooks/compare/v2.6.3...v2.7.0) (2021-08-29)
 
 
