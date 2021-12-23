@@ -9,6 +9,6 @@ jobs:
   setup:
     runs-on: ubuntu-latest
     steps:
-      - uses: nearform/github-action-notify-release@v1.2.7
+      - uses: nearform/github-action-notify-release@v1.2.8
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
