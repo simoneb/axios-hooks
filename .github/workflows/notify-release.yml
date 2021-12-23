@@ -1,14 +1,12 @@
 name: notify-release
 on:
   workflow_dispatch:
-    branches:
-      - master
   schedule:
     - cron: '30 8 * * *'
 jobs:
   setup:
     runs-on: ubuntu-latest
     steps:
-      - uses: nearform/github-action-notify-release@v1.2.8
+      - uses: nearform/github-action-notify-release@v1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
