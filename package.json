@@ -48,7 +48,7 @@
     "@babel/preset-env": "7.16.5",
     "@babel/preset-react": "7.16.5",
     "@commitlint/cli": "16.0.1",
-    "@commitlint/config-conventional": "15.0.0",
+    "@commitlint/config-conventional": "16.0.0",
     "@testing-library/react": "12.1.2",
     "@testing-library/react-hooks": "7.0.2",
     "@types/jest": "27.0.3",
