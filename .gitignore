@@ -5,3 +5,4 @@ coverage
 npm-debug.log*
 *.test.ts*
 *.test.ssr.ts*
+package-lock.json

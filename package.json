@@ -27,7 +27,7 @@
     "clean": "rimraf cjs es",
     "format": "prettier --write \"{src,test}/**/*.{js?(x),md,ts?(x)}\"",
     "lint": "eslint src test",
-    "prepare": "npm run clean && npm run build",
+    "prepare": "npm run clean && npm run build && husky install",
     "release": "standard-version",
     "pretest": "cp ./test/index.test.jsx ./test/index.test.tsx && cp ./test/index.test.ssr.jsx ./test/index.test.ssr.tsx",
     "test": "jest --no-cache"
@@ -38,12 +38,13 @@
     "lru-cache": "6.0.0"
   },
   "peerDependencies": {
-    "react": "^16.8.0-0 || ^17.0.0",
-    "axios": "^0.24.0"
+    "axios": "^0.24.0",
+    "react": "^16.8.0-0 || ^17.0.0"
   },
   "devDependencies": {
     "@babel/cli": "7.16.7",
     "@babel/core": "7.16.7",
+    "@babel/eslint-parser": "7.16.5",
     "@babel/plugin-transform-runtime": "7.16.7",
     "@babel/preset-env": "7.16.7",
     "@babel/preset-react": "7.16.7",
@@ -57,7 +58,6 @@
     "@types/react": "17.0.38",
     "@types/react-dom": "17.0.11",
     "axios": "0.24.0",
-    "babel-eslint": "10.1.0",
     "cross-env": "7.0.3",
     "eslint": "7.32.0",
     "eslint-config-prettier": "8.3.0",
@@ -65,7 +65,7 @@
     "eslint-plugin-prettier": "4.0.0",
     "eslint-plugin-react": "7.28.0",
     "eslint-plugin-react-hooks": "4.3.0",
-    "husky": "7.0.4",
+    "husky": "^7.0.0",
     "jest": "26.6.3",
     "lint-staged": "12.1.5",
     "npm-run-all": "4.1.5",
@@ -77,13 +77,6 @@
     "standard-version": "9.3.2",
     "ts-jest": "26.5.6",
     "typescript": "4.5.4"
-  },
-  "husky": {
-    "hooks": {
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
-      "pre-commit": "lint-staged",
-      "post-merge": "npm i"
-    }
   },
   "lint-staged": {
     "{src,test}/**/*.{js?(x),md}": [
