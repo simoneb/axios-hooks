@@ -34,3 +34,4 @@ jobs:
           commit-message: ${{ github.event.inputs.commit-message }}
           semver: ${{ github.event.inputs.semver }}
           npm-tag: ${{ github.event.inputs.tag }}
+          build-command: npm i
