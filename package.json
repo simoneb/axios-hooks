@@ -38,7 +38,7 @@
     "lru-cache": "6.0.0"
   },
   "peerDependencies": {
-    "axios": "^0.24.0",
+    "axios": ">=0.24.0",
     "react": "^16.8.0-0 || ^17.0.0"
   },
   "devDependencies": {
