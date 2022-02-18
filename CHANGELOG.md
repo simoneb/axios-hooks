@@ -1,3 +1,5 @@
+> ⚠ This file is deprecated. Releases after 3.0.0 use GitHub's built-in releases to track changes ⚠
+
 # Changelog
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
