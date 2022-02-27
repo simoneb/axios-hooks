@@ -1,3 +1,5 @@
+> The license of this software has changed to AWMIT - Anti War MIT license
+
 # axios-hooks
 
 ![ci](https://github.com/simoneb/axios-hooks/workflows/ci/badge.svg)
