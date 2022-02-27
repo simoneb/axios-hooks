@@ -8,4 +8,4 @@ THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH RE
 
 ANTI WAR CLAUSE
 
-This license is a modification of the original MIT license. It is identical to MIT but explicitly forbids use by any businesses, institutions or individuals residing or financing countries whose governments engage in wars against other countries.
+This license is a modification of the original ISC license. It is identical to ISC but explicitly forbids use by any businesses, institutions or individuals residing or financing countries whose governments engage in wars against other countries.
