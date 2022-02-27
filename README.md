@@ -1,4 +1,4 @@
-> The license of this software has changed to AWMIT - Anti War MIT license
+> The license of this software has changed to AWISC - Anti War ISC license
 
 # axios-hooks
 
