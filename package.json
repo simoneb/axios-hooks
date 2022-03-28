@@ -55,7 +55,7 @@
     "@types/jest": "27.4.1",
     "@types/lru-cache": "7.6.0",
     "@types/node": "17.0.23",
-    "@types/react": "17.0.41",
+    "@types/react": "17.0.43",
     "@types/react-dom": "17.0.14",
     "axios": "0.26.1",
     "cross-env": "7.0.3",
