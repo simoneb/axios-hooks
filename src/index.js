@@ -152,7 +152,7 @@ export function makeUseAxios(configureOptions) {
           ...state,
           loading: false,
           ...(action.error ? { data: null } : { data: action.payload.data }),
-          [action.error ? 'error' : 'response']: action.payload
+          ...(action.error ? { error: action.payload, response: null } : { error: null, response: action.payload }),
         }
     }
   }
