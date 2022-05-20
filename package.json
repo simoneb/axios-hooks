@@ -33,7 +33,7 @@
     "test": "jest --no-cache"
   },
   "dependencies": {
-    "@babel/runtime": "7.17.9",
+    "@babel/runtime": "7.18.0",
     "dequal": "2.0.2",
     "lru-cache": "6.0.0"
   },
@@ -43,10 +43,10 @@
   },
   "devDependencies": {
     "@babel/cli": "7.17.10",
-    "@babel/core": "7.17.12",
+    "@babel/core": "7.18.0",
     "@babel/eslint-parser": "7.17.0",
     "@babel/plugin-transform-runtime": "7.17.12",
-    "@babel/preset-env": "7.17.12",
+    "@babel/preset-env": "7.18.0",
     "@babel/preset-react": "7.17.12",
     "@commitlint/cli": "17.0.0",
     "@commitlint/config-conventional": "17.0.0",
