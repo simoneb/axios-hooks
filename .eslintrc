@@ -1,6 +1,5 @@
 {
   "root": true,
-  "parser": "@babel/eslint-parser",
   "extends": [
     "eslint:recommended",
     "plugin:import/recommended",
@@ -8,7 +7,7 @@
     "plugin:react-hooks/recommended"
   ],
   "parserOptions": {
-    "ecmaVersion": 2018
+    "ecmaVersion": "latest"
   },
   "env": {
     "browser": true,
