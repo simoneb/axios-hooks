@@ -1023,6 +1023,32 @@ function standardTests(
 
       expect(axios).toHaveBeenCalledTimes(1)
     })
+
+    it('should reset error when one successful request follows a failing request', async () => {
+      axios.mockResolvedValueOnce({ data: 'working 1' })
+
+      const { result, waitForNextUpdate, rerender } = setup('working')
+
+      await waitForNextUpdate()
+
+      const error = new Error('boom')
+
+      axios.mockRejectedValueOnce(error)
+
+      rerender({ config: 'boom', options: {} })
+
+      await waitForNextUpdate()
+
+      expect(result.current[0].error).toBe(error)
+
+      axios.mockResolvedValueOnce({ data: 'working 2' })
+
+      rerender({ config: 'working', options: {} })
+
+      expect(result.current[0].error).toBe(null)
+      // because it's coming from cache
+      expect(result.current[0].data).toBe('working 1')
+    })
   })
 
   describe('configure', () => {
