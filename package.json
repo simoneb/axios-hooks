@@ -55,7 +55,7 @@
     "@types/lru-cache": "7.10.10",
     "@types/node": "18.0.1",
     "@types/react": "18.0.14",
-    "@types/react-dom": "18.0.5",
+    "@types/react-dom": "18.0.6",
     "axios": "0.27.2",
     "cross-env": "7.0.3",
     "eslint": "8.19.0",
