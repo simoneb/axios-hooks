@@ -33,7 +33,7 @@
     "test": "jest --no-cache"
   },
   "dependencies": {
-    "@babel/runtime": "7.18.6",
+    "@babel/runtime": "7.18.9",
     "dequal": "2.0.3",
     "lru-cache": "6.0.0"
   },
