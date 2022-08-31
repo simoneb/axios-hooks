@@ -251,7 +251,11 @@ export function makeUseAxios(configureOptions) {
         request(withCancelToken(config), options, dispatch).catch(() => {})
       }
 
-      return cancelOutstandingRequest
+      return () => {
+        if (options.autoCancel) {
+          cancelOutstandingRequest()
+        }
+      }
     }, [config, options, withCancelToken, cancelOutstandingRequest])
 
     const refetch = React.useCallback(

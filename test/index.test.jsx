@@ -387,6 +387,20 @@ function standardTests(
         expect(cancel).not.toHaveBeenCalled()
       })
 
+      it('should skip default cancellation after unmount if options.autoCancel is set to false', async () => {
+        axios.mockResolvedValue({ data: 'whatever' })
+
+        const { waitForNextUpdate, unmount } = setup('', {
+          autoCancel: false
+        })
+
+        await waitForNextUpdate()
+
+        unmount()
+
+        expect(cancel).not.toHaveBeenCalled()
+      })
+
       it('should provide the cancel token to axios', async () => {
         axios.mockResolvedValueOnce({ data: 'whatever' })
 
