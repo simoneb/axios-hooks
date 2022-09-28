@@ -59,6 +59,9 @@ function configToObject(config) {
 }
 
 export function makeUseAxios(configureOptions) {
+  /**
+   * @type {import('lru-cache')}
+   */
   let cache
   let axiosInstance
   let defaultOptions
@@ -66,7 +69,7 @@ export function makeUseAxios(configureOptions) {
   const __ssrPromises = []
 
   function resetConfigure() {
-    cache = new LRU()
+    cache = new LRU({ max: 500 })
     axiosInstance = StaticAxios
     defaultOptions = DEFAULT_OPTIONS
   }
@@ -103,7 +106,7 @@ export function makeUseAxios(configureOptions) {
   }
 
   function clearCache() {
-    cache.reset()
+    cache.clear()
   }
 
   return Object.assign(useAxios, {

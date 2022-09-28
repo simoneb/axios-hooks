@@ -12,6 +12,7 @@ import defaultUseAxios, {
   makeUseAxios
 } from '../src'
 import { mockCancelToken } from './testUtils'
+import LRUCache from 'lru-cache'
 
 jest.mock('axios')
 
@@ -1151,13 +1152,15 @@ function standardTests(
 
   describe('loadCache', () => {
     it('should load cache', () => {
-      loadCache({ some: 'data' })
+      const cache = new LRUCache({ max: 1 })
+
+      loadCache(cache.dump())
     })
   })
 
   describe('serializeCache', () => {
-    it('should serialize cache', () => {
-      serializeCache()
+    it('should serialize cache', async () => {
+      await serializeCache()
     })
   })
 }
