@@ -32,12 +32,17 @@ export interface ConfigureOptions {
   defaultOptions?: Options
 }
 
+export interface RefetchFunction<TBody, TResponse> {
+  (
+    config?: AxiosRequestConfig<TBody> | string,
+    options?: RefetchOptions
+  ): AxiosPromise<TResponse>
+  (e: Event): AxiosPromise<TResponse>
+}
+
 export type UseAxiosResult<TResponse = any, TBody = any, TError = any> = [
   ResponseValues<TResponse, TBody, TError>,
-  (
-    config?: AxiosRequestConfig<TBody>,
-    options?: RefetchOptions
-  ) => AxiosPromise<TResponse>,
+  RefetchFunction<TBody, TResponse>,
   () => void
 ]
 
