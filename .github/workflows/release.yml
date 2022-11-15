@@ -27,7 +27,7 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-      - uses: nearform/optic-release-automation-action@v3
+      - uses: nearform/optic-release-automation-action@v4
         with:
           github-token: ${{ secrets.github_token }}
           npm-token: ${{ secrets.NPM_TOKEN }}
