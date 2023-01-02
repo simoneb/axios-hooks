@@ -51,7 +51,7 @@
     "@commitlint/config-conventional": "17.3.0",
     "@testing-library/react": "12.1.5",
     "@testing-library/react-hooks": "7.0.2",
-    "@types/jest": "29.2.4",
+    "@types/jest": "29.2.5",
     "@types/node": "18.11.18",
     "@types/react": "18.0.26",
     "@types/react-dom": "18.0.10",
