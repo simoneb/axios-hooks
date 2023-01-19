@@ -55,7 +55,7 @@
     "@types/node": "18.11.18",
     "@types/react": "18.0.27",
     "@types/react-dom": "18.0.10",
-    "axios": "0.27.2",
+    "axios": "1.2.3",
     "cross-env": "7.0.3",
     "eslint": "8.32.0",
     "eslint-config-prettier": "8.6.0",
