@@ -1,5 +1,5 @@
 import {
-  AxiosRequestConfig,
+  RawAxiosRequestConfig,
   AxiosError,
   AxiosPromise,
   AxiosStatic,
@@ -34,7 +34,7 @@ export interface ConfigureOptions {
 
 export interface RefetchFunction<TBody, TResponse> {
   (
-    config?: AxiosRequestConfig<TBody> | string,
+    config?: RawAxiosRequestConfig<TBody> | string,
     options?: RefetchOptions
   ): AxiosPromise<TResponse>
   (e: Event): AxiosPromise<TResponse>
@@ -48,7 +48,7 @@ export type UseAxiosResult<TResponse = any, TBody = any, TError = any> = [
 
 export interface UseAxios {
   <TResponse = any, TBody = any, TError = any>(
-    config: AxiosRequestConfig<TBody> | string,
+    config: RawAxiosRequestConfig<TBody> | string,
     options?: Options
   ): UseAxiosResult<TResponse, TBody, TError>
 
