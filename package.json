@@ -35,7 +35,7 @@
   "dependencies": {
     "@babel/runtime": "7.22.6",
     "dequal": "2.0.3",
-    "lru-cache": "^8.0.0"
+    "lru-cache": "^10.0.0"
   },
   "peerDependencies": {
     "axios": ">=0.24.0",
