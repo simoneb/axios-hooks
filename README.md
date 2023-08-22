@@ -108,7 +108,7 @@ The main React hook to execute HTTP requests.
     from the automatic hook request or from the `manual` execute method
 
 > [!IMPORTANT]  
-> Default caching behavior can interfere with test isolation. For more information, read the [testing](#testing) section for more information.
+> Default caching behavior can interfere with test isolation. Read the [testing](#testing) section for more information.
 
 **Returns**
 
