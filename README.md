@@ -107,6 +107,9 @@ The main React hook to execute HTTP requests.
   - `autoCancel` ( `true` ) - Enables or disables automatic cancellation of pending requests whether it be
     from the automatic hook request or from the `manual` execute method
 
+> [!IMPORTANT]  
+> Default caching behavior can interfere with test isolation. For more information, read the [testing](#testing) section for more information.
+
 **Returns**
 
 `[{ data, loading, error, response }, execute, manualCancel]`
@@ -402,6 +405,18 @@ function App() {
     </div>
   )
 }
+```
+
+## Testing
+
+Testing components that make use of the `useAxios` hook are susceptible to test isolation leakage because of default caching behavior. The following snippets can be used to disable caching while testing:
+
+### react-testing-library
+
+```js
+beforeAll(() => {
+    useAxios.configure({cache: false})
+})
 ```
 
 ## Promises
