@@ -1,5 +1,5 @@
 import React from 'react'
-import axios from 'axios'
+import axios, { CanceledError } from 'axios'
 import { render, fireEvent } from '@testing-library/react'
 import { renderHook, act } from '@testing-library/react-hooks'
 
@@ -12,7 +12,7 @@ import defaultUseAxios, {
   makeUseAxios
 } from '../src'
 import { mockCancelToken } from './testUtils'
-import LRUCache from 'lru-cache'
+import { LRUCache } from 'lru-cache'
 
 jest.mock('axios')
 
@@ -517,12 +517,9 @@ function standardTests(
       })
 
       it('should not dispatch an error when the request is canceled', async () => {
-        const cancellation = new Error('canceled')
+        const cancellation = new CanceledError('canceled')
 
         axios.mockRejectedValueOnce(cancellation)
-        axios.isCancel = jest
-          .fn()
-          .mockImplementationOnce(err => err === cancellation)
 
         const { result, waitFor } = setup('')
 
@@ -530,8 +527,10 @@ function standardTests(
         // to wait for. yet, if we don't try to wait, we won't know if we're handling
         // the error properly because the return value will not have the error until a
         // state update happens. it would be great to have a better way to test this
-        await waitFor(() => {
-          expect(result.current[0].error).toBeNull()
+        await act(async () => {
+          await waitFor(() => {
+            expect(result.current[0].error).toBeNull()
+          })
         })
       })
     })
@@ -610,12 +609,9 @@ function standardTests(
       })
 
       it('should throw an error when the request is canceled', async () => {
-        const cancellation = new Error('canceled')
+        const cancellation = new CanceledError('canceled')
 
         axios.mockRejectedValueOnce(cancellation)
-        axios.isCancel = jest
-          .fn()
-          .mockImplementationOnce(err => err === cancellation)
 
         const { result } = renderHook(() => useAxios('', { manual: true }))
 

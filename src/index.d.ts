@@ -6,7 +6,7 @@ import {
   AxiosInstance,
   AxiosResponse
 } from 'axios'
-import LRUCache from 'lru-cache'
+import { LRUCache } from 'lru-cache'
 
 export interface ResponseValues<TResponse, TBody, TError> {
   data?: TResponse

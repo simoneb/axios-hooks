@@ -1,6 +1,6 @@
 import React from 'react'
 import StaticAxios from 'axios'
-import LRU from 'lru-cache'
+import { LRUCache } from 'lru-cache'
 import { dequal as deepEqual } from 'dequal/lite'
 
 const actions = {
@@ -69,7 +69,7 @@ export function makeUseAxios(configureOptions) {
   const __ssrPromises = []
 
   function resetConfigure() {
-    cache = new LRU({ max: 500 })
+    cache = new LRUCache({ max: 500 })
     axiosInstance = StaticAxios
     defaultOptions = DEFAULT_OPTIONS
   }
