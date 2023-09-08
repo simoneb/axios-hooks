@@ -11,17 +11,15 @@ import defaultUseAxios, {
   serializeCache as defaultSerializeCache,
   makeUseAxios
 } from '../src'
-import { mockCancelToken } from './testUtils'
 import { LRUCache } from 'lru-cache'
 
 jest.mock('axios')
 
-let cancel
-let token
 let errors
+let abortSpy
 
 beforeEach(() => {
-  ;({ cancel, token } = mockCancelToken(axios))
+  abortSpy = jest.spyOn(AbortController.prototype, 'abort')
 })
 
 beforeAll(() => {
@@ -385,7 +383,7 @@ function standardTests(
 
         rerender()
 
-        expect(cancel).not.toHaveBeenCalled()
+        expect(abortSpy).not.toHaveBeenCalled()
       })
 
       it('should skip default cancellation after unmount if options.autoCancel is set to false', async () => {
@@ -399,17 +397,17 @@ function standardTests(
 
         unmount()
 
-        expect(cancel).not.toHaveBeenCalled()
+        expect(abortSpy).not.toHaveBeenCalled()
       })
 
-      it('should provide the cancel token to axios', async () => {
+      it('should provide the abort signal to axios', async () => {
         axios.mockResolvedValueOnce({ data: 'whatever' })
 
         const { waitForNextUpdate } = setup('')
 
         expect(axios).toHaveBeenCalledWith(
           expect.objectContaining({
-            cancelToken: token
+            signal: expect.any(AbortSignal)
           })
         )
 
@@ -425,7 +423,7 @@ function standardTests(
 
         unmount()
 
-        expect(cancel).toHaveBeenCalled()
+        expect(abortSpy).toHaveBeenCalled()
       })
 
       it('should cancel the outstanding request when the cancel method is called', async () => {
@@ -437,7 +435,7 @@ function standardTests(
 
         result.current[2]()
 
-        expect(cancel).toHaveBeenCalled()
+        expect(abortSpy).toHaveBeenCalled()
       })
 
       it('should cancel the outstanding request when the component refetches due to a rerender', async () => {
@@ -449,7 +447,7 @@ function standardTests(
 
         rerender({ config: 'new config', options: {} })
 
-        expect(cancel).toHaveBeenCalled()
+        expect(abortSpy).toHaveBeenCalled()
 
         await waitForNextUpdate()
       })
@@ -463,7 +461,7 @@ function standardTests(
 
         rerender()
 
-        expect(cancel).not.toHaveBeenCalled()
+        expect(abortSpy).not.toHaveBeenCalled()
       })
 
       it('should not cancel the outstanding request when the component rerenders with same object config', async () => {
@@ -475,7 +473,7 @@ function standardTests(
 
         rerender()
 
-        expect(cancel).not.toHaveBeenCalled()
+        expect(abortSpy).not.toHaveBeenCalled()
       })
 
       it('should not cancel the outstanding request when the component rerenders with equal string config', async () => {
@@ -487,7 +485,7 @@ function standardTests(
 
         rerender({ config: 'initial config', options: {} })
 
-        expect(cancel).not.toHaveBeenCalled()
+        expect(abortSpy).not.toHaveBeenCalled()
       })
 
       it('should not cancel the outstanding request when the component rerenders with equal object config', async () => {
@@ -499,7 +497,7 @@ function standardTests(
 
         rerender({ config: { some: 'config' }, options: {} })
 
-        expect(cancel).not.toHaveBeenCalled()
+        expect(abortSpy).not.toHaveBeenCalled()
       })
 
       it('should cancel the outstanding request when the cancel method is called after the component rerenders with same config', async () => {
@@ -513,7 +511,7 @@ function standardTests(
 
         result.current[2]()
 
-        expect(cancel).toHaveBeenCalled()
+        expect(abortSpy).toHaveBeenCalled()
       })
 
       it('should not dispatch an error when the request is canceled', async () => {
@@ -536,7 +534,7 @@ function standardTests(
     })
 
     describe('manual refetches', () => {
-      it('should provide the cancel token to axios', async () => {
+      it('should provide the abort signal to axios', async () => {
         const { result, waitForNextUpdate } = setup('', { manual: true })
 
         axios.mockResolvedValueOnce({ data: 'whatever' })
@@ -549,7 +547,7 @@ function standardTests(
 
         expect(axios).toHaveBeenLastCalledWith(
           expect.objectContaining({
-            cancelToken: token
+            signal: expect.any(AbortSignal)
           })
         )
 
@@ -571,7 +569,7 @@ function standardTests(
 
         unmount()
 
-        expect(cancel).toHaveBeenCalled()
+        expect(abortSpy).toHaveBeenCalled()
       })
 
       it('should cancel the outstanding manual refetch when the component refetches', async () => {
@@ -587,7 +585,7 @@ function standardTests(
 
         rerender({ config: 'new config', options: {} })
 
-        expect(cancel).toHaveBeenCalled()
+        expect(abortSpy).toHaveBeenCalled()
 
         await waitForNextUpdate()
       })
@@ -605,7 +603,7 @@ function standardTests(
 
         result.current[2]()
 
-        expect(cancel).toHaveBeenCalled()
+        expect(abortSpy).toHaveBeenCalled()
       })
 
       it('should throw an error when the request is canceled', async () => {

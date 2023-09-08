@@ -1,5 +1,5 @@
 import React from 'react'
-import StaticAxios from 'axios'
+import StaticAxios, { isCancel } from 'axios'
 import { LRUCache } from 'lru-cache'
 import { dequal as deepEqual } from 'dequal/lite'
 
@@ -189,7 +189,7 @@ export function makeUseAxios(configureOptions) {
 
       return response
     } catch (err) {
-      if (!StaticAxios.isCancel(err)) {
+      if (!isCancel(err)) {
         dispatch({ type: actions.REQUEST_END, payload: err, error: true })
       }
 
@@ -217,7 +217,7 @@ export function makeUseAxios(configureOptions) {
       useDeepCompareMemoize(_options)
     )
 
-    const cancelSourceRef = React.useRef()
+    const abortControllerRef = React.useRef()
 
     const [state, dispatch] = React.useReducer(
       reducer,
@@ -229,20 +229,20 @@ export function makeUseAxios(configureOptions) {
     }
 
     const cancelOutstandingRequest = React.useCallback(() => {
-      if (cancelSourceRef.current) {
-        cancelSourceRef.current.cancel()
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort()
       }
     }, [])
 
-    const withCancelToken = React.useCallback(
+    const withAbortSignal = React.useCallback(
       config => {
         if (options.autoCancel) {
           cancelOutstandingRequest()
         }
 
-        cancelSourceRef.current = StaticAxios.CancelToken.source()
+        abortControllerRef.current = new AbortController()
 
-        config.cancelToken = cancelSourceRef.current.token
+        config.signal = abortControllerRef.current.signal
 
         return config
       },
@@ -251,7 +251,7 @@ export function makeUseAxios(configureOptions) {
 
     React.useEffect(() => {
       if (!options.manual) {
-        request(withCancelToken(config), options, dispatch).catch(() => {})
+        request(withAbortSignal(config), options, dispatch).catch(() => {})
       }
 
       return () => {
@@ -259,14 +259,14 @@ export function makeUseAxios(configureOptions) {
           cancelOutstandingRequest()
         }
       }
-    }, [config, options, withCancelToken, cancelOutstandingRequest])
+    }, [config, options, withAbortSignal, cancelOutstandingRequest])
 
     const refetch = React.useCallback(
       (configOverride, options) => {
         configOverride = configToObject(configOverride)
 
         return request(
-          withCancelToken({
+          withAbortSignal({
             ...config,
             ...(isReactEvent(configOverride) ? null : configOverride)
           }),
@@ -274,7 +274,7 @@ export function makeUseAxios(configureOptions) {
           dispatch
         )
       },
-      [config, withCancelToken]
+      [config, withAbortSignal]
     )
 
     return [state, refetch, cancelOutstandingRequest]
