@@ -6,12 +6,14 @@ const commonOptions = {
 const projects = [
   {
     displayName: 'js',
-    testMatch: ['**/?(*.)+(spec|test).js?(x)']
+    testMatch: ['**/?(*.)+(spec|test).js?(x)'],
+    testEnvironment: 'jsdom'
   },
   {
     displayName: 'ts',
     testMatch: ['**/?(*.)+(spec|test).ts?(x)'],
-    preset: 'ts-jest/presets/js-with-ts'
+    preset: 'ts-jest/presets/js-with-ts',
+    testEnvironment: 'jsdom'
   },
   {
     displayName: 'ssr-js',

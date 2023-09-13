@@ -3,14 +3,12 @@ import React from 'react'
 import ReactDOM from 'react-dom/server'
 
 import { makeUseAxios } from '../src'
-import { mockCancelToken } from './testUtils'
 
 jest.mock('axios')
 
 let useAxios
 
 beforeEach(() => {
-  mockCancelToken(axios)
   useAxios = makeUseAxios()
 })
 

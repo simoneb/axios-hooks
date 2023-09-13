@@ -5,7 +5,7 @@ const loose = true
 module.exports = {
   presets: [['@babel/preset-env', { loose, modules: false }]],
   plugins: [
-    ['@babel/proposal-object-rest-spread', { loose }],
+    ['@babel/plugin-transform-object-rest-spread', { loose }],
     cjs && ['@babel/transform-modules-commonjs', { loose }],
     ['@babel/transform-runtime', { useESModules: !cjs }]
   ].filter(Boolean),
