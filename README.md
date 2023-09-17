@@ -22,6 +22,11 @@ React hooks for [axios], with built-in support for server side rendering.
 
 > `axios` is a peer dependency and needs to be installed explicitly
 
+## Version information
+
+- `axios-hooks@5.x` is compatible with `axios@1.x`
+- `axios-hooks@4.x` and below are compatible with `axios@0.x`
+
 ## Quick Start
 
 [![Edit axios-hooks Quick Start](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/2oxrlq8rjr)
@@ -238,17 +243,15 @@ function App() {
     'https://reqres.in/api/users/1'
   )
 
-  const [
-    { data: putData, loading: putLoading, error: putError },
-    executePut
-  ] = useAxios(
-    {
-      url: 'https://reqres.in/api/users/1',
-      method: 'PUT'
-    },
-    { manual: true }
-  )
-  
+  const [{ data: putData, loading: putLoading, error: putError }, executePut] =
+    useAxios(
+      {
+        url: 'https://reqres.in/api/users/1',
+        method: 'PUT'
+      },
+      { manual: true }
+    )
+
   function updateData() {
     executePut({
       data: {
@@ -415,7 +418,7 @@ Testing components that make use of the `useAxios` hook are susceptible to test 
 
 ```js
 beforeAll(() => {
-    useAxios.configure({cache: false})
+  useAxios.configure({ cache: false })
 })
 ```
 
