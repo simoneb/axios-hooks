@@ -42,7 +42,7 @@
     "react": "^16.8.0-0 || ^17.0.0 || ^18.0.0"
   },
   "devDependencies": {
-    "@babel/cli": "7.22.15",
+    "@babel/cli": "7.23.0",
     "@babel/core": "7.23.0",
     "@babel/plugin-transform-runtime": "7.22.15",
     "@babel/preset-env": "7.22.20",
