@@ -71,7 +71,7 @@
     "prettier": "3.0.3",
     "react": "17.0.2",
     "react-dom": "17.0.2",
-    "rimraf": "5.0.4",
+    "rimraf": "5.0.5",
     "shx": "0.3.4",
     "standard-version": "9.5.0",
     "ts-jest": "29.1.1",
