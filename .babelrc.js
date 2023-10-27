@@ -3,7 +3,7 @@ const cjs = NODE_ENV === 'test' || BABEL_ENV === 'commonjs'
 const loose = true
 
 module.exports = {
-  presets: [['@babel/preset-env', { loose, modules: false }]],
+  presets: [['@babel/preset-env', { loose, modules: false }], "@babel/preset-typescript"],
   plugins: [
     ['@babel/plugin-transform-object-rest-spread', { loose }],
     cjs && ['@babel/transform-modules-commonjs', { loose }],
@@ -11,7 +11,7 @@ module.exports = {
   ].filter(Boolean),
   env: {
     test: {
-      presets: ['@babel/preset-env', '@babel/preset-react']
+      presets: ['@babel/preset-env', '@babel/preset-react', "@babel/preset-typescript"]
     }
   }
 }

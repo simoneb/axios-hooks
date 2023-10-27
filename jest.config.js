@@ -5,20 +5,10 @@ const commonOptions = {
 
 const projects = [
   {
-    displayName: 'js',
-    testMatch: ['**/?(*.)+(spec|test).js?(x)'],
-    testEnvironment: 'jsdom'
-  },
-  {
     displayName: 'ts',
     testMatch: ['**/?(*.)+(spec|test).ts?(x)'],
     preset: 'ts-jest/presets/js-with-ts',
     testEnvironment: 'jsdom'
-  },
-  {
-    displayName: 'ssr-js',
-    testMatch: ['**/?(*.)+(spec|test).ssr.js?(x)'],
-    testEnvironment: 'node'
   },
   {
     displayName: 'ssr-ts',
@@ -29,5 +19,13 @@ const projects = [
 ]
 
 module.exports = {
-  projects: projects.map(p => ({ ...p, ...commonOptions }))
+  projects: projects.map(p => ({ ...p, ...commonOptions })),
+  roots: ['./src'],
+  testMatch: [
+    '**/__tests__/**/*.+(ts|tsx|js)',
+    '**/?(*.)+(spec|test).+(ts|tsx|js)'
+  ],
+  transform: {
+    '^.+\\.(ts|tsx)$': 'ts-jest'
+  }
 }
