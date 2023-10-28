@@ -1,17 +1,10 @@
-import {
-  AxiosError,
-  AxiosInstance,
-  AxiosRequestConfig,
-  isAxiosError,
-  isCancel
-} from 'axios'
+import { AxiosError, AxiosInstance, AxiosRequestConfig, isCancel } from 'axios'
 
 import { ACTIONS } from './../constants'
 import { tryStoreInCache } from './../utils/cache'
 import { UseAxiosCache } from '../types/UseAxiosCache.type'
 import { UseAxiosResponse } from '../types/UseAxiosResponse.type'
 import { Dispatch } from '../types/Dispatch.type'
-import { isError } from '../utils/isError'
 
 /**
  * This function executes the request and dispatches the appropriate actions.
@@ -33,24 +26,22 @@ export async function executeRequest<Res, Req, Err>(
   try {
     dispatch({ type: ACTIONS.REQUEST_START })
 
-    const {
-      config: _config,
-      request,
+    const response = await axiosInstance(config)
+    const cloned: UseAxiosResponse<Res> & { request?: any; config?: any } = {
       ...response
-    } = await axiosInstance(config)
+    }
+    if (cloned.request) delete cloned.request
+    if (cloned.config) delete cloned.config
 
-    tryStoreInCache(config, response, cache)
+    tryStoreInCache(config, cloned, cache)
 
-    dispatch({ type: ACTIONS.REQUEST_END, payload: response })
+    dispatch({ type: ACTIONS.REQUEST_END, payload: cloned })
 
-    return response
+    return cloned
   } catch (err) {
-    if (isError(err)) {
-      if (isAxiosError<Err, Req>(err) && !isCancel(err)) {
-        const _err = err as AxiosError<Err, Req>
-        dispatch({ type: ACTIONS.REQUEST_END, payload: _err })
-      }
-      dispatch({ type: ACTIONS.REQUEST_END, payload: err })
+    if (!isCancel(err)) {
+      const _err = err as AxiosError<Err, Req>
+      dispatch({ type: ACTIONS.REQUEST_END, payload: _err })
     }
     throw err
   }
