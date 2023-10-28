@@ -233,7 +233,9 @@ function standardTests(
 
       expect(result.current[0].loading).toBe(false)
       expect(result.current[0].error).toBe(null)
-      expect(result.current[0].response).toBe(response)
+      // expect(received).toBe(expected) --> Object.is equality which will check the reference as well
+      // but if we want to check deep equality we should use toMatchObject
+      expect(result.current[0].response).toMatchObject(response)
     })
 
     it('should set error when request fails', async () => {
