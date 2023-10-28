@@ -18,7 +18,7 @@ export type State<Res, Req, Err> = {
   /**
    * The error value.
    */
-  error: AxiosError<Err, Req> | null;
+  error: AxiosError<Err, Req> | Error | null;
   /**
    * The whole success response object.
    */

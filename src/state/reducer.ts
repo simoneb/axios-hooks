@@ -2,6 +2,7 @@ import { isAxiosError } from 'axios';
 import { State } from '../types/State.type';
 import { ACTIONS } from '../constants';
 import { Action } from '../types/Action.type';
+import { isError } from '../utils/isError';
 
 /**
  * This function is the reducer for the state.
@@ -30,7 +31,7 @@ export function reducer<Res, Req, Err>(
     case ACTIONS.REQUEST_END:
       // If the action payload is an axios error, set the error property
       // and clear the response and data properties.
-      if (isAxiosError(action.payload)) {
+      if (isError(action.payload) || isAxiosError(action.payload)) {
         return {
           loading: false,
           error: action.payload,
