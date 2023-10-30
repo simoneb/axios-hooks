@@ -21,8 +21,11 @@
     "src/"
   ],
   "scripts": {
-    "build:commonjs": "cross-env BABEL_ENV=commonjs babel src --out-dir cjs",
-    "build:es": "babel src --out-dir es",
+    "type-check": "tsc --noEmit",
+    "type-check:watch": "npm run type-check --watch",
+    "build:commonjs": "cross-env BABEL_ENV=commonjs babel src --out-dir cjs --extensions \".ts,.tsx\"",
+    "build:es": "babel src --out-dir es --extensions \".ts,.tsx\"",
+    "build:types": "tsc --emitDeclarationOnly",
     "build": "run-p build:*",
     "clean": "rimraf cjs es",
     "format": "prettier --write \"{src,test}/**/*.{js?(x),md,ts?(x)}\"",
@@ -47,6 +50,7 @@
     "@babel/plugin-transform-runtime": "7.23.2",
     "@babel/preset-env": "7.23.2",
     "@babel/preset-react": "7.22.15",
+    "@babel/preset-typescript": "7.23.2",
     "@commitlint/cli": "17.8.0",
     "@commitlint/config-conventional": "17.8.0",
     "@testing-library/react": "12.1.5",
