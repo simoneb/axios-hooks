@@ -32,7 +32,6 @@
     "lint": "eslint . --ext .js,.jsx",
     "prepare": "npm run clean && npm run build && husky install",
     "release": "standard-version",
-    "pretest": "shx cp ./test/index.test.jsx ./test/index.test.tsx && shx cp ./test/index.test.ssr.jsx ./test/index.test.ssr.tsx",
     "test": "tsd && jest --no-cache"
   },
   "dependencies": {
