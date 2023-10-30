@@ -75,6 +75,6 @@ export function configure(options: ConfigureOptions): void
 export function resetConfigure(): void
 
 // private
-export const __ssrPromises: Promise<any>[]
+export let __ssrPromises: Promise<any>[]
 
 export function makeUseAxios(options?: ConfigureOptions): UseAxios
