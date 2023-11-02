@@ -5,6 +5,7 @@ import ReactDOM from 'react-dom/server'
 import { makeUseAxios } from '../src'
 
 jest.mock('axios')
+const mockedAxios = axios as jest.MockedFunction<typeof axios>
 
 let useAxios
 
@@ -31,7 +32,7 @@ it('should not populate promises on server when ssr=false', () => {
 })
 
 it('should populate promises on server with default options', () => {
-  axios.mockResolvedValueOnce({ data: 'whatever' })
+  mockedAxios.mockResolvedValueOnce({ data: 'whatever' })
 
   ReactDOM.renderToString(<DummyComponent />)
 

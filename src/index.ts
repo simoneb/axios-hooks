@@ -2,6 +2,8 @@ import React from 'react'
 import StaticAxios, { isCancel } from 'axios'
 import { LRUCache } from 'lru-cache'
 import { dequal as deepEqual } from 'dequal/lite'
+import type { AxiosHooksConfig } from './types/AxiosHooksConfig.type'
+import { UseAxiosResult } from './types'
 
 const actions = {
   REQUEST_START: 'REQUEST_START',
@@ -58,7 +60,7 @@ function configToObject(config) {
   return Object.assign({}, config)
 }
 
-export function makeUseAxios(configureOptions) {
+export function makeUseAxios(configureOptions?: AxiosHooksConfig) {
   /**
    * @type {import('lru-cache')}
    */
@@ -74,7 +76,7 @@ export function makeUseAxios(configureOptions) {
     defaultOptions = DEFAULT_OPTIONS
   }
 
-  function configure(options = {}) {
+  function configure(options: AxiosHooksConfig = {}) {
     if (options.axios !== undefined) {
       axiosInstance = options.axios
     }
@@ -162,7 +164,7 @@ export function makeUseAxios(configureOptions) {
     }
   }
 
-  function tryGetFromCache(config, options, dispatch) {
+  function tryGetFromCache(config, options, dispatch?) {
     if (!cache || !options.useCache) {
       return
     }
@@ -204,7 +206,7 @@ export function makeUseAxios(configureOptions) {
     )
   }
 
-  function useAxios(_config, _options) {
+  function useAxios(_config, _options?): UseAxiosResult {
     const config = React.useMemo(
       () => configToObject(_config),
       // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -217,7 +219,7 @@ export function makeUseAxios(configureOptions) {
       useDeepCompareMemoize(_options)
     )
 
-    const abortControllerRef = React.useRef()
+    const abortControllerRef = React.useRef<AbortController>()
 
     const [state, dispatch] = React.useReducer(
       reducer,
@@ -225,7 +227,7 @@ export function makeUseAxios(configureOptions) {
     )
 
     if (typeof window === 'undefined' && options.ssr && !options.manual) {
-      useAxios.__ssrPromises.push(axiosInstance(config))
+      (useAxios as any).__ssrPromises.push(axiosInstance(config))
     }
 
     const cancelOutstandingRequest = React.useCallback(() => {
@@ -251,7 +253,7 @@ export function makeUseAxios(configureOptions) {
 
     React.useEffect(() => {
       if (!options.manual) {
-        request(withAbortSignal(config), options, dispatch).catch(() => {})
+        request(withAbortSignal(config), options, dispatch).catch(() => { })
       }
 
       return () => {
@@ -262,7 +264,7 @@ export function makeUseAxios(configureOptions) {
     }, [config, options, withAbortSignal, cancelOutstandingRequest])
 
     const refetch = React.useCallback(
-      (configOverride, options) => {
+      (configOverride, options?) => {
         configOverride = configToObject(configOverride)
 
         return request(

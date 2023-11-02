@@ -14,6 +14,7 @@ import defaultUseAxios, {
 import { LRUCache } from 'lru-cache'
 
 jest.mock('axios')
+const mockedAxios = axios as jest.MockedFunction<typeof axios>
 
 let errors
 let abortSpy
@@ -80,7 +81,7 @@ describe('makeUseAxios', () => {
     })
 
     it('should use local state across rerenders', async () => {
-      axios.mockResolvedValueOnce({ data: 'whatever' })
+      mockedAxios.mockResolvedValueOnce({ data: 'whatever' })
 
       const { waitForNextUpdate, rerender } = setup('')
 
@@ -92,7 +93,7 @@ describe('makeUseAxios', () => {
     })
 
     it('should hit network across component mounts', async () => {
-      axios.mockResolvedValue({ data: 'whatever' })
+      mockedAxios.mockResolvedValue({ data: 'whatever' })
 
       const { waitForNextUpdate, unmount } = setup('')
 
@@ -125,7 +126,7 @@ describe('makeUseAxios', () => {
           makeUseAxios({ defaultOptions: { useCache: false } })
         )
 
-        axios.mockResolvedValue({ data: 'whatever' })
+        mockedAxios.mockResolvedValue({ data: 'whatever' })
 
         const { waitForNextUpdate, unmount } = setup('')
 
@@ -174,7 +175,7 @@ describe('makeUseAxios', () => {
 })
 
 function makeSetup(useAxios) {
-  return (config, options = undefined) =>
+  return (config, options: any = undefined) =>
     renderHook(
       ({ config, options }) => {
         return useAxios(config, options)
@@ -199,7 +200,7 @@ function standardTests(
 
   describe('basic functionality', () => {
     it('should set loading to true and error to null before the request resolves', async () => {
-      axios.mockResolvedValueOnce({ data: 'whatever' })
+      mockedAxios.mockResolvedValueOnce({ data: 'whatever' })
 
       const { result, waitForNextUpdate } = setup('')
 
@@ -210,7 +211,7 @@ function standardTests(
     })
 
     it('should set loading to false when request resolves', async () => {
-      axios.mockResolvedValueOnce({ data: 'whatever' })
+      mockedAxios.mockResolvedValueOnce({ data: 'whatever' })
 
       const { result, waitForNextUpdate } = setup('')
 
@@ -224,7 +225,7 @@ function standardTests(
     it('should set the response', async () => {
       const response = { data: 'whatever' }
 
-      axios.mockResolvedValueOnce(response)
+      mockedAxios.mockResolvedValueOnce(response)
 
       const { result, waitForNextUpdate } = setup('')
 
@@ -238,7 +239,7 @@ function standardTests(
     it('should set error when request fails', async () => {
       const error = new Error('boom')
 
-      axios.mockRejectedValueOnce(error)
+      mockedAxios.mockRejectedValueOnce(error)
 
       const { result, waitForNextUpdate } = setup('')
 
@@ -250,7 +251,7 @@ function standardTests(
     it('should not reset error when component rerenders', async () => {
       const error = new Error('boom')
 
-      axios.mockRejectedValueOnce(error)
+      mockedAxios.mockRejectedValueOnce(error)
 
       const { result, waitForNextUpdate, rerender } = setup('')
 
@@ -258,7 +259,7 @@ function standardTests(
 
       expect(result.current[0].error).toBe(error)
 
-      axios.mockResolvedValueOnce({ data: 'whatever' })
+      mockedAxios.mockResolvedValueOnce({ data: 'whatever' })
 
       rerender()
 
@@ -268,7 +269,7 @@ function standardTests(
     it('should reset error when component remounts', async () => {
       const error = new Error('boom')
 
-      axios.mockRejectedValueOnce(error)
+      mockedAxios.mockRejectedValueOnce(error)
 
       const firstRender = setup('')
 
@@ -276,7 +277,7 @@ function standardTests(
 
       expect(firstRender.result.current[0].error).toBe(error)
 
-      axios.mockResolvedValueOnce({ data: 'whatever' })
+      mockedAxios.mockResolvedValueOnce({ data: 'whatever' })
 
       const secondRender = setup('')
 
@@ -288,7 +289,7 @@ function standardTests(
     it('should reset error when refetch succeeds', async () => {
       const error = new Error('boom')
 
-      axios.mockRejectedValueOnce(error)
+      mockedAxios.mockRejectedValueOnce(error)
 
       const { result, waitForNextUpdate } = setup('')
 
@@ -296,7 +297,7 @@ function standardTests(
 
       expect(result.current[0].error).toBe(error)
 
-      axios.mockResolvedValueOnce({ data: 'whatever' })
+      mockedAxios.mockResolvedValueOnce({ data: 'whatever' })
 
       // Refetch
       act(() => {
@@ -311,7 +312,7 @@ function standardTests(
     it('should set loading to false when request completes and returns error', async () => {
       const error = new Error('boom')
 
-      axios.mockRejectedValueOnce(error)
+      mockedAxios.mockRejectedValueOnce(error)
 
       const { result, waitForNextUpdate } = setup('')
 
@@ -322,7 +323,7 @@ function standardTests(
     })
 
     it('should refetch', async () => {
-      axios.mockResolvedValue({ data: 'whatever' })
+      mockedAxios.mockResolvedValue({ data: 'whatever' })
 
       const { result, waitForNextUpdate } = setup('')
 
@@ -339,7 +340,7 @@ function standardTests(
     })
 
     it('should return the same reference to the fetch function', async () => {
-      axios.mockResolvedValue({ data: 'whatever' })
+      mockedAxios.mockResolvedValue({ data: 'whatever' })
 
       const { result, rerender, waitForNextUpdate } = setup('')
 
@@ -355,7 +356,7 @@ function standardTests(
     it('should return the cached response on a new render', async () => {
       const response = { data: 'whatever' }
 
-      axios.mockResolvedValueOnce(response)
+      mockedAxios.mockResolvedValueOnce(response)
 
       await setup('').waitForNextUpdate()
 
@@ -373,7 +374,7 @@ function standardTests(
   describe('request cancellation', () => {
     describe('effect-generated requests', () => {
       it('should skip default cancellation before request if options.autoCancel is set to false', async () => {
-        axios.mockResolvedValue({ data: 'whatever' })
+        mockedAxios.mockResolvedValue({ data: 'whatever' })
 
         const { waitForNextUpdate, rerender } = setup('', {
           autoCancel: false
@@ -387,7 +388,7 @@ function standardTests(
       })
 
       it('should skip default cancellation after unmount if options.autoCancel is set to false', async () => {
-        axios.mockResolvedValue({ data: 'whatever' })
+        mockedAxios.mockResolvedValue({ data: 'whatever' })
 
         const { waitForNextUpdate, unmount } = setup('', {
           autoCancel: false
@@ -401,7 +402,7 @@ function standardTests(
       })
 
       it('should provide the abort signal to axios', async () => {
-        axios.mockResolvedValueOnce({ data: 'whatever' })
+        mockedAxios.mockResolvedValueOnce({ data: 'whatever' })
 
         const { waitForNextUpdate } = setup('')
 
@@ -415,7 +416,7 @@ function standardTests(
       })
 
       it('should cancel the outstanding request when the component unmounts', async () => {
-        axios.mockResolvedValueOnce({ data: 'whatever' })
+        mockedAxios.mockResolvedValueOnce({ data: 'whatever' })
 
         const { waitForNextUpdate, unmount } = setup('')
 
@@ -427,7 +428,7 @@ function standardTests(
       })
 
       it('should cancel the outstanding request when the cancel method is called', async () => {
-        axios.mockResolvedValue({ data: 'whatever' })
+        mockedAxios.mockResolvedValue({ data: 'whatever' })
 
         const { waitForNextUpdate, result } = setup('')
 
@@ -439,7 +440,7 @@ function standardTests(
       })
 
       it('should cancel the outstanding request when the component refetches due to a rerender', async () => {
-        axios.mockResolvedValue({ data: 'whatever' })
+        mockedAxios.mockResolvedValue({ data: 'whatever' })
 
         const { waitForNextUpdate, rerender } = setup('initial config')
 
@@ -453,7 +454,7 @@ function standardTests(
       })
 
       it('should not cancel the outstanding request when the component rerenders with same string config', async () => {
-        axios.mockResolvedValue({ data: 'whatever' })
+        mockedAxios.mockResolvedValue({ data: 'whatever' })
 
         const { waitForNextUpdate, rerender } = setup('initial config')
 
@@ -465,7 +466,7 @@ function standardTests(
       })
 
       it('should not cancel the outstanding request when the component rerenders with same object config', async () => {
-        axios.mockResolvedValue({ data: 'whatever' })
+        mockedAxios.mockResolvedValue({ data: 'whatever' })
 
         const { waitForNextUpdate, rerender } = setup({ some: 'config' })
 
@@ -477,7 +478,7 @@ function standardTests(
       })
 
       it('should not cancel the outstanding request when the component rerenders with equal string config', async () => {
-        axios.mockResolvedValue({ data: 'whatever' })
+        mockedAxios.mockResolvedValue({ data: 'whatever' })
 
         const { waitForNextUpdate, rerender } = setup('initial config', {})
 
@@ -489,7 +490,7 @@ function standardTests(
       })
 
       it('should not cancel the outstanding request when the component rerenders with equal object config', async () => {
-        axios.mockResolvedValue({ data: 'whatever' })
+        mockedAxios.mockResolvedValue({ data: 'whatever' })
 
         const { waitForNextUpdate, rerender } = setup({ some: 'config' }, {})
 
@@ -501,7 +502,7 @@ function standardTests(
       })
 
       it('should cancel the outstanding request when the cancel method is called after the component rerenders with same config', async () => {
-        axios.mockResolvedValue({ data: 'whatever' })
+        mockedAxios.mockResolvedValue({ data: 'whatever' })
 
         const { waitForNextUpdate, rerender, result } = setup('initial config')
 
@@ -517,7 +518,7 @@ function standardTests(
       it('should not dispatch an error when the request is canceled', async () => {
         const cancellation = new CanceledError('canceled')
 
-        axios.mockRejectedValueOnce(cancellation)
+        mockedAxios.mockRejectedValueOnce(cancellation)
 
         const { result, waitFor } = setup('')
 
@@ -537,7 +538,7 @@ function standardTests(
       it('should provide the abort signal to axios', async () => {
         const { result, waitForNextUpdate } = setup('', { manual: true })
 
-        axios.mockResolvedValueOnce({ data: 'whatever' })
+        mockedAxios.mockResolvedValueOnce({ data: 'whatever' })
 
         act(() => {
           result.current[1]()
@@ -559,7 +560,7 @@ function standardTests(
           manual: true
         })
 
-        axios.mockResolvedValueOnce({ data: 'whatever' })
+        mockedAxios.mockResolvedValueOnce({ data: 'whatever' })
 
         act(() => {
           result.current[1]()
@@ -573,7 +574,7 @@ function standardTests(
       })
 
       it('should cancel the outstanding manual refetch when the component refetches', async () => {
-        axios.mockResolvedValue({ data: 'whatever' })
+        mockedAxios.mockResolvedValue({ data: 'whatever' })
 
         const { result, waitForNextUpdate, rerender } = setup('')
 
@@ -591,7 +592,7 @@ function standardTests(
       })
 
       it('should cancel the outstanding manual refetch when the cancel method is called', async () => {
-        axios.mockResolvedValue({ data: 'whatever' })
+        mockedAxios.mockResolvedValue({ data: 'whatever' })
 
         const { result, waitForNextUpdate } = setup('', { manual: true })
 
@@ -609,7 +610,7 @@ function standardTests(
       it('should throw an error when the request is canceled', async () => {
         const cancellation = new CanceledError('canceled')
 
-        axios.mockRejectedValueOnce(cancellation)
+        mockedAxios.mockRejectedValueOnce(cancellation)
 
         const { result } = renderHook(() => useAxios('', { manual: true }))
 
@@ -619,7 +620,7 @@ function standardTests(
       it('should return response from cache in hook results', async () => {
         const response = { data: 'whatever' }
 
-        axios.mockResolvedValueOnce(response)
+        mockedAxios.mockResolvedValueOnce(response)
 
         // first component renders and stores results in cache
         await setup('').waitForNextUpdate()
@@ -649,7 +650,7 @@ function standardTests(
       it('should resolve to the response by default', async () => {
         const response = { data: 'whatever' }
 
-        axios.mockResolvedValue(response)
+        mockedAxios.mockResolvedValue(response)
 
         const {
           result: {
@@ -670,7 +671,7 @@ function standardTests(
       it('should resolve to the response when using cache', async () => {
         const response = { data: 'whatever' }
 
-        axios.mockResolvedValue(response)
+        mockedAxios.mockResolvedValue(response)
 
         const {
           result: {
@@ -693,7 +694,7 @@ function standardTests(
       it('should reject with the error by default', async () => {
         const error = new Error('boom')
 
-        axios.mockRejectedValue(error)
+        mockedAxios.mockRejectedValue(error)
 
         const {
           result: {
@@ -714,7 +715,7 @@ function standardTests(
       it('should reject with the error and skip cache even when using cache', async () => {
         const error = new Error('boom')
 
-        axios.mockRejectedValue(error)
+        mockedAxios.mockRejectedValue(error)
 
         const {
           result: {
@@ -737,7 +738,7 @@ function standardTests(
       it('should override url', async () => {
         const response = { data: 'whatever' }
 
-        axios.mockResolvedValue(response)
+        mockedAxios.mockResolvedValue(response)
 
         const {
           result: {
@@ -765,7 +766,7 @@ function standardTests(
       it('should merge with the existing configuration', async () => {
         const response = { data: 'whatever' }
 
-        axios.mockResolvedValue(response)
+        mockedAxios.mockResolvedValue(response)
 
         const {
           result: {
@@ -798,7 +799,7 @@ function standardTests(
       it('should ignore config override if it is an event', async () => {
         const response = { data: 'whatever' }
 
-        axios.mockResolvedValue(response)
+        mockedAxios.mockResolvedValue(response)
 
         const {
           result: {
@@ -849,7 +850,7 @@ function standardTests(
     it('should execute request manually and skip cache by default', async () => {
       const { result, waitForNextUpdate } = setup('', { manual: true })
 
-      axios.mockResolvedValueOnce({ data: 'whatever' })
+      mockedAxios.mockResolvedValueOnce({ data: 'whatever' })
 
       act(() => {
         result.current[1]()
@@ -869,7 +870,7 @@ function standardTests(
       const { result, waitForNextUpdate } = setup('', { manual: true })
 
       const response = { data: 'whatever' }
-      axios.mockResolvedValueOnce(response)
+      mockedAxios.mockResolvedValueOnce(response)
 
       // first manual request
       act(() => {
@@ -894,7 +895,7 @@ function standardTests(
     })
 
     it('should not return response even if there is a cached one', async () => {
-      axios.mockResolvedValueOnce({ data: 'whatever' })
+      mockedAxios.mockResolvedValueOnce({ data: 'whatever' })
 
       await setup('').waitForNextUpdate()
 
@@ -906,7 +907,7 @@ function standardTests(
 
   describe('useCache option', () => {
     it('should use local state across rerenders', async () => {
-      axios.mockResolvedValueOnce({ data: 'whatever' })
+      mockedAxios.mockResolvedValueOnce({ data: 'whatever' })
 
       const { waitForNextUpdate, rerender } = setup('')
 
@@ -918,7 +919,7 @@ function standardTests(
     })
 
     it('should not hit network across component mounts by default', async () => {
-      axios.mockResolvedValueOnce({ data: 'whatever' })
+      mockedAxios.mockResolvedValueOnce({ data: 'whatever' })
 
       const { waitForNextUpdate, unmount } = setup('')
 
@@ -932,7 +933,7 @@ function standardTests(
     })
 
     it('should use local state across rerenders even when cache disabled', async () => {
-      axios.mockResolvedValueOnce({ data: 'whatever' })
+      mockedAxios.mockResolvedValueOnce({ data: 'whatever' })
 
       const { waitForNextUpdate, rerender } = setup('', { useCache: false })
 
@@ -944,7 +945,7 @@ function standardTests(
     })
 
     it('should hit network across component mounts when cache disabled', async () => {
-      axios.mockResolvedValue({ data: 'whatever' })
+      mockedAxios.mockResolvedValue({ data: 'whatever' })
 
       const { waitForNextUpdate, unmount } = setup('', { useCache: false })
 
@@ -958,7 +959,7 @@ function standardTests(
     })
 
     it('should store result in cache even when disabled', async () => {
-      axios.mockResolvedValue({ data: 'whatever' })
+      mockedAxios.mockResolvedValue({ data: 'whatever' })
 
       const { waitForNextUpdate, unmount } = setup('', { useCache: false })
 
@@ -974,7 +975,7 @@ function standardTests(
 
   describe('option change detection', () => {
     it('manual:false to manual:true with cache disabled should execute first request only', async () => {
-      axios.mockResolvedValue({ data: 'whatever' })
+      mockedAxios.mockResolvedValue({ data: 'whatever' })
 
       const { waitForNextUpdate, rerender } = setup('', {
         manual: false,
@@ -989,7 +990,7 @@ function standardTests(
     })
 
     it('manual:true to manual:false with cache disabled should execute second request only', async () => {
-      axios.mockResolvedValue({ data: 'whatever' })
+      mockedAxios.mockResolvedValue({ data: 'whatever' })
 
       const { waitForNextUpdate, rerender } = setup('', {
         manual: true,
@@ -1004,7 +1005,7 @@ function standardTests(
     })
 
     it('useCache:true to useCache:false should execute both requests', async () => {
-      axios.mockResolvedValue({ data: 'whatever' })
+      mockedAxios.mockResolvedValue({ data: 'whatever' })
 
       const { waitForNextUpdate, rerender } = setup('', {
         useCache: true
@@ -1020,7 +1021,7 @@ function standardTests(
     })
 
     it('useCache:false to useCache:true should execute first request only', async () => {
-      axios.mockResolvedValue({ data: 'whatever' })
+      mockedAxios.mockResolvedValue({ data: 'whatever' })
 
       const { waitForNextUpdate, rerender } = setup('', {
         useCache: false
@@ -1034,7 +1035,7 @@ function standardTests(
     })
 
     it('should reset error when one successful request follows a failing request', async () => {
-      axios.mockResolvedValueOnce({ data: 'working 1' })
+      mockedAxios.mockResolvedValueOnce({ data: 'working 1' })
 
       const { result, waitForNextUpdate, rerender } = setup('working')
 
@@ -1042,7 +1043,7 @@ function standardTests(
 
       const error = new Error('boom')
 
-      axios.mockRejectedValueOnce(error)
+      mockedAxios.mockRejectedValueOnce(error)
 
       rerender({ config: 'boom', options: {} })
 
@@ -1050,7 +1051,7 @@ function standardTests(
 
       expect(result.current[0].error).toBe(error)
 
-      axios.mockResolvedValueOnce({ data: 'working 2' })
+      mockedAxios.mockResolvedValueOnce({ data: 'working 2' })
 
       rerender({ config: 'working', options: {} })
 
@@ -1079,7 +1080,7 @@ function standardTests(
       it('should use local state across rerenders', async () => {
         configure({ cache: false })
 
-        axios.mockResolvedValueOnce({ data: 'whatever' })
+        mockedAxios.mockResolvedValueOnce({ data: 'whatever' })
 
         const { waitForNextUpdate, rerender } = setup('')
 
@@ -1093,7 +1094,7 @@ function standardTests(
       it('should hit network across component mounts', async () => {
         configure({ cache: false })
 
-        axios.mockResolvedValue({ data: 'whatever' })
+        mockedAxios.mockResolvedValue({ data: 'whatever' })
 
         const { waitForNextUpdate, unmount } = setup('')
 
@@ -1122,7 +1123,7 @@ function standardTests(
         it('should override default useCache option', async () => {
           configure({ defaultOptions: { useCache: false } })
 
-          axios.mockResolvedValue({ data: 'whatever' })
+          mockedAxios.mockResolvedValue({ data: 'whatever' })
 
           const { waitForNextUpdate, unmount } = setup('')
 
