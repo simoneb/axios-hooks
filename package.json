@@ -33,7 +33,7 @@
     "test": "tsd && jest --no-cache"
   },
   "dependencies": {
-    "@babel/runtime": "7.23.2",
+    "@babel/runtime": "7.23.4",
     "dequal": "2.0.3",
     "lru-cache": "^10.0.1"
   },
