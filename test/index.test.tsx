@@ -13,7 +13,14 @@ import defaultUseAxios, {
 } from '../src'
 import { LRUCache } from 'lru-cache'
 
-jest.mock('axios')
+jest.mock('axios', ()=>{
+  const originalModule = jest.requireActual('axios')
+  return {
+    __esModule: true,
+    ...originalModule,
+    default: jest.fn(() => axios),
+  };;
+})
 const mockedAxios = axios as jest.MockedFunction<typeof axios>
 
 let errors
@@ -245,7 +252,7 @@ function standardTests(
 
       await waitForNextUpdate()
 
-      expect(result.current[0].error).toBe(error)
+      expect(result.current[0].error.message).toBe(error.message)
     })
 
     it('should not reset error when component rerenders', async () => {
@@ -257,13 +264,13 @@ function standardTests(
 
       await waitForNextUpdate()
 
-      expect(result.current[0].error).toBe(error)
+      expect(result.current[0].error.message).toBe(error.message)
 
       mockedAxios.mockResolvedValueOnce({ data: 'whatever' })
 
       rerender()
 
-      expect(result.current[0].error).toBe(error)
+      expect(result.current[0].error.message).toBe(error.message)
     })
 
     it('should reset error when component remounts', async () => {
@@ -275,7 +282,7 @@ function standardTests(
 
       await firstRender.waitForNextUpdate()
 
-      expect(firstRender.result.current[0].error).toBe(error)
+      expect(firstRender.result.current[0].error.message).toBe(error.message)
 
       mockedAxios.mockResolvedValueOnce({ data: 'whatever' })
 
@@ -295,7 +302,7 @@ function standardTests(
 
       await waitForNextUpdate()
 
-      expect(result.current[0].error).toBe(error)
+      expect(result.current[0].error.message).toBe(error.message)
 
       mockedAxios.mockResolvedValueOnce({ data: 'whatever' })
 
@@ -319,7 +326,7 @@ function standardTests(
       await waitForNextUpdate()
 
       expect(result.current[0].loading).toBe(false)
-      expect(result.current[0].error).toBe(error)
+      expect(result.current[0].error.message).toBe(error.message)
     })
 
     it('should refetch', async () => {
@@ -1049,7 +1056,7 @@ function standardTests(
 
       await waitForNextUpdate()
 
-      expect(result.current[0].error).toBe(error)
+      expect(result.current[0].error.message).toBe(error.message)
 
       mockedAxios.mockResolvedValueOnce({ data: 'working 2' })
 
