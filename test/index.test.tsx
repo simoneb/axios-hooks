@@ -635,7 +635,7 @@ function standardTests(
         const { result } = setup('', { manual: true })
 
         // no results on first render as it's a manual request
-        expect(result.current[0]).toEqual({ loading: false, error: null })
+        expect(result.current[0]).toEqual({ loading: false, error: null, data: null, response: null })
 
         // refetch using cache
         act(() => {
@@ -908,7 +908,7 @@ function standardTests(
 
       const { result } = setup('', { manual: true })
 
-      expect(result.current[0]).toEqual({ loading: false, error: null })
+      expect(result.current[0]).toEqual({ loading: false, error: null, data: null, response: null })
     })
   })
 

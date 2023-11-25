@@ -1,7 +1,8 @@
 import { expectAssignable, expectType } from 'tsd'
-import { AxiosError, AxiosResponse } from 'axios'
+import { AxiosError } from 'axios'
 
 import useAxios from '../src'
+import { UseAxiosResponse } from '../src/types/UseAxiosResponse.type'
 
 useAxios('')
 useAxios(
@@ -14,7 +15,7 @@ const [{ data, loading, error, response }, refetch, cancel] = useAxios('')
 expectType<any>(data)
 expectType<boolean>(loading)
 expectAssignable<AxiosError<any, any> | null>(error)
-expectAssignable<AxiosResponse | undefined>(response)
+expectAssignable<UseAxiosResponse | null>(response)
 expectAssignable<Function>(refetch)
 expectAssignable<Function>(cancel)
 

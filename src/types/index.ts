@@ -1,12 +1,6 @@
 // TODO: clean up this file
-import type { AxiosError, AxiosPromise, AxiosRequestConfig, AxiosResponse } from "axios"
-
-export interface ResponseValues<TResponse, TBody, TError> {
-    data?: TResponse
-    loading: boolean
-    error: AxiosError<TError, TBody> | null
-    response?: AxiosResponse<TResponse, TBody>
-  }
+import type { AxiosPromise, AxiosRequestConfig } from "axios"
+import { State } from "./State.type"
   
   export interface RefetchOptions {
     useCache?: boolean
@@ -21,7 +15,7 @@ export interface ResponseValues<TResponse, TBody, TError> {
   }
   
   export type UseAxiosResult<TResponse = any, TBody = any, TError = any> = [
-    ResponseValues<TResponse, TBody, TError>,
+    State<TResponse, TBody, TError>,
     RefetchFunction<TBody, TResponse>,
     () => void
   ]

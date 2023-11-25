@@ -4,6 +4,8 @@ import { LRUCache } from 'lru-cache'
 import { dequal as deepEqual } from 'dequal/lite'
 import type { AxiosHooksConfig } from './types/AxiosHooksConfig.type'
 import { ACTIONS, DEFAULT_OPTIONS } from './constants'
+import { reducer } from './state/reducer'
+import { createInitialState } from './state/createInitialState'
 import { UseAxiosResult } from './types'
 
 const useAxios = makeUseAxios()
@@ -123,36 +125,6 @@ export function makeUseAxios(configureOptions?: AxiosHooksConfig) {
     cache.set(cacheKey, responseForCache)
   }
 
-  function createInitialState(config, options) {
-    const response = !options.manual && tryGetFromCache(config, options)
-
-    return {
-      loading: !options.manual && !response,
-      error: null,
-      ...(response ? { data: response.data, response } : null)
-    }
-  }
-
-  function reducer(state, action) {
-    switch (action.type) {
-      case actions.REQUEST_START:
-        return {
-          ...state,
-          loading: true,
-          error: null
-        }
-      case actions.REQUEST_END:
-        return {
-          ...state,
-          loading: false,
-          // set data and error
-          ...(action.error ? {} : { data: action.payload.data, error: null }),
-          // set raw response or error
-          [action.error ? 'error' : 'response']: action.payload
-        }
-    }
-  }
-
   function tryGetFromCache(config, options, dispatch?) {
     if (!cache || !options.useCache) {
       return
@@ -221,7 +193,7 @@ export function makeUseAxios(configureOptions?: AxiosHooksConfig) {
 
     const [state, dispatch] = React.useReducer(
       reducer,
-      createInitialState(config, options)
+      createInitialState(config, options, tryGetFromCache)
     )
 
     if (typeof window === 'undefined' && options.ssr && !options.manual) {
