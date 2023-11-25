@@ -1,21 +1,10 @@
 import React from 'react'
-import StaticAxios, { isCancel } from 'axios'
+import StaticAxios, { AxiosError, isAxiosError, isCancel } from 'axios'
 import { LRUCache } from 'lru-cache'
 import { dequal as deepEqual } from 'dequal/lite'
 import type { AxiosHooksConfig } from './types/AxiosHooksConfig.type'
+import { ACTIONS, DEFAULT_OPTIONS } from './constants'
 import { UseAxiosResult } from './types'
-
-const actions = {
-  REQUEST_START: 'REQUEST_START',
-  REQUEST_END: 'REQUEST_END'
-}
-
-const DEFAULT_OPTIONS = {
-  manual: false,
-  useCache: true,
-  ssr: true,
-  autoCancel: true
-}
 
 const useAxios = makeUseAxios()
 
@@ -173,7 +162,7 @@ export function makeUseAxios(configureOptions?: AxiosHooksConfig) {
     const response = cache.get(cacheKey)
 
     if (response && dispatch) {
-      dispatch({ type: actions.REQUEST_END, payload: response })
+      dispatch({ type: ACTIONS.REQUEST_END, payload: response })
     }
 
     return response
@@ -181,21 +170,30 @@ export function makeUseAxios(configureOptions?: AxiosHooksConfig) {
 
   async function executeRequest(config, dispatch) {
     try {
-      dispatch({ type: actions.REQUEST_START })
+      dispatch({ type: ACTIONS.REQUEST_START })
 
       const response = await axiosInstance(config)
 
       tryStoreInCache(config, response)
 
-      dispatch({ type: actions.REQUEST_END, payload: response })
+      dispatch({ type: ACTIONS.REQUEST_END, payload: response })
 
       return response
     } catch (err) {
-      if (!isCancel(err)) {
-        dispatch({ type: actions.REQUEST_END, payload: err, error: true })
+      let _err = err
+      if (isAxiosError(err)) {
+        if (!isCancel(err)) {
+          dispatch({ type: ACTIONS.REQUEST_END, payload: err })
+        }
+      } else {
+        _err = AxiosError.from(err, 'ERR_AXIOS_HOOKS', config)
+        dispatch({
+          type: ACTIONS.REQUEST_END,
+          payload: _err
+        })
       }
 
-      throw err
+      throw _err
     }
   }
 
