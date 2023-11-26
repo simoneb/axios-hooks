@@ -132,7 +132,7 @@ The main React hook to execute HTTP requests.
 
   **Returns**
 
-  A promise containing the response. If the request is unsuccessful, the promise reects and the rejection must be handled manually.
+  A promise containing the response. If the request is unsuccessful, the promise rejects and the rejection must be handled manually.
 
 - `manualCancel()` - A function to cancel outstanding requests manually.
 
