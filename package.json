@@ -74,7 +74,7 @@
     "rimraf": "5.0.5",
     "shx": "0.3.4",
     "standard-version": "9.5.0",
-    "ts-jest": "29.1.1",
+    "ts-jest": "29.1.2",
     "tsd": "^0.30.0",
     "typescript": "5.3.3"
   },
