@@ -46,7 +46,7 @@
     "@babel/core": "7.24.1",
     "@babel/plugin-transform-runtime": "7.24.0",
     "@babel/preset-env": "7.24.1",
-    "@babel/preset-react": "7.23.3",
+    "@babel/preset-react": "7.24.1",
     "@commitlint/cli": "19.2.1",
     "@commitlint/config-conventional": "19.1.0",
     "@testing-library/react": "12.1.5",
