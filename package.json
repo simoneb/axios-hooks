@@ -75,7 +75,7 @@
     "shx": "0.3.4",
     "standard-version": "9.5.0",
     "ts-jest": "29.1.2",
-    "tsd": "^0.30.0",
+    "tsd": "^0.31.0",
     "typescript": "5.4.3"
   },
   "lint-staged": {
