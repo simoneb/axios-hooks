@@ -76,7 +76,7 @@
     "standard-version": "9.5.0",
     "ts-jest": "29.2.3",
     "tsd": "^0.31.0",
-    "typescript": "5.5.3"
+    "typescript": "5.5.4"
   },
   "lint-staged": {
     "{src,test}/**/*.{js?(x),md}": [
