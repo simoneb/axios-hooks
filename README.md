@@ -2,7 +2,7 @@
 
 # axios-hooks
 
-![ci](https://github.com/simoneb/axios-hooks/workflows/ci/badge.svg)
+[![ci](https://github.com/simoneb/axios-hooks/actions/workflows/ci.yml/badge.svg)](https://github.com/simoneb/axios-hooks/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/simoneb/axios-hooks/branch/master/graph/badge.svg)](https://codecov.io/gh/simoneb/axios-hooks)
 [![npm version](https://badge.fury.io/js/axios-hooks.svg)](https://badge.fury.io/js/axios-hooks)
 [![bundlephobia](https://badgen.net/bundlephobia/minzip/axios-hooks)](https://bundlephobia.com/result?p=axios-hooks)
