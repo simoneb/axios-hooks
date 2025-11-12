@@ -434,6 +434,6 @@ developed by the awesome people at [NearForm](https://github.com/nearform).
 
 ## License
 
-MIT
+AWISC
 
 [axios]: https://github.com/axios/axios

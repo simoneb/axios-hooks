@@ -7,7 +7,7 @@
     "react",
     "hooks"
   ],
-  "license": "MIT",
+  "license": "AWISC",
   "author": "Simone Busoli <simone.busoli@gmail.com>",
   "homepage": "https://github.com/simoneb/axios-hooks",
   "repository": "simoneb/axios-hooks",
